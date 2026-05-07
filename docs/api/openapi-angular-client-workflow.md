@@ -40,7 +40,7 @@ This repository uses the Spring route service as the source of truth and generat
 
 ## Team workflow
 
-- Regenerate locally whenever the backend OpenAPI contract changes.
+- Regenerate locally whenever the OpenAPI contract changes.
 - Commit the generated contract if the team wants code review to show the API diff and keep builds deterministic.
 - Use CI to verify contract drift, not as the only place that generates the client.
-- A good CI check is: start the backend, run `npm run openapi:sync`, then fail if the generated output changes or the frontend build breaks.
+- A good CI check is: start the server, run `npm run openapi:sync`, then fail if the generated output changes or the client build breaks.

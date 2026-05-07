@@ -71,7 +71,7 @@ npm run openapi:fetch
 npm run openapi:generate
 ```
 
-4. Run both steps together when the backend is running:
+4. Run both steps together when the server is running:
 
 ```bash
 npm run openapi:sync
