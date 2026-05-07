@@ -1,0 +1,13 @@
+{
+  "ngVersion": "21.0.0",
+  "providedInRoot": true,
+  "useSingleRequestParameter": true,
+  "withInterfaces": true,
+  "stringEnums": true,
+  "enumPropertyNaming": "original",
+  "modelPropertyNaming": "original",
+  "serviceSuffix": "Api",
+  "supportsES6": true,
+  "removeOperationIdPrefix": true,
+  "sortModelPropertiesByRequiredFlag": true
+}
