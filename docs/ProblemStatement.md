@@ -1,8 +1,8 @@
 # 📝 Problem Statement: Travel Journal Application
 
-Many people enjoy traveling. Keeping track of the places one has visited, the sights one has seen, and the experiences 
+Many people enjoy traveling in Germany. Keeping track of the places one has visited, the sights one has seen, and the experiences 
 one has gained may get overwhelming. Discovering sights one may have missed, or finding new destinations to explore, 
-that also match one's interests, can be difficult and time-consuming.
+that also match one's interests, can be difficult and time-consuming. The Travel Journal App 
 
 ## Main Functionality
 
@@ -11,17 +11,15 @@ The Travel Journal Application will support multiple key features:
   - When was the Trip, and how long did it last
   - What was the destination
   - How did I travel to and from the destination
-  - What sights did I see, and what experiences did I have (Potentially users can also upload photos, videos, and other 
-    media to document their trips)
-- Users can generate Descriptions of the sights they have seen
-- Users can get Recommendations for new destinations to explore, based on their past trips and interests
+- Users can generate Descriptions of their trips
+- Users can get Recommendations for new destinations to explore, based on their past trips
 - Users can collect statistics about their travels. These statistics may include:
   - How many trips have I taken?
-  - How many different countries have I visited?
+  - How many different states have I visited?
   - How many miles have I traveled?
   - What is the average length of my trips?
   - What is the average cost of my trips?
-  - What is the means of transportation I use most often?
+  - What is the mode of transportation I use most often?
   - how often was my train delayed?
   - and more...
 - Users can plan their train journeys for their trips. This may include:
@@ -33,10 +31,9 @@ The Travel Journal Application will support multiple key features:
 Potentially, the application can also support other features, such as:
 - Users can share their trips and experiences with friends and family
 - Users can gain achievements, like:
-  - Visiting a certain number of continents
-  - Visiting every continent
-  - Visiting a certain number of countries
-  - Visiting a certain number of capitals
+  - Visiting a certain number of cities
+  - Visiting every state
+  - Visiting the capital
   - and so on...
 
 ## Intended Users
@@ -49,24 +46,25 @@ statistics may be a common trait among the users, but it is not a requirement.
 
 The Travel Journal Application will integrate AI to assist users in writing smooth and consistent travel reports of the
 sights they have visited. The AI will further analyze users' travel data and provide personalized recommendations for 
-new destinations to explore.
+new destinations to explore. If for example a user has visited many state capitals, then the app may recommend them to 
+visit the remaining state capitals. If a user has visited many historical cities, then the app may recommend them to
+visit other historical cities.
 
 ## Use Case Scenarios
-Jane is currently on a Trip to New Zealand. This has been on her Bucket list for years. Now that she is finally there, 
-she wants to keep track of her trip and document her experiences. She uses the Travel Journal Application to do so. She 
-uploads photos and videos of the sights she has seen, and writes descriptions of her experiences. The AI helps her to 
-write nice travel reports. After her trip, Jane looks at the statistics about her travels and discovers that she has 
-visited 10 different tourist sights, traveled a total of 3827 km, and that the sight she has visited most often is the
-Lord of the Rings movie-set (4 times in total).
+Jane is currently on a Trip to Marburg. This has been on her Bucket list for years. Now that she is finally there, 
+she wants to keep track of her trip and document it. She uses the Travel Journal Application to do so. She specifies
+the route she has taken (what train, when, ...), and writes descriptions of her experiences. The AI helps her to 
+write nice travel reports. After her trip, Jane looks at the statistics about her travels and discovers that she has
+traveled a total of 428 km, and that she had to wait on her connecting train for 67 minutes.
 
-Steward has been on many Trips to China, Japan and South Korea. He is a big fan of Asian culture and cuisine, and has
-visited countless cultural sights and traditional restaurants during his travels. He uses the Travel Journal 
-Application to keep track of his trips. The AI analyzes his travel data and recommends him to visit Vietnam, as it has
-a rich culture, stunning traditional architecture, and delicious food that matches his interests. Steward plans his
-next trip to Taiwan using the application, and finds an affordable hotel, offering suitable amenities and being located 
-close to a famous Vietnamese restaurant.
+Steward has been on many Trips to Berlin, Hamburg, Frankfurt, and Bremen. He is a big fan of state capitals, and has
+visited many of them quite frequently. He uses the Travel Journal 
+Application to keep track of his trips. The AI analyzes his travel data and recommends him to visit Munich, as it has
+a rich culture, great Sightseeing, and is also a state capital. Steward plans his  next trip to Munich using the 
+application, and finds an affordable train connection, offering low probability for train delays, only a single train 
+transition and a short estimated travel time.
 
-Alice likes to travel by train. She has been on many train journeys across Europe, and has documented them in the Travel
+Alice likes to travel by train. She has been on many train journeys across Germany, and has documented them in the Travel
 Journal app. While most of her connections were on time, she has experienced delays and cancellations. She uses the 
 statistics feature of the app to analyze her train journeys and discovers that her train was delayed 15% of the time,
 and that the average delay was 30 minutes. She also finds out that the train line she uses most often has a higher
