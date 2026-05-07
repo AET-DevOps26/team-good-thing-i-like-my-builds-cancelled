@@ -1,0 +1,100 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Markdown should preserve trailing spaces for line breaks
+
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# Angular / TypeScript / JavaScript
+
+[*.{ts,tsx,js,jsx}]
+indent_size = 4
+
+# Angular templates
+
+[*.html]
+indent_size = 4
+
+# Stylesheets
+
+[*.{css,scss,sass}]
+indent_size = 4
+
+# JSON
+
+[*.json]
+indent_size = 4
+
+# YAML
+
+[*.{yml,yaml}]
+indent_size = 4
+
+# Dockerfiles
+
+[Dockerfile]
+indent_size = 4
+
+# Shell scripts
+
+[*.sh]
+indent_size = 2
+
+# Java / Kotlin / Gradle
+
+[*.{java,kt,kts,gradle}]
+indent_size = 4
+
+# Python
+
+[*.py]
+indent_size = 4
+
+# SQL
+
+[*.sql]
+indent_size = 4
+
+# XML (Spring configs, Maven POMs)
+
+[*.xml]
+indent_size = 2
+
+# Properties files
+
+[*.properties]
+indent_size = 2
+
+# GitHub Actions
+
+[.github/workflows/*.yml]
+indent_size = 2
+
+# Kubernetes manifests
+
+[infra/kubernetes/**/*.yml]
+indent_size = 2
+
+# Helm charts
+
+[infra/kubernetes/helm/**/*.yaml]
+indent_size = 2
+
+# Makefiles require tabs
+
+[Makefile]
+indent_style = tab
+
+# Batch files
+
+[*.bat]
+end_of_line = crlf

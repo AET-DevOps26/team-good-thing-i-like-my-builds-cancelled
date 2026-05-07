@@ -1,0 +1,71 @@
+<main class="shell">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Route service playground</p>
+      <h1>Examples</h1>
+      <p class="lede">Create example records and review the current list directly against the Spring service.</p>
+    </div>
+
+    <button type="button" class="ghost-button" (click)="loadExamples()" [disabled]="loading">
+      {{ loading ? 'Refreshing…' : 'Refresh list' }}
+    </button>
+  </section>
+
+  <section class="layout">
+    <form class="panel form-panel" [formGroup]="form" (ngSubmit)="saveExample()">
+      <div class="panel-header">
+        <h2>Add example</h2>
+        <p>Send a new example to <code>/api/v1/examples</code>.</p>
+      </div>
+
+      <label class="field">
+        <span>Name</span>
+        <input type="text" formControlName="name" placeholder="Route 66" autocomplete="off" />
+      </label>
+
+      @if (nameControl.touched && nameControl.invalid) {
+        <p class="field-error">Enter a name between 2 and 120 characters.</p>
+      }
+
+      <button type="submit" class="primary-button" [disabled]="saving">
+        {{ saving ? 'Saving…' : 'Create example' }}
+      </button>
+    </form>
+
+    <div class="panel list-panel">
+      <div class="panel-header">
+        <h2>Stored examples</h2>
+        <p>{{ examples.length }} item(s) loaded from the server.</p>
+      </div>
+
+      @if (errorMessage) {
+        <p class="notice error">{{ errorMessage }}</p>
+      }
+
+      @if (successMessage) {
+        <p class="notice success">{{ successMessage }}</p>
+      }
+
+      @if (loading) {
+        <div class="state">Loading examples…</div>
+      } @else if (examples.length === 0) {
+        <div class="state">No examples yet. Add the first one on the left.</div>
+      } @else {
+        <div class="table">
+          @for (example of examples; track example.id) {
+            <article class="row">
+              <div>
+                <span class="row-label">ID</span>
+                <strong>{{ example.id }}</strong>
+              </div>
+              <div>
+                <span class="row-label">Name</span>
+                <strong>{{ example.name }}</strong>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </div>
+  </section>
+</main>

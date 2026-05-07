@@ -1,0 +1,1203 @@
+<LectureDetailsDTO xmlns=""><id>1898</id><title>Project Work</title><isTutorialLecture>false</isTutorialLecture><course><id>564</id><title>DevOps: Engineering for Deployment and Operations (CIT423001)</title><shortName>DevOps26</shortName><studentGroupName>artemis-DevOps26-students</studentGroupName><teachingAssistantGroupName>artemis-DevOps26-tutors</teachingAssistantGroupName><editorGroupName>artemis-DevOps26-editors</editorGroupName><instructorGroupName>artemis-DevOps26-instructors</instructorGroupName></course><lectureUnits><lectureUnits><id>8070</id><lecture><id>1898</id></lecture><name>Project Details</name><completed>false</completed><visibleToStudents>true</visibleToStudents><content>##
+ Objective
+
+The project requires teams to design, implement, and operate a complete
+software system that reflects a realistic DevOps workflow. The goal is
+to demonstrate how a system is structured, integrated, deployed, and
+maintained in a reproducible and observable way. Development,
+deployment, and operation must therefore be treated as a single
+engineering problem rather than as separate phases.
+
+At the technical level, the project must result in a web application
+that includes a client side, a server side, persistent storage, and a
+separate Generative AI component. The system must be containerised,
+runnable locally, automatically tested and deployed through GitHub
+Actions, deployable to Kubernetes, and observable through Prometheus and
+ Grafana. The application domain is flexible, but the technical and
+process requirements are fixed and must all be satisfied.
+
+The project is intended to simulate a realistic cloud-native software
+delivery scenario. The final result must be structured in a way that
+supports modular development, reproducible setup, automated deployment,
+and operational visibility.
+
+**Deadline:** to be announced (EOD – 23:59 Munich time)
+
+| **Aspect** | **Requirement** |
+| --- | --- |
+| Project type | Complete DevOps-oriented software system |
+| Main focus | Development, deployment, operation, and observability as
+one integrated workflow |
+| Required system elements | Client, server, database, GenAI, CI/CD,
+Kubernetes, monitoring |
+| Application domain | Flexible, but all technical requirements must be
+fulfilled |
+
+## Team Organisation
+
+Teams consist of three students. Each student must take responsibility
+for one primary subsystem, typically client, server, or GenAI. However,
+subsystem ownership does not imply isolated work. Teams are expected to
+collaborate across subsystem boundaries, especially for integration,
+deployment, and debugging. A project where each student only works on
+*their part* without participating in system integration does not
+reflect the intended DevOps model.
+
+Registration information is required in order to make contribution
+tracking possible and to connect repository activity to individual team
+members. Therefore, each student must provide their GitHub username,
+TUMonline login, and matriculation number.
+
+Work must be transparent and traceable throughout the semester. This
+means that contributions must be visible through GitHub commits, pull
+request authorship, code review participation, and involvement in
+infrastructure tasks such as CI/CD configuration and deployment.
+
+Communication must take place through the official course channels.
+Tutor feedback, planning, questions, and issue reporting must be visible
+ in the dedicated Artemis team channels. No other communication channel
+will be taken into account for evaluation. Teams are expected to work in
+ an organised and responsive way and to treat communication as part of
+engineering practice.
+
+| **Aspect** | **Requirement** |
+| --- | --- |
+| Team size | 3 students |
+| Registration | GitHub username, TUMonline login, matriculation number |
+| Ownership | Each student owns a primary subsystem (client, server,
+GenAI) |
+| Collaboration | Collaborative development across subsystem boundaries
+is expected |
+| Contribution tracking | Visible via commits, PRs, code reviews, and
+infrastructure work |
+| Communication | Only official course channels in Artemis |
+
+## Development Workflow
+
+The project must be developed in a GitHub mono-repository.  Therefore,
+the system is must be treated as one integrated deliverable. A mono-repo
+ makes it possible to version client, server, GenAI service, deployment
+files, CI/CD workflows, and documentation together, and to validate
+changes across the whole system.
+
+All work must be structured through pull requests. Each feature or
+bugfix must be developed in a dedicated feature branch. Direct commits
+to the main branch are not acceptable as a normal workflow. A pull
+request must be opened, reviewed, and approved before the change is
+merged into main. Team members must peer-review each other’s work.
+Review is part of the workflow and should be treated as a normal step
+before merging changes.
+
+The CI pipeline must run automatically on every pull request. At a
+minimum, it must build the relevant services and execute the automated
+tests. On merge to main, the CD pipeline must automatically deploy the
+system to a Kubernetes environment. The intended workflow is therefore:
+develop in a feature branch, validate through CI, review through PR,
+merge into main, and deploy automatically.
+
+| **Aspect** | **Requirement** |
+| --- | --- |
+| Repository | GitHub mono-repo |
+| Branching | Each feature or bugfix developed in a feature branch |
+| Pull Requests | Mandatory before merge into main |
+| Code review | Peer review and approval by team members required |
+| CI checks | Automated tests and validation on every PR |
+| CD behaviour | Automatic deployment to Kubernetes on merge to main |
+
+## System Architecture
+
+The system must be structured as a set of interacting but separated
+components. At minimum, this includes a client side, a server side, a
+database, and a separate GenAI component. The client side must provide a
+ usable interface and communicate with the server over REST. The server
+side must expose REST APIs, coordinate business logic, and interact with
+ persistent storage. The database must support persistent data storage
+and must have a documented schema. The GenAI component must run as an
+independent service and communicate with the remaining services over a
+defined interface.
+
+The server side must be implemented in Spring Boot and must consist of
+at least three microservices. ****These services do not need to be
+large, but they must have distinct responsibilities and communicate in a
+ controlled and documented way.
+
+The client side may be implemented in React, Angular, or Vue.js. It must
+ provide a usable and responsive interface and interact with the server
+over REST APIs. The database may be MySQL, PostgreSQL, or a similar
+relational or persistent database system, but it must run via Docker in
+local development and support documented persistent storage in the
+deployed setup.
+
+| **Component** | **Technology** | **Notes** |
+| --- | --- | --- |
+| Client Side | React, Angular, Vue.js | Usable, responsive UI that
+interacts with server over REST |
+| Server Side | Spring Boot (Java) | Must expose REST APIs and consist
+of at least 3 microservices; modular architecture required |
+| Database | MySQL or PostgreSQL or similar | Must support persistent
+storage; schema must be documented; run via Docker |
+
+## GenAI Component
+
+The GenAI component must be implemented as a separate service in Python.
+ It must be deployed as a modular microservice, containerised
+independently, networked with the server, and integrated through a
+defined interface.
+
+Functionally, the GenAI component must fulfil a real user-facing use
+case. Acceptable examples include summarisation, generation, question
+answering, or a similarly meaningful feature that is accessible through
+the application workflow. It is not sufficient to include a GenAI
+service that exists technically but is not connected to an actual
+user-facing capability.
+
+The system must support both cloud-based and local large language
+models. Cloud support may be implemented through providers such as the
+OpenAI API. Local model support may be implemented using technologies
+such as GPT4All or LLaMA. Teams do not need to demonstrate sophisticated
+ model research, but they do need to demonstrate that the service
+architecture can work with both remote and local inference options where
+ feasible.
+
+As an optional advanced bonus, teams may implement a full
+retrieval-augmented generation setup using a vector database such as
+Weaviate.
+
+| **Aspect** | **Requirement** |
+| --- | --- |
+| Language | Python |
+| Deployment | Modular microservice, containerised and networked with
+the server |
+| Functionality | Real user-facing use case, e.g. summarisation,
+generation, Q&amp;A |
+| Model support | Cloud-based models (e.g. OpenAI API) and local models
+(e.g. GPT4All, LLaMA) |
+| Optional bonus | Full RAG architecture using a vector database such as
+ Weaviate |
+
+## Environment and Deployment
+
+All components must be fully containerised and runnable locally using a
+compose-based setup. This includes the client, the server-side services,
+ the GenAI service, and the database. Each component must therefore have
+ its own Dockerfile. The local setup must support end-to-end system
+execution through a `docker-compose.yml` file.
+
+The local setup must be simple. The system must be runnable in three or
+fewer commands, for example by building and starting through `docker
+compose up`. The setup must provide sane defaults, which means that
+students should not rely on long manual configuration instructions or
+complex environment preparation steps. A new user must be able to start
+the system without reverse-engineering the project.
+
+The same system must also be deployable to Kubernetes. Deployment may be
+ implemented either through Helm charts or raw Kubernetes manifests. The
+ project must support deployment on the course infrastructure via
+Rancher and also on one cloud environment, which in your current version
+ is Azure. Configuration must be externalised using environment
+variables, Secrets, and similar mechanisms. Hardcoded credentials,
+hardcoded environment-dependent values, or manual configuration in the
+code are not acceptable.
+
+| **Aspect** | **Requirement** |
+| --- | --- |
+| Containerisation | All components (server, client, GenAI, DB) must
+have their own Dockerfile |
+| Local orchestration | `docker-compose.yml` must run the system
+end-to-end locally |
+| Setup | Runnable in three or fewer commands; no complex manual ENV
+setup |
+| Kubernetes | Deployable using Helm or raw manifests |
+| Environments | Local infrastructure (Rancher) and a cloud option
+(Azure) |
+
+## CI/CD
+
+The system must include a working CI/CD pipeline implemented with GitHub
+ Actions. The pipeline must reflect the actual lifecycle of the system
+and must be reliable enough that it can be treated as part of the
+system.
+
+Continuous Integration must build and test all services. It must also
+perform static analysis or linting where appropriate. This means that
+the CI pipeline should validate the codebase before integration into the
+ main branch and should fail when the system is not in a correct or
+stable state.
+
+Continuous Deployment must automatically deploy to Kubernetes after
+merge to main. This deployment process must be reproducible and
+maintainable. The workflow must make correct use of secrets and
+environment-specific variables. Hardcoded tokens should be avoided.
+
+| **Aspect** | **Requirement** |
+| --- | --- |
+| Tooling | GitHub Actions |
+| CI tasks | Build and test all services; perform static
+analysis/linting |
+| CD tasks | Automatically deploy to Kubernetes on merge to main |
+| Configuration | Must use secrets and support environment-specific
+variables |
+
+## Observability
+
+The system must expose basic but meaningful operational visibility. This
+ means that monitoring should not stop at “Prometheus is installed” or
+“Grafana is running.” Instead, the monitored data must allow someone to
+understand whether the system is behaving correctly or incorrectly.
+
+Prometheus must be used for metrics collection. At minimum, the project
+must track request count, latency, and error rate. These metrics should
+cover the core runtime behaviour of the system, especially on the server
+ side and, where relevant, the GenAI component. Grafana must be used for
+ visualisation, and dashboards must reflect key system metrics. These
+dashboards must be submitted as exported `.json` files. At least one
+meaningful alert rule must be configured, for example for service
+downtime or slow response time.
+
+| **Tool** | **Requirements** |
+| --- | --- |
+| Prometheus | Metrics collection for at least request count, latency,
+and error rate |
+| Grafana | Dashboards must reflect key system metrics (server, GenAI);
+must be submitted as `.json` |
+| Alerts | At least one meaningful alert rule, e.g. service down or slow
+ response time |
+
+## Testing
+
+Testing must validate the behaviour of the system. Tests must cover
+critical server-side logic, relevant parts of the GenAI component, and
+important client-side workflows and interactions.
+
+Unit tests are mandatory for critical server and GenAI logic.
+Client-side tests should cover core workflows and interactions. All
+tests must run automatically in the CI pipeline. The pipeline should
+therefore act as the main enforcement point for system stability and
+should prevent broken changes from being merged.
+
+| **Aspect** | **Requirement** |
+| --- | --- |
+| Unit Tests | Must cover critical server and GenAI logic |
+| Client Tests | Should cover core workflows and interactions |
+| CI Testing | All tests must run automatically in the CI pipeline |
+
+## Engineering Artefacts
+
+Teams must provide engineering artefacts that explain how the system is
+structured and how it works. These artefacts must reflect the actual
+implementation and must support understanding, reproducibility, and
+evaluation.
+
+A high-level architecture description is required, together with
+decomposition into subsystems and their interfaces. UML-style diagrams
+are mandatory. Specifically, the project must include a Subsystem
+Decomposition diagram, a Use Case Diagram, and an Analysis Object Model.
+ In addition, the system must provide API documentation through
+OpenAPI/Swagger and expose Swagger UI or an equivalent interface.
+
+| **Aspect** | **Requirement** |
+| --- | --- |
+| Architecture | High-level system description |
+| Decomposition | Subsystems and interfaces |
+| Architecture Diagrams | UML-style diagrams: Subsystem Decomposition,
+Use Case Diagram, Analysis Object Model are mandatory |
+| API documentation | Must provide OpenAPI/Swagger documentation and
+expose Swagger UI or equivalent |
+
+## Deliverables
+
+The final submission must include the complete codebase for the client,
+server, and GenAI services, together with all configuration required to
+run the system locally and to deploy it to Kubernetes. This includes
+Dockerfiles, the compose setup, deployment manifests or Helm charts,
+CI/CD workflows, and monitoring configuration.
+
+The monitoring setup must include Prometheus and Grafana configuration,
+exported dashboards, and alert rule files. The testing suite must be
+included together with instructions for how to run it. Documentation in
+`README.md` must include setup instructions, architecture information,
+API documentation references, CI/CD and monitoring instructions, and an
+explanation of student responsibilities.
+
+The project concludes with a final presentation, as well as individual
+oral examination.  You need to be prepared to defend thee whole project,
+ as well as your individual contribution within it. The final team
+presentation must include a live demo. Each student must present and
+explain their subsystem and be ready to answer technical questions.
+
+| **Deliverable** | **Description** |
+| --- | --- |
+| Source Code | Complete codebase for server, client, and GenAI services
+ |
+| Docker Setup | Dockerfiles and `docker-compose.yml` for local setup |
+| Kubernetes Deployment | Helm charts or raw Kubernetes YAMLs with setup
+ instructions |
+| Monitoring Configuration | Prometheus and Grafana config with exported
+ dashboards and alert rules |
+| Testing Suite | Unit/integration tests with instructions to run them |
+| Documentation | `README.md` with setup guide, architecture, API docs,
+CI/CD and monitoring instructions, student responsibilities |
+
+## Common pitfalls and how to avoid them
+
+Creating a project in a team with other people, even if they are your
+friends, is not easy. Truly effective collaboration with people who have
+ distinct views, skills, and working styles requires significant effort
+in order for it to work well. To help you with it, we would like to
+provide recommendations based on personal experience from continuous
+observation of different teams, as well as general good practices.
+
+&gt; A smart man learns from his mistakes, a wise man learns from the
+mistakes of others.
+&gt;
+
+**Effective project**
+
+1. Reliability &gt; Feature count
+
+    One of the very common reasons for a team to fail is feature
+orientation. It might seem reasonable that the best strategy is to build
+ as many features as possible in the shortest time. But quality can
+never beat quantity this way. If you cannot reliably deploy or run every
+ new feature you create, you will eventually fail with the whole flow of
+ project execution. One of the important DevOps principles is that fast,
+ reliable flow is more important than feature count. We recommend the
+following strategy: keep the scope small, make the system deployable
+early, and iterate on it.
+
+2. The system is a single pipeline
+
+    Every part of the system is a different component, but they are all
+interconnected and dependent on each other. A big mistake is to think
+about coding, deployment, and monitoring as three separate components —
+the system you create with this strategy would ended up just a codebase.
+ The best practice you can implement is to link every component of the
+system into one chain: code → test → build → deploy → observe → improve
+
+3. Reproducibility
+
+    The joke “it works on my machine” is as old as time. This might
+create the impression that this problem is no longer relevant or already
+ solved by someone. In reality, this is still one of the major problems
+for people who do not keep reproducibility in mind at all times. Try to
+ask yourself after each feature is implemented: “Can someone else run
+your system without you?” Typical failures include many manual steps and
+ undocumented environments. The best advice is to make setup trivial:
+try to eliminate manual configuration and make sure to test the setup
+yourself from scratch at least a couple of times.
+
+4. Visible system behaviour
+
+    Monitoring might seem like the easiest and most fun part of the
+responsibilities. In reality, it requires significant effort,
+understanding of system functionality, awareness of common pitfalls,
+understanding your system’s drawbacks, and an analytical mindset to
+create truly useful monitoring. Many teams “install monitoring”, but
+dashboards show nothing useful. Remember that all dashboards must be
+linked to system behaviour. You need to be able to monitor what can
+break. Visualisation of latency, failures, and load will help you and
+your team understand the system state, instead of collecting data
+without purpose.
+
+**Patterns of failure**
+
+1. Project as a checklist
+
+    The easiest way to think about the project is to treat it as a
+collection of checkpoints you need to mark. Required to have dashboards
+and alerts? Install Prometheus, add 1 dashboard, add 1 alert ✅ done. If
+you only aim to pass the requirement, the quality of the system drops
+drastically. Requirements should serve only as a starting point, on top
+of which you add your own ideas, understanding, and experience. When you
+ think about the project only as a collection of checkpoints, you
+distance yourself from it and forget its purpose and logical
+functionality. Try to give every requirement meaning and connect it to
+real system behaviour.
+
+2. Late integration
+
+    What fails most projects one week before submission? Late
+integration. To the question “If you could start the project again, what
+ would you do differently?”, the most common answer is: “I would start
+integration much earlier.” Too many teams build components separately
+and integrate them at the very end. Every time the result is the same:
+CI/CD breaks, deployment becomes unstable, and eventually the system is
+incomplete. Try to follow this recommendation and start integration as
+early as possible with your team.
+
+3. Fake CI/CD
+
+    It’s easy to have CI/CD, but it’s extremely hard to have good CI/CD.
+ Very often the pipeline exists, but tests are meaningless or missing.
+It is easy to get frustrated if your pipeline runs too long, fails
+randomly, or requires manual approval for small changes. Try to make
+your life easier early and follow good CI/CD practices from the
+beginning:
+https://about.gitlab.com/blog/how-to-keep-up-with-ci-cd-best-practices/
+
+4. GenAI as decoration
+
+    GenAI might not be everyone’s cup of tea. If you are not interested
+in working with this technology, it might be a frustrating experience,
+and you might catch yourself integrating GenAI just as a checkbox. In
+reality, when working on industrial projects, you often need to work
+with things you would not choose yourself. A very important quality of a
+ DevOps engineer is flexibility and willingness to learn. Use this
+opportunity to learn a new technology and think about real challenges
+modern teams are solving.
+
+5. “I will document it later”
+
+    Needless to say, we all fall into this trap. You spend hours
+debugging a feature, finally fix it, push, commit… and then: “I will
+document it tomorrow.” Then the next day you come back and no longer
+fully understand your own code. Always start a new class or method with a
+ short comment describing its purpose. This helps structure your
+thinking and understand what you are doing. Try to document as you go
+and make it a habit. It helps not only you, but also anyone who looks at
+ your code later, and improves maintainability.
+
+
+https://www.aleksandrhovhannisyan.com/blog/writing-better-documentation/
+
+**Team culture**
+
+A good project is not built by perfect individuals working all by
+themselves. The best teams consist of people who communicate
+effectively, take responsibility, and support each other when needed.
+
+1. Other people cannot read your thoughts
+
+    If something is bothering you, bring it up for discussion as soon as
+ possible. The earlier you do it, the easier it is to resolve.
+Otherwise, issues accumulate over time and can lead to frustration. At
+the same time, do not blame others for things you never communicated as
+concerns. If you encounter a problem you cannot resolve within your
+team, contact your tutor or instructor.
+
+2. Clear roles and responsibilities
+
+    It is easy to avoid responsibility if you do not clearly understand
+what you are responsible for. Right after forming a team, one of the
+first things to discuss is individual responsibilities. Try to define
+roles similar to those in real projects, and thought the project
+execution define reponsibilities and accountability for various tasks.
+We recommend to use a RACI matrix for this:
+https://www.atlassian.com/work-management/project-management/raci-chart
+
+
+3. Individual strength
+     Everyone in a team has different strengths and weaknesses. Some may
+ already have industrial experience and a strong technical background,
+others are strong in theory, and others are better at planning and
+communication. Good teams are technically strong, but great teams
+consist of people who complement each other. We would like you to use
+this opportunity to work with different people, and being eager to teach
+ what you know, and learn what you do not.</content><type>text</type></lectureUnits><lectureUnits><id>8071</id><lecture><id>1898</id></lecture><name>Project Grading</name><completed>false</completed><visibleToStudents>true</visibleToStudents><content>Project
+ grading consists of three separate grades: an aggregated team grade, a
+team final grade, and an individual oral examination. These are weighted
+ as follows: 40% aggregated team grade, 30% team final presentation, and
+ 30% individual oral examination.
+
+The team final presentation and individual oral examination are both
+conducted at the end of the semester. The aggregated team grade is based
+ on three evaluations carried out during the semester, approximately one
+ per month.
+
+![grading_v4.png](/api/core/files/markdown/
+Markdown_2026-04-17T13-19-58-962_0b459a5d.png)
+
+**Individual oral examination (30%)**
+
+The individual oral examination is the sole individual grading which
+serves as the main mechanism for assessing each student’s personal
+contribution and understanding. It is conducted at the end of the
+semester by a pair of tutors.
+
+In this examination, each student presents one artefact of their choice
+that they personally developed within the project. Assumingly, the
+selected artefact represents the strongest example of the student’s
+work, and the evaluation can therefore be based on how well the student
+is able to explain, justify, and defend it. The artefact should
+correspond to the student’s declared responsibility area. Depending on
+the project, this may include a CI/CD pipeline, a monitoring setup, a
+deployment configuration, a Docker-based environment, a testing setup, a
+ service implementation, a logging or alerting mechanism, or an
+infrastructure-as-code component.
+
+Each student is given a 15-minute slot and is assessed using prepared
+questions. During the examination, the student first explains the chosen
+ artefact, its function, and its design decisions, and then answers
+technical questions. We would verify ownership, depth of understanding,
+technical correctness, and the student’s ability to explain how their
+work fits into the overall system. It also provides a basis for judging
+code quality, the significance and difficulty of the contribution, and
+the student’s understanding of collaboration within the team.
+
+During the examination, you are expected to:
+
+- explain your subsystem and its role in the overall system
+- describe technical decisions you made
+- demonstrate understanding of how your component integrates with others
+
+Your contribution will be evaluated based on your work during the
+project, which includes:
+
+- code quality (clarity, structure, maintainability)
+- contribution (balance between difficulty and quantity of work)
+- collaboration (participation in reviews, integration, and team work)
+
+**Team aggregated grade (40%)**
+
+The team aggregated grade reflects how the team works over the course of
+ the semester. It is based on three checkpoint evaluations, one per
+month, carried out by the tutor.  The aggregated grade ensures that work
+ is done throughout the semester and avoids situations where everything
+is done at the last minute. It also prevent unfair sutuatios, in which a
+ student who worked the whole semester gets the same grade as someone
+who did everything one week before submission. This grade captures how
+the project develops over time and how consistently the team is able to
+organise and carry it forward. The final team aggregated grade is
+derived from these intermediate evaluations.
+
+This component is intended to assess whether the team is managing the
+project in a structured and reliable way. The main questions are whether
+ the team plans and distributes work clearly, makes steady progress,
+integrates the technical parts of the system properly, reacts to
+feedback, and collaborates effectively as a group. You expected to
+receive a guidance on any risks and problems observed, and being
+suggested concrete steps for improvement. In this way, the aggregated
+grade also serves as a mechanism for guidance during the semester.
+
+**❗ You will recieve your intermediate grade from your tutor after each
+evaluation. That will allow you to understand your strength and
+weaknesses, and to work on it.**
+
+The next parameters are evaluated during each iteration:
+
+- Planning and task distribution
+- Progress since last evaluation
+- Technical integration
+- Collaboration and communication
+- Responsiveness to feedback
+- Risks and problems occurring during the project execution and how they
+ were handled
+
+It is expected that tutors can interact with a running version of your
+system without requiring additional setup. This means that your
+deployment must be stable, accessible, and reflect the final state of
+your project.
+
+This requires:
+
+- a deployed instance available via URL (on course infrastructure or
+cloud)
+- a working system that reflects the final submission
+- clear instructions on how to access and use the system
+- no reliance on local-only setups for evaluation
+
+**Team final presentation (30%)**
+
+The team final presentation and demonstration is the main
+end-of-semester assessment of the project as a whole. It is evaluated
+jointly by tutors and instructors. During this evaluation, the focus is
+on how well the system works as a complete and integrated solution.
+
+The team is expected to present the overall goal and scope of the
+project clearly, explain the architecture and DevOps pipeline, and
+justify the main engineering decisions they made. They should also show
+that they understand the trade-offs involved in their solution and can
+explain why the system was designed in that way.
+
+An important part of this assessment is the demonstration itself. The
+team should show that the system actually works, that the main workflow
+can be followed clearly, and that the operational aspects of the project
+ are visible where relevant. This may include deployment, monitoring,
+testing, and other supporting infrastructure. In other words, this
+component evaluates both how well the team can explain the project and
+how well the project works in practice.
+
+## Project Grading Criteria
+
+The project is graded across the categories presented below. The table
+serves as a visual example, highlighting different aspects of the
+project which will be graded, as well as what you should pay attention
+to during project execution. The exact evaluation may differ depending
+on the judgement of the person evaluating it. The ability to answer
+technical questions, clarify your own part of the work, and present it
+clearly is also taken into account.
+
+The project is graded as failed if:
+
+- Contributions are not transparently documented (Artemis + Github)
+- Team members cannot clearly explain their own subsystem during the
+presentation
+- No working end-to-end system is demonstrated
+
+---
+
+## System
+
+| **Category** | **Evaluation** | **Explanation** |
+| --- | --- | --- |
+| Functional System | Excellent | Full end-to-end system works reliably
+across all components; no major failures |
+|  | Good | Core functionality works; minor issues in integration or
+edge cases |
+|  | Basic | Partial functionality; several components not fully
+integrated |
+|  | Poor | System does not function as a coherent whole |
+| Architecture Quality | Excellent | Clear modular structure;
+components/services well-separated with defined interfaces |
+|  | Good | Mostly modular; interfaces exist but inconsistencies present
+ |
+|  | Basic | Limited structure; tight coupling between components |
+|  | Poor | No clear architecture or structure |
+| User-Facing Value | Excellent | System provides clear user workflows;
+functionality solves a meaningful problem; UI supports usage well |
+|  | Good | Functionality usable but limited or partially unclear |
+|  | Basic | Minimal functionality; usability issues present |
+|  | Poor | No meaningful user-facing functionality |
+
+---
+
+## DevOps &amp; Infrastructure
+
+| **Category** | **Evaluation** | **Explanation** |
+| --- | --- | --- |
+| Build and Deployment | Excellent | Fully automated CI/CD: build, test,
+ image creation, and deployment work reliably |
+|  | Good | CI automated (build + test); deployment partially automated
+or unstable |
+|  | Basic | Partial automation (only build or test); deployment manual |
+|  | Poor | No functional CI/CD pipeline |
+| Runtime and Observability | Excellent | Metrics reflect system
+behaviour (e.g. latency, errors, load); dashboards clearly visualise
+system state; alerts are meaningful |
+|  | Good | Metrics and dashboards exist but limited coverage or unclear
+ interpretation |
+|  | Basic | Basic monitoring setup present but not useful for
+understanding system behaviour |
+|  | Poor | No meaningful observability setup |
+| Environment and Reproducibility | Excellent | System fully
+containerised; local setup reproducible with minimal steps and no manual
+ fixes |
+|  | Good | Mostly reproducible; minor setup issues or manual steps
+required |
+|  | Basic | Setup works but requires significant manual intervention |
+|  | Poor | System cannot be reliably set up locally |
+
+---
+
+## Engineering Process
+
+| **Category** | **Evaluation** | **Explanation** |
+| --- | --- | --- |
+| Testing Strategy | Excellent | Tests cover critical flows, edge cases,
+ and failures; integrated into CI |
+|  | Good | Tests cover main functionality; limited edge case coverage |
+|  | Basic | Few tests; limited relevance to system behaviour |
+|  | Poor | No meaningful testing |
+| Engineering Artefacts | Excellent | Architecture and system design
+clearly documented and consistent with implementation |
+|  | Good | Documentation exists but incomplete or partially
+inconsistent |
+|  | Basic | Minimal documentation; unclear structure |
+|  | Poor | No useful engineering artefacts |
+| Documentation | Excellent | Documentation enables full setup, usage,
+and understanding; responsibilities clearly traceable |
+|  | Good | Documentation usable but incomplete |
+|  | Basic | Limited documentation; unclear instructions |
+|  | Poor | No usable documentation |
+
+---
+
+## Bonus
+
+For exceptional additional technical characteristics of the project,
+additional credit may be given by the evaluator. These are awarded for
+technical extensions beyond baseline requirements. Depending on the
+quality of execution, recognition may vary.
+
+| **Level** | **Description** |
+| --- | --- |
+| Advanced DevOps | e.g. autoscaling, self-healing, advanced deployment
+strategies |
+| Advanced Observability | e.g. tracing, log aggregation, custom metrics
+ |
+| Advanced AI | e.g. RAG pipeline, vector database integration |
+| System Excellence | clearly above baseline in design or implementation
+ |
+| Additional justified improvements | technically meaningful extensions |
+
+Additional consideration may be given in cases where the team is not
+full (e.g. two or one member). Since the grading structure is designed
+for full teams, adjustments may be made to reflect the workload in such
+cases.</content><type>text</type></lectureUnits><lectureUnits><id>8072</id><lecture><id>1898</id></lecture><name>Problem Statement Template</name><releaseDate>2025-05-02T10:15:00Z</releaseDate><completed>false</completed><visibleToStudents>true</visibleToStudents><content>#
+ 📝 Problem Statement
+
+## ⚠️ **Deadline for submission:** 08.05.2026
+
+##### **❗️ Please complete this document carefully. It will help you to
+structure your ideas early and plan your development efficiently. ❗️**
+---
+
+## 1. Problem Statement
+
+Describe clearly what problem your application will solve or what user
+need it addresses.
+
+Include:
+
+- **What is the main functionality?**
+- **Who are the intended users?**
+- **How will you integrate GenAI meaningfully?**
+- **Describe some scenarios how your app will function?**
+
+---
+
+## 📅 Important Notes
+
+- This document must be stored in your team’s GitHub repository.</content><type>text</type></lectureUnits><lectureUnits><id>8073</id><lecture><id>1898</id></lecture><name>System Overview —&gt; Architecture</name><releaseDate>2025-05-02T10:15:00Z</releaseDate><completed>false</completed><visibleToStudents>true</visibleToStudents><content>#
+ 📝 System Overview —&gt; Architecture
+
+## ⚠️ **Deadline for submission:** 08.05.2026
+
+##### **❗️ Please complete this document carefully. It will help you to
+structure your ideas early and plan your development efficiently. ❗️**
+---
+
+## 1. Initial System Structure
+
+Describe how you plan to divide the system technically. You must cover:
+
+- **Server:** Spring Boot REST API
+- **Client:** React / Angular / Vue.js frontend
+- **GenAI Service:** Python, LangChain microservice
+- **Database:** (e.g., PostgreSQL, MongoDB)
+
+Include three UML diagrams (Analysis object model, Use cases, and
+Top-level architecture):
+- A simple analysis object model in the form of a UML class diagram
+- A use case diagram
+- A UML component diagram to visualize the architecture (this can be
+understood as the "top-level architecture diagram")
+
+You can use tools like [Apollon](https://apollon.ase.in.tum.de).
+
+---
+
+## 2. First Product Backlog
+
+Prepare a simple backlog in a Markdown table or GitHub Project. Each
+item should be a feature or task.
+
+---
+
+## 📅 Important Notes
+
+- This document must be stored in your team's GitHub repository.</content><type>text</type></lectureUnits><lectureUnits><id>8074</id><lecture><id>1898</id></lecture><name>Best Practices Microservices</name><releaseDate>2025-06-19T09:00:00Z</releaseDate><completed>false</completed><visibleToStudents>true</visibleToStudents><content>#
+ Concrete Tips and Hints
+
+## 1. ✅ Microservice Architecture &amp; Design Best Practices
+
+- **Single Responsibility Services**: Each microservice should
+encapsulate one specific domain or business capability. Avoid feature
+creep and overlapping responsibilities.
+- **Stateless Services**: Design services to be stateless. Store
+session/context in tokens (e.g., JWT) or shared databases/cache layers
+like Redis if necessary.
+- **Language Boundary Awareness**: Carefully define the interface
+(OpenAPI spec) between Spring Boot (Java) and Langchain (Python). Use
+JSON over HTTP, not internal data structures.
+
+---
+
+## 2. 📐 API-Driven Design and OpenAPI Usage
+
+### Design First
+- Teams should define and review the OpenAPI specs collaboratively
+before implementing any logic.
+- Use tools like [Swagger Editor](https://editor.swagger.io/) or
+[Stoplight](https://stoplight.io/).
+
+### Use OpenAPI Code Generators
+- **Java (Spring Boot)**: `springdoc-openapi` or [OpenAPI
+Generator](https://openapi-generator.tech/)
+- **Python**:
+[openapi-python-client](https://github.com/openapi-generators/openapi-
+python-client)
+- **Versioning**: Always version APIs (e.g., `/api/v1/resource`) from
+day one to prevent breaking clients during iteration.
+
+### API-First, Contract-Strong
+
+| Task                     | Concrete Tool / Command
+
+                                         |
+|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+| Edit &amp; lint spec         | `npx @redocly/cli lint
+api/openapi.yaml` (Spectral rules)
+                                                             |
+| Generate Java stubs      | `openapi-generator-cli generate -i
+api/openapi.yaml -g spring -o services/spring-order/generated`
+                                                 |
+| Generate Python client   | `openapi-python-client --path
+api/openapi.yaml --output services/py-recommender/client`
+                                                      |
+| Generate TypeScript SDK  | `npx openapi-typescript api/openapi.yaml -o
+ web-client/src/api.ts`
+                                         |
+| Mock server for client   | `npx prism mock api/openapi.yaml` (runs on
+port 4010)
+                                          |
+
+Never merge without running the linter; add it to a **pre-commit hook**.
+
+➡️ [pre-commit.com](https://pre-commit.com/)
+Include .pre-commit-config.yaml in your repo and register:
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/Redocly/openapi-cli
+    rev: v1.0.0-beta.92
+    hooks:
+      - id: openapi-cli-lint
+```
+
+Run with:
+
+```bash
+pre-commit run -a
+```
+
+---
+
+## Mono-repo Layout
+
+```
+repo/
+├── api/                   # Single source of truth
+│   ├── openapi.yaml       # Versioned spec (v1, v2…)
+│   └── scripts/           # helper scripts for code-gen
+├── services/
+│   ├── spring-order/      # Java 21, Spring Boot 3
+│   └── py-recommender/    # Python 3.12, LangChain
+├── web-client/            # Any JS framework
+├── infra/                 # docker-compose, k8s Helm charts, Terraform
+└── .github/workflows/     # CI pipelines
+```
+
+&gt; The OpenAPI spec lives once in `/api`. Every language consumes it
+via code-gen.
+&gt; No hand-written DTOs. Use **records** (immutable) for DTOs in Java.
+
+---
+
+### 👀 Minimal `gen-all.sh` helper (drop in /api/scripts)
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+openapi-generator-cli generate -i api/openapi.yaml -g spring \
+  -o services/spring-order/generated --skip-validate-spec
+
+openapi-python-client --path api/openapi.yaml \
+  --output services/py-recommender/client --config
+api/scripts/py-config.json
+
+npx openapi-typescript api/openapi.yaml -o web-client/src/api.ts
+```
+
+Make it executable and callable from CI; run `./api/scripts/gen-all.sh`
+after each spec change.
+
+💡 **Tip**: Add a Git hook (`post-checkout`, `post-merge`) to run
+`./api/scripts/gen-all.sh` automatically.
+This ensures generated clients are always up-to-date after switching
+branches or pulling changes.
+
+---
+
+## 3. 🔐 Security Best Practices
+
+- Use **OAuth2 / OIDC** via API gateway (e.g., Keycloak, GitHub, Auth0).
+- Pass JWTs through HTTP headers.
+- Each service must verify the token using a shared public key.
+- Gateways (like Traefik or NGINX) can centralize token validation.
+
+👉 **Tip**: Place the gateway as the entrypoint to intercept and
+validate tokens before forwarding to services.
+
+---
+
+## 4. ⚙️ Development and Deployment Practices
+
+- **Contract Testing**: Use [Pact](https://pact.io/) or similar tools to
+ ensure API contract fidelity between producer (Spring Boot) and
+consumer (Langchain).
+- **Service Discovery**: Use an API gateway (e.g., Traefik, NGINX) to
+route and secure APIs. Avoid direct service-to-service calls across
+languages unless encapsulated.
+- **Consistent Error Handling**: Use a unified error schema in OpenAPI:
+`{code, message, details}`. Enforce it across all services and in the
+OpenAPI spec.
+- **CI/CD Pipeline**: Automate OpenAPI linting, stub generation, and
+testing in GitHub Actions. Always validate that OpenAPI specs match
+implementation on each build. 
+- **Docker Image Publishing**: Push container images to a registry with
+semantic version tags (e.g.,
+[ghcr.io/org/service:1.0.0](http://ghcr.io/org/service:1.0.0)) and/or
+Git commit SHA (:sha-abc123) to ensure traceability and reproducibility
+across environments.
+
+---
+
+### GitHub Actions Pipeline Example
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md'
+  pull_request:
+
+concurrency: ci-${{ github.ref }}
+
+jobs:
+  generate-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [spring-order, py-recommender, web-client]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint OpenAPI
+        run: npx @redocly/cli lint api/openapi.yaml
+
+      - name: Generate code
+        run: ./api/scripts/gen-all.sh
+        shell: bash
+
+      - name: Cache Maven / npm / pip
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.cache/pip
+            ~/.npm
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+
+      - name: Build &amp; test
+        working-directory: services/${{ matrix.service }}
+        run: |
+          case ${{ matrix.service }} in
+            spring-order) ./mvnw verify ;;
+            py-recommender) pip install -r req.txt &amp;&amp; pytest ;;
+            web-client) npm ci &amp;&amp; npm run test --
+--watchAll=false ;;
+          esac
+
+  contract-test:
+    needs: generate-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pact verification
+        run: ./scripts/run-pact.sh
+```
+
+---
+
+## Local Development and Runtime
+
+| Area                | Hands-on Choice                                |
+ Why                                                                 |
+|---------------------|--------------------------------------------------|----------------------------------------------------------------------|
+
+| Service discovery   | Simple API Gateway.                            |
+ Leads to one ingress, easier CORS, security.                          |
+| Data isolation      | One PostgreSQL database per service (logical
+schema ok).                      | Classic microservice rule → avoids
+coupling                                                   |
+| Dev containers      | `devcontainer.json` + VS Code, Docker-in-Docker
+enabled     | Requires zero local setup.
+           |
+| Local orchestration | Include a file called `docker-compose up` in
+`/infra`                | Offers DBs + gateway + both services in one
+command.                            |
+| Cross-service call  | Python → Java via generated TypeScript-style
+client (py-recommender/client).              | Consistent via OpenAPI
+through reusing same OpenAPI spec, avoids hidden internal formats
+         |
+| Observability       | Spring Boot Actuator + Prometheus; Include
+LangChain's tracing to OpenTelementry; Scrape via Docker Compose       |
+ Production-grade insights with minimal code.
+   |
+
+---
+
+## 5. 💻 Client Integration
+
+- Import generated `api.ts` in React or similar.
+- Runtime base URL comes from `.env` file:
+`VITE_API_URL=http://localhost:8080`
+- For CORS, configure gateway:
+
+```yaml
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+```
+
+- Use **SWR** or **React Query** for caching and retries.
+
+---
+
+## 6. 🤝 Collaboration Best Practices
+
+| Ritual               | Concrete Action
+                                 |
+|----------------------|----------------------------------------------------------------------------------|
+
+| API review           | Weekly 15-min sync to review `openapi.yaml`
+changes                             |
+| Definition of Done   | PR must include: ✅ Passing CI, ✅ Updated spec, ✅
+ Short doc (/docs/adr-xyz.md) |
+| Doc automation       | Generate and publish OpenAPI docs
+with: `redoc-cli bundle api/openapi.yaml -o docs/api.html` → deploy with
+ GH Pages((/docs folder)).     |
+| Issue template       | Add checkboxes in the "Describe Changes"
+section: “Affects API?”, “Spec updated?” ; Create a [PR
+template](https://docs.github.com/en/communities/using-templates-to-
+encourage-useful-issues-and-pull-requests/creating-a-pull-request-
+template-for-your-repository)                                |
+
+---
+
+## 7. 🧪 Write Tests
+
+- Consider implementing **integration** and **end-to-end (E2E)** tests
+per microservice.
+- These tests should include interactions with the database and any
+external APIs to ensure that services behave correctly as the system
+evolves.
+- This helps maintain stability and avoid regressions when introducing
+new features.
+
+---
+
+## 8. 🚫 What Not To Do
+
+- ❌ No direct HTTP calls without generated client
+- ❌ No shared DTOs/utilities outside the OpenAPI spec
+- ❌ No long-running branches (max 2 days → rebase/merge)
+- ❌ No manual production deploys — everything must go through CI/CD</content><type>text</type></lectureUnits><lectureUnits><id>8075</id><lecture><id>1898</id></lecture><name>Best Practices Monitoring with Kubernetes</name><releaseDate>2025-06-26T07:00:00Z</releaseDate><completed>false</completed><visibleToStudents>true</visibleToStudents><content>##
+ ✅ Monitoring Best Practices in Kubernetes
+
+### 1. Separate Namespace
+
+Deploy Prometheus and Grafana in a dedicated namespace (e.g.,
+`monitoring`) to isolate observability tools from application
+microservices.
+This brings benefits like:
+
+- Easier user permission management
+- Resource limits (CPU/memory) via Kubernetes quotas
+- Clear separation for upgrades, troubleshooting, and maintenance
+
+---
+
+### 2. Persistent Volumes
+
+Ensure that Prometheus and Grafana retain important data across
+restarts:
+
+- Use Persistent Volumes (PVs) for Prometheus to keep historical metrics
+- Use PVs for Grafana to persist dashboards and configuration
+
+---
+
+### 3. Label-Based Discovery
+
+Label your services and pods consistently so Prometheus can discover
+them automatically.
+This ensures that metrics are still collected after updates or scaling.
+
+**Recommended labels:**
+```yaml
+app: my-service
+monitoring: "true"
+```
+
+**PrometheusSelector Example:**
+```yaml
+matchLabels:
+  monitoring: "true"
+```
+
+### 4. Use ServiceMonitor / PodMonitor
+
+Use special configuration files called ServiceMonitor and PodMonitor to
+tell Prometheus which services or pods it should collect data from:
+
+These objects are part of the Prometheus Operator and help define what
+Prometheus should monitor. They automatically adapt to changes in your
+deployments.
+
+### 5. Dashboards as Code
+
+Avoid manual configuration in environments:
+
+- Store Grafana dashboards as version-controlled files (JSON)
+- Use Helm or config maps to provision dashboards and data sources
+- This ensures consistency and easier collaboration
+
+### 6. Optional: Access Control
+
+Secure your monitoring tools:
+
+- Protect Prometheus and Grafana with authentication (e.g., via Rancher)
+- Use TLS for encrypted connections
+- Apply role-based access control (RBAC) to manage user permissions
+
+### 7. Version Visibility
+
+Expose application version information as a custom Prometheus metric:
+
+- Helps track which version is currently deployed
+- Makes it easier to correlate performance changes or issues with
+specific releases
+- Visualize versions in Grafana dashboards
+
+### 8. Alerting Rules
+
+Set up meaningful and actionable alerts:
+1. Define rules such as:
+
+    - High error rate
+    - Pod restart count &gt; 5
+    - Slow response time
+2. Use PrometheusRule CRDs (Custom Resource Definitions) if working with
+ Prometheus Operator
+3. Connect to Alertmanager for routing alerts to:
+
+    - Email
+    - Slack
+    - PagerDuty
+</content><type>text</type></lectureUnits></lectureUnits></LectureDetailsDTO>
