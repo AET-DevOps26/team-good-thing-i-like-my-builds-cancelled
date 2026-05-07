@@ -54,6 +54,31 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## OpenAPI client generation
+
+The Angular app consumes generated API clients from `libs/contracts/openapi`.
+
+1. Start the Spring route service so the OpenAPI document is available at `http://localhost:9100/v3/api-docs`.
+2. Fetch the spec into the shared contract folder:
+
+```bash
+npm run openapi:fetch
+```
+
+3. Generate the Angular client into the shared contract library:
+
+```bash
+npm run openapi:generate
+```
+
+4. Run both steps together when the backend is running:
+
+```bash
+npm run openapi:sync
+```
+
+Import generated services and models from `@contracts/openapi`.
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
