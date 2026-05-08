@@ -2,7 +2,7 @@
 
 Many people enjoy traveling in Germany. Keeping track of the places one has visited, the sights one has seen, and the experiences 
 one has gained may get overwhelming. Discovering sights one may have missed, or finding new destinations to explore, 
-that also match one's interests, can be difficult and time-consuming. The Travel Journal App 
+that also match one's interests, can be difficult and time-consuming.
 
 ## Main Functionality
 
