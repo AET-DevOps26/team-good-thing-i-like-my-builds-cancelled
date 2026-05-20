@@ -34,6 +34,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: apps/client/package-lock.json
       - run: npm install
 
   test:
@@ -52,6 +53,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: apps/client/package-lock.json
       - run: npm link @angular/cli@${{ env.CLI_VERSION }}
       - if: ${{ matrix.Test == 'Lint' }}
         run: npm run test:lint
@@ -71,6 +73,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: apps/client/package-lock.json
 
       -   run: npm link @angular/cli@${{ env.CLI_VERSION }}
       -   run: npm run build:${GITHUB_REF##*/}
