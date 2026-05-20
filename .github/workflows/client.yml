@@ -10,6 +10,10 @@ on:
     branches: [ "main", "develop" ]
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: apps/client/
+
 env:
   NODE_VERSION: 24.x
   CLI_VERSION: 21.2.10
