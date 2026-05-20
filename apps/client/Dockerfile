@@ -1,18 +1,37 @@
-FROM npm as build
+# =========================
+# Build stage
+# =========================
+FROM node:22-alpine AS build
 
-RUN npm install
-RUN npm build
+WORKDIR /app
+
+# Copy dependency files first for better Docker layer caching
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy the rest of the project
+COPY . .
+
+# Build Angular app
+RUN npm run build --configuration production
 
 
-FROM nginx
-COPY --from=build dist/client/browser /usr/share/nginx/html
-COPY --from=build /nginx.conf  /etc/nginx/conf.d/default.conf
+# =========================
+# Runtime stage
+# =========================
+FROM nginx:alpine
 
-#COPY src/assets/favicon /usr/share/nginx/html/
+# Copy built Angular app
+COPY --from=build /app/dist/client/browser /usr/share/nginx/html
 
-RUN mkdir -p /usr/share/nginx/html/assets/
-RUN rm -f /usr/share/nginx/html/assets/release.txt
-RUN touch /usr/share/nginx/html/assets/release.txt
-RUN echo $(date) > /usr/share/nginx/html/assets/release.txt
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Optional release file
+RUN mkdir -p /usr/share/nginx/html/assets/ && \
+    rm -f /usr/share/nginx/html/assets/release.txt && \
+    date > /usr/share/nginx/html/assets/release.txt
 
 EXPOSE 80
