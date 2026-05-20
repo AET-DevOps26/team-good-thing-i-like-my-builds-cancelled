@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { ChangeDetectorRef, Component, inject, PLATFORM_ID } from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -11,7 +11,7 @@ import { Example, ExampleCreateRequest, ExamplesService } from './examples.servi
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
+export class App implements OnInit {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly changeDetectorRef = inject(ChangeDetectorRef);
   private readonly fb = inject(FormBuilder);
