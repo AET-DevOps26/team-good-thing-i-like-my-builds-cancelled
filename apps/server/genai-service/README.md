@@ -1,6 +1,6 @@
 # GenAI Service (Minimal)
 
-Minimaler FastAPI-Service mit zwei GET-Endpoints fuer Report-Generierung und Empfehlungen.
+Minimal FastAPI-Service with two GET-Endpoints for Report-Generation and Recommendations.
 
 ## Quick Start
 
@@ -14,7 +14,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Alternativ direkt mit Uvicorn:
+Alternatively using Uvicorn:
 
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 9200 --reload
