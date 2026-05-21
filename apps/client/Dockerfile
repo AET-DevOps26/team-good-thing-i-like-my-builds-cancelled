@@ -1,7 +1,7 @@
 # =========================
 # Build stage
 # =========================
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN npm ci
 COPY . .
 
 # Build Angular app
-RUN npm run build --configuration production
+RUN npm run build -- --configuration production
 
 
 # =========================
