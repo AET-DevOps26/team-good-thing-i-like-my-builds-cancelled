@@ -6,8 +6,12 @@ name: Node.js CI
 on:
   push:
     branches: [ "main", "develop" ]
+    paths:
+      - 'apps/client/**'
   pull_request:
     branches: [ "main", "develop" ]
+    paths:
+      - 'apps/client/**'
   workflow_dispatch:
 
 defaults:
