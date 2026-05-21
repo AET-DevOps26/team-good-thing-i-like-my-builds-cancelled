@@ -5,6 +5,7 @@
       <h1>Examples</h1>
       <p class="lede">Create example records and review the current list directly against the Spring service.</p>
     </div>
+
     <button type="button" class="ghost-button" (click)="loadExamples()" [disabled]="loading">
       {{ loading ? 'Refreshing…' : 'Refresh list' }}
     </button>
