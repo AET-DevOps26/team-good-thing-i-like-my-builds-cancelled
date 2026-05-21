@@ -5,11 +5,9 @@ name: Build Client
 
 on:
   push:
-    branches: [ "main", "develop" ]
     paths:
       - 'apps/client/**'
   pull_request:
-    branches: [ "main", "develop" ]
     paths:
       - 'apps/client/**'
   workflow_dispatch:
@@ -94,6 +92,15 @@ jobs:
     if: github.event_name != 'pull_request'
     steps:
       - uses: actions/checkout@v3
+      - name: Resolve Angular build configuration
+        id: angular-config
+        run: |
+          branch="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          if [ "$branch" = "main" ]; then
+            echo "configuration=production" >> "$GITHUB_OUTPUT"
+          else
+            echo "configuration=development" >> "$GITHUB_OUTPUT"
+          fi
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
@@ -133,6 +140,8 @@ jobs:
         with:
           context: ./apps/client
           file: ./apps/client/Dockerfile
+          build-args: |
+            ANGULAR_CONFIGURATION=${{ steps.angular-config.outputs.configuration }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
