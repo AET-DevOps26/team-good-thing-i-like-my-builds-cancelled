@@ -3,36 +3,38 @@ package dev.gtilmbc.routeservice.service;
 import dev.gtilmbc.routeservice.dto.ExampleCreateRequest;
 import dev.gtilmbc.routeservice.dto.ExampleDto;
 import dev.gtilmbc.routeservice.model.Example;
-import dev.gtilmbc.routeservice.repository.ExampleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ExampleService {
-
-    private final ExampleRepository exampleRepository;
+    ArrayList<Example> examples = new ArrayList<>();
 
     public List<ExampleDto> getAll() {
-        return exampleRepository.findAll()
-            .stream()
-            .map(this::toDto)
-            .toList();
+        return examples.stream().map(this::toDto).toList();
     }
 
     public ExampleDto get(Long id) {
-        return exampleRepository.findById(id)
+        return examples.stream()
+            .filter(e -> e.getId().equals(id))
+            .findFirst()
             .map(this::toDto)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Example not found"));
     }
 
     public ExampleDto save(ExampleCreateRequest request) {
-        Example saved = exampleRepository.save(toEntity(request));
-        return toDto(saved);
+        Example example = toEntity(request);
+
+        // set id as random long
+        example.setId(Math.round(Math.random() * 1000000));
+        examples.add(toEntity(request));
+        return get(example.getId());
     }
 
     private ExampleDto toDto(Example example) {
