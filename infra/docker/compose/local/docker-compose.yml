@@ -1,6 +1,8 @@
+name: gtilmbc
 services:
     client:
         build: ../../../../apps/client
+        hostname: client
         environment:
             TZ: "Europe/Berlin"
         ports:
@@ -8,6 +10,7 @@ services:
 
     db:
         image: postgres:14.23
+        hostname: db
         environment:
             TZ: "Europe/Berlin"
             POSTGRES_DB: logbook_service
@@ -23,6 +26,7 @@ services:
 
     pg_admin:
         image: dpage/pgadmin4:9.15
+        hostname: pg_admin
         environment:
             TZ: "Europe/Berlin"
             PGADMIN_DEFAULT_EMAIL: admin@local.dev
@@ -35,6 +39,7 @@ services:
 
     logbook_service:
         build: ../../../../apps/server/logbook-service
+        hostname: logbook_service
         environment:
             TZ: "Europe/Berlin"
             SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/logbook_service
