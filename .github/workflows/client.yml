@@ -7,9 +7,6 @@ on:
   push:
     paths:
       - 'apps/client/**'
-  pull_request:
-    paths:
-      - 'apps/client/**'
   workflow_dispatch:
 
 defaults:
