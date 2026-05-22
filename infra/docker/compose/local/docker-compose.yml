@@ -1,0 +1,48 @@
+services:
+    client:
+        build: ../../../../apps/client
+        environment:
+            TZ: "Europe/Berlin"
+        ports:
+            -   "4567:80"
+
+    db:
+        image: postgres:14.23
+        environment:
+            TZ: "Europe/Berlin"
+            POSTGRES_DB: logbook_service
+            POSTGRES_USER: logbook_user
+            POSTGRES_PASSWORD: logbook_password
+        ports:
+            -   "55002:5432"
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U logbook_user -d logbook_service"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    pg_admin:
+        image: dpage/pgadmin4:9.15
+        environment:
+            TZ: "Europe/Berlin"
+            PGADMIN_DEFAULT_EMAIL: admin@local.dev
+            PGADMIN_DEFAULT_PASSWORD: admin123
+        ports:
+            -   "5050:80"
+        depends_on:
+            db:
+                condition: service_healthy
+
+    logbook_service:
+        build: ../../../../apps/server/logbook-service
+        environment:
+            TZ: "Europe/Berlin"
+            SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/logbook_service
+            SPRING_DATASOURCE_USERNAME: logbook_user
+            SPRING_DATASOURCE_PASSWORD: logbook_password
+        ports:
+            -   "8080:8080"
+        depends_on:
+            db:
+                condition: service_healthy
+
