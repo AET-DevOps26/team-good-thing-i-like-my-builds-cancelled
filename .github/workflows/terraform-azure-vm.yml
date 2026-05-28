@@ -1,0 +1,96 @@
+name: Terraform Azure VM
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "infra/terraform/**"
+      - ".github/workflows/terraform-azure-vm.yml"
+
+jobs:
+  deploy-vm:
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      TF_INPUT: "false"
+
+      TF_STATE_RG: ${{ vars.TF_STATE_RG || 'GTILMBC' }}
+      TF_STATE_LOCATION: ${{ vars.TF_STATE_LOCATION || 'swedencentral' }}
+      TF_STATE_STORAGE_ACCOUNT: ${{ vars.TF_STATE_STORAGE_ACCOUNT || 'traveljournalterraform' }}
+      TF_STATE_CONTAINER: ${{ vars.TF_STATE_CONTAINER || 'travel-journal' }}
+
+      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_ssh_allowed_cidrs: ${{ vars.TF_SSH_ALLOWED_CIDRS || '["51.12.216.63/32"]' }}
+      TF_VAR_web_allowed_cidrs: ${{ vars.TF_WEB_ALLOWED_CIDRS || '["0.0.0.0/0"]' }}
+
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Ensure Terraform state storage
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          az group create --name "$TF_STATE_RG" --location "$TF_STATE_LOCATION" --output none
+
+          if ! az storage account show --name "$TF_STATE_STORAGE_ACCOUNT" --resource-group "$TF_STATE_RG" --output none 2>/dev/null; then
+            az storage account create \
+              --name "$TF_STATE_STORAGE_ACCOUNT" \
+              --resource-group "$TF_STATE_RG" \
+              --location "$TF_STATE_LOCATION" \
+              --sku Standard_LRS \
+              --kind StorageV2 \
+              --allow-blob-public-access false \
+              --output none
+          fi
+
+          account_key=$(az storage account keys list \
+            --account-name "$TF_STATE_STORAGE_ACCOUNT" \
+            --resource-group "$TF_STATE_RG" \
+            --query '[0].value' \
+            --output tsv)
+          echo "ARM_ACCESS_KEY=$account_key" >> "$GITHUB_ENV"
+
+          az storage container create \
+            --name "$TF_STATE_CONTAINER" \
+            --account-name "$TF_STATE_STORAGE_ACCOUNT" \
+            --account-key "$account_key" \
+            --output none
+
+      - name: Write SSH public key
+        shell: bash
+        run: |
+          set -euo pipefail
+          key_path="$RUNNER_TEMP/ssh_key.pub"
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > "$key_path"
+          chmod 600 "$key_path"
+          echo "TF_VAR_admin_ssh_public_key_path=$key_path" >> "$GITHUB_ENV"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: infra/terraform
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=$TF_STATE_RG" \
+            -backend-config="storage_account_name=$TF_STATE_STORAGE_ACCOUNT" \
+            -backend-config="container_name=$TF_STATE_CONTAINER" \
+            -backend-config="key=vm.tfstate"
+
+      - name: Terraform Apply
+        working-directory: infra/terraform
+        run: terraform apply -auto-approve

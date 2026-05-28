@@ -27,6 +27,10 @@ build/
 
 *.iml
 
+.terraform/
+*.tfstate
+*.tfstate.*
+
 # Python
 .venv/
 __pycache__/
