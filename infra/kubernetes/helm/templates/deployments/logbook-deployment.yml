@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: logbook
-          image: # TODO
+          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/logbook:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

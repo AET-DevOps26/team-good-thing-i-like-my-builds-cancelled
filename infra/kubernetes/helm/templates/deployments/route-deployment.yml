@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: route
-          image: # TODO
+          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/route:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

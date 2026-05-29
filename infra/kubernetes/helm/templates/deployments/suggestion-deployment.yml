@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: suggestion
-          image: # TODO
+          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/suggestion:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

@@ -1,6 +1,6 @@
 image:
   registry: ghcr.io
-  owner: aet-devops26
+  owner: aet-devops26/team-good-thing-i-like-my-builds-cancelled
   tag: latest
   pullPolicy: Always
 
