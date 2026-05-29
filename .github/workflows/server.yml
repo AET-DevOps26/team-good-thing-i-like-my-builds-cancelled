@@ -61,38 +61,35 @@ jobs:
 
           add_service() {
             local service_name="$1"
-            local service_context="$2"
-            local service_dockerfile="$3"
-            local service_image="$4"
-            matrix=$(jq -c --arg name "$service_name" --arg context "$service_context" --arg dockerfile "$service_dockerfile" --arg image "$service_image" '. + [{"name":$name,"context":$context,"dockerfile":$dockerfile,"image":$image}]' <<< "$matrix")
+            matrix=$(jq -c --arg service "$service_name" '. + [{"service":$service}]' <<< "$matrix")
             has_changes=true
           }
 
           if [ -n "$MANUAL_SERVICES" ]; then
             if [ "$MANUAL_SERVICES" = "all" ]; then
-              add_service "logbook-service" "./apps/server/logbook-service" "./apps/server/logbook-service/Dockerfile" "logbook-service"
-              add_service "route-service" "./apps/server/route-service" "./apps/server/route-service/Dockerfile" "route-service"
+              add_service "logbook-service"
+              add_service "route-service"
             else
               IFS=',' read -ra requested_services <<< "$MANUAL_SERVICES"
               for requested_service in "${requested_services[@]}"; do
                 requested_service="$(echo "$requested_service" | xargs)"
                 case "$requested_service" in
                   logbook_service|logbook-service)
-                    add_service "logbook-service" "./apps/server/logbook-service" "./apps/server/logbook-service/Dockerfile" "logbook-service"
+                    add_service "logbook-service"
                     ;;
                   route_service|route-service)
-                    add_service "route-service" "./apps/server/route-service" "./apps/server/route-service/Dockerfile" "route-service"
+                    add_service "route-service"
                     ;;
                 esac
               done
             fi
           else
             if [ "${{ steps.filter.outputs.logbook_service }}" = "true" ]; then
-              add_service "logbook-service" "./apps/server/logbook-service" "./apps/server/logbook-service/Dockerfile" "logbook-service"
+              add_service "logbook-service"
             fi
 
             if [ "${{ steps.filter.outputs.route_service }}" = "true" ]; then
-              add_service "route-service" "./apps/server/route-service" "./apps/server/route-service/Dockerfile" "route-service"
+              add_service "route-service"
             fi
           fi
 
@@ -103,6 +100,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: changes
     if: needs.changes.outputs.has_changes == 'true'
+    name: Build and push ${{ matrix.service }}
 
     strategy:
       fail-fast: false
@@ -110,6 +108,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Resolve service paths
+        id: service
+        shell: bash
+        run: |
+          case "${{ matrix.service }}" in
+            logbook-service)
+              echo "context=./apps/server/logbook-service" >> "$GITHUB_OUTPUT"
+              echo "dockerfile=./apps/server/logbook-service/Dockerfile" >> "$GITHUB_OUTPUT"
+              echo "image=logbook-service" >> "$GITHUB_OUTPUT"
+              ;;
+            route-service)
+              echo "context=./apps/server/route-service" >> "$GITHUB_OUTPUT"
+              echo "dockerfile=./apps/server/route-service/Dockerfile" >> "$GITHUB_OUTPUT"
+              echo "image=route-service" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -126,7 +141,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.image }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ steps.service.outputs.image }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -135,8 +150,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: ${{ matrix.context }}
-          file: ${{ matrix.dockerfile }}
+          context: ${{ steps.service.outputs.context }}
+          file: ${{ steps.service.outputs.dockerfile }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
