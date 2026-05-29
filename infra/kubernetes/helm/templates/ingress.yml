@@ -36,3 +36,10 @@ spec:
                 name: logbook-service
                 port:
                   number: 80
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: client-service
+                port:
+                  number: 80
