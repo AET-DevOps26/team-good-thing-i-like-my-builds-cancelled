@@ -4,6 +4,15 @@ on:
   push:
     branches:
       - main
+
+    paths:
+      - "infra/terraform/**"
+      - ".github/workflows/terraform-azure-vm.yml"
+
+  pull_request:
+    branches:
+      - main
+
     paths:
       - "infra/terraform/**"
       - ".github/workflows/terraform-azure-vm.yml"
