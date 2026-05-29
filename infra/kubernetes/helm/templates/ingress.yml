@@ -29,10 +29,17 @@ spec:
                 port:
                   number: 80
           - pathType: Prefix
-            path: "/api/v1/examples"
+            path: "/api/v1/examples" # TODO: Change path when implementing logbook service
             backend:
               service:
                 name: logbook-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/pgadmin"
+            backend:
+              service:
+                name: pgadmin-service
                 port:
                   number: 80
           - pathType: Prefix
