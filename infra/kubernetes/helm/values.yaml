@@ -1,0 +1,9 @@
+image:
+  registry: ghcr.io
+  owner: aet-devops26
+  tag: latest
+  pullPolicy: Always
+
+ingress:
+  enabled: true
+  host: cancelled.stud.k8s.aet.cit.tum.de

@@ -3,7 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: logbook
-  namespace: my-namespace
   labels:
     app: logbook
 spec:
@@ -21,7 +20,7 @@ spec:
           image: # TODO
           imagePullPolicy: Always
           ports:
-            - containerPort: # TODO
+            - containerPort: 8080
               name: logbook-api
           resources:
             requests:

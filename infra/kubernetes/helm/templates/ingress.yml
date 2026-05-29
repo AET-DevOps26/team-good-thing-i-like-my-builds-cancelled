@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - cancelled.stud.k8s.aet.cit.tum.de
+        - {{ .Values.ingress.host | quote }}
       secretName: cancelled-tls
   rules:
-    - host: cancelled.stud.k8s.aet.cit.tum.de
+    - host: {{ .Values.ingress.host | quote }}
       http:
         paths:
           - pathType: Prefix
