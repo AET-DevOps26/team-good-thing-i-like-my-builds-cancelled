@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: route
+  namespace: my-namespace
+  labels:
+    app: route
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: route
+  template:
+    metadata:
+      labels:
+        app: route
+    spec:
+      containers:
+        - name: route
+          image: # TODO
+          imagePullPolicy: Always
+          ports:
+            - containerPort: # TODO
+              name: route-api
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"

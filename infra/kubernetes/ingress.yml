@@ -1,0 +1,38 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cancelled-ingress
+  namespace: my-namespace
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging # TODO: Prod when working
+spec:
+  tls:
+    - hosts:
+        - cancelled.stud.k8s.aet.cit.tum.de
+      secretName: cancelled-tls
+  rules:
+    - host: cancelled.stud.k8s.aet.cit.tum.de
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/api/v1/route"
+            backend:
+              service:
+                name: route-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/api/v1/suggestion"
+            backend:
+              service:
+                name: suggestion-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/api/v1/logbook"
+            backend:
+              service:
+                name: logbook-service
+                port:
+                  number: 80

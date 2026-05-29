@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: suggestion
+  namespace: my-namespace
+  labels:
+    app: suggestion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: suggestion
+  template:
+    metadata:
+      labels:
+        app: suggestion
+    spec:
+      containers:
+        - name: suggestion
+          image: # TODO
+          imagePullPolicy: Always
+          ports:
+            - containerPort: # TODO
+              name: suggestion-api
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"

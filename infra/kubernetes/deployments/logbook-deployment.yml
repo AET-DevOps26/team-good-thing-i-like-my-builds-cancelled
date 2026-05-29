@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logbook
+  namespace: my-namespace
+  labels:
+    app: logbook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logbook
+  template:
+    metadata:
+      labels:
+        app: logbook
+    spec:
+      containers:
+        - name: logbook
+          image: # TODO
+          imagePullPolicy: Always
+          ports:
+            - containerPort: # TODO
+              name: logbook-api
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "32Mi"
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
