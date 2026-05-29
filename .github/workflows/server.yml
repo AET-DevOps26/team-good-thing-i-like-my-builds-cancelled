@@ -12,6 +12,16 @@ on:
       - 'apps/server/logbook-service/**'
       - 'apps/server/route-service/**'
   workflow_dispatch:
+    inputs:
+      services:
+        description: 'Comma-separated services to build, or "all"'
+        required: false
+        default: all
+        type: choice
+        options:
+          - all
+          - logbook-service
+          - route-service
 
 permissions:
   contents: read
@@ -43,18 +53,47 @@ jobs:
       - name: Build service matrix
         id: matrix
         shell: bash
+        env:
+          MANUAL_SERVICES: ${{ github.event_name == 'workflow_dispatch' && inputs.services || '' }}
         run: |
           matrix='[]'
           has_changes=false
 
-          if [ "${{ steps.filter.outputs.logbook_service }}" = "true" ]; then
-            matrix=$(jq -c '. + [{"name":"logbook-service","context":"./apps/server/logbook-service","dockerfile":"./apps/server/logbook-service/Dockerfile","image":"logbook-service"}]' <<< "$matrix")
+          add_service() {
+            local service_name="$1"
+            local service_context="$2"
+            local service_dockerfile="$3"
+            local service_image="$4"
+            matrix=$(jq -c --arg name "$service_name" --arg context "$service_context" --arg dockerfile "$service_dockerfile" --arg image "$service_image" '. + [{"name":$name,"context":$context,"dockerfile":$dockerfile,"image":$image}]' <<< "$matrix")
             has_changes=true
-          fi
+          }
 
-          if [ "${{ steps.filter.outputs.route_service }}" = "true" ]; then
-            matrix=$(jq -c '. + [{"name":"route-service","context":"./apps/server/route-service","dockerfile":"./apps/server/route-service/Dockerfile","image":"route-service"}]' <<< "$matrix")
-            has_changes=true
+          if [ -n "$MANUAL_SERVICES" ]; then
+            if [ "$MANUAL_SERVICES" = "all" ]; then
+              add_service "logbook-service" "./apps/server/logbook-service" "./apps/server/logbook-service/Dockerfile" "logbook-service"
+              add_service "route-service" "./apps/server/route-service" "./apps/server/route-service/Dockerfile" "route-service"
+            else
+              IFS=',' read -ra requested_services <<< "$MANUAL_SERVICES"
+              for requested_service in "${requested_services[@]}"; do
+                requested_service="$(echo "$requested_service" | xargs)"
+                case "$requested_service" in
+                  logbook_service|logbook-service)
+                    add_service "logbook-service" "./apps/server/logbook-service" "./apps/server/logbook-service/Dockerfile" "logbook-service"
+                    ;;
+                  route_service|route-service)
+                    add_service "route-service" "./apps/server/route-service" "./apps/server/route-service/Dockerfile" "route-service"
+                    ;;
+                esac
+              done
+            fi
+          else
+            if [ "${{ steps.filter.outputs.logbook_service }}" = "true" ]; then
+              add_service "logbook-service" "./apps/server/logbook-service" "./apps/server/logbook-service/Dockerfile" "logbook-service"
+            fi
+
+            if [ "${{ steps.filter.outputs.route_service }}" = "true" ]; then
+              add_service "route-service" "./apps/server/route-service" "./apps/server/route-service/Dockerfile" "route-service"
+            fi
           fi
 
           echo "matrix={\"include\":$matrix}" >> "$GITHUB_OUTPUT"
