@@ -1,8 +1,12 @@
 image:
   registry: ghcr.io
   owner: aet-devops26/team-good-thing-i-like-my-builds-cancelled
-  tag: latest
-  pullPolicy: Always
+
+images:
+  genai: genai-service:feature-gen-ai-service-dockerfile-and-action
+  route: route-service:feature-microservice-gh-actions
+  logbook: logbook-service:feature-microservice-gh-actions
+  client: client:fix-gh-actions-ghcr-publish-permissions
 
 ingress:
   enabled: true

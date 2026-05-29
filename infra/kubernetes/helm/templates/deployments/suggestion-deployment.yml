@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: suggestion
-          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/suggestion:latest
+          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/{{ .Values.images.genai }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -28,4 +28,4 @@ spec:
               memory: "32Mi"
             limits:
               cpu: "500m"
-              memory: "128Mi"
+              memory: "256Mi"

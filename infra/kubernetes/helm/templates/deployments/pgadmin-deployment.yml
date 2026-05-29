@@ -2,26 +2,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client
+  name: pgadmin
   labels:
-    app: client
+    app: pgadmin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: client
+      app: pgadmin
   template:
     metadata:
       labels:
-        app: client
+        app: pgadmin
     spec:
       containers:
-        - name: client
-          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/{{ .Values.images.client }}
-          imagePullPolicy: Always
+        - name: pgadmin
+          image: dpage/pgadmin4:9.15
           ports:
             - containerPort: 80
-              name: client-api
+              name: pgadmin-api
           resources:
             requests:
               cpu: "50m"
@@ -29,3 +28,10 @@ spec:
             limits:
               cpu: "500m"
               memory: "256Mi"
+          env:
+            - name: TZ
+              value: Europe/Berlin
+            - name: PGADMIN_DEFAULT_EMAIL
+              value: admin@local.dev
+            - name: PGADMIN_DEFAULT_PASSWORD
+              value: admin123

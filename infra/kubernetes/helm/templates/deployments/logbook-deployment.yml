@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: logbook
-          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/logbook:latest
+          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/{{ .Values.images.logbook }}
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -28,4 +28,16 @@ spec:
               memory: "32Mi"
             limits:
               cpu: "500m"
-              memory: "128Mi"
+              memory: "256Mi"
+          env:
+            - name: TZ
+              value: Europe/Berlin
+
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/logbook_service
+
+            - name: SPRING_DATASOURCE_USERNAME
+              value: logbook_user
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: logbook_password
