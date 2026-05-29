@@ -20,7 +20,7 @@ spec:
           image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/{{ .Values.images.genai }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: 9200
               name: suggestion-api
           resources:
             requests:
