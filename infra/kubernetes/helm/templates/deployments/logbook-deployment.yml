@@ -34,10 +34,10 @@ spec:
               value: Europe/Berlin
 
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://postgres:5432/logbook_service
+              value: jdbc:postgresql://postgres-service:5432/logbook_service
 
             - name: SPRING_DATASOURCE_USERNAME
-              value: logbook_user
+              value: {{ .Values.database.user }}
 
             - name: SPRING_DATASOURCE_PASSWORD
-              value: logbook_password
+              value: {{ .Values.database.password }}

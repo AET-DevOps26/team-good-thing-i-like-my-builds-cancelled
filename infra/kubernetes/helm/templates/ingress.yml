@@ -29,7 +29,7 @@ spec:
                 port:
                   number: 80
           - pathType: Prefix
-            path: "/api/v1/logbook"
+            path: "/api/v1/examples"
             backend:
               service:
                 name: logbook-service

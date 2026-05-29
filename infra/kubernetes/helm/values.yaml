@@ -11,3 +11,7 @@ images:
 ingress:
   enabled: true
   host: cancelled.stud.k8s.aet.cit.tum.de
+
+database:
+  user: logbook_user
+  password: logbook_password

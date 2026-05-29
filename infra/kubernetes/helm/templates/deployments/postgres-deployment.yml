@@ -20,7 +20,7 @@ spec:
           image: postgres:16
           ports:
             - containerPort: 5432
-              name: pgadmin-api
+              name: postgres-api
           resources:
             requests:
               cpu: "50m"
@@ -33,7 +33,7 @@ spec:
               value: logbook_service
 
             - name: POSTGRES_USER
-              value: logbook_user
+              value: {{ .Values.database.user }}
 
             - name: POSTGRES_PASSWORD
-              value: logbook_password
+              value: {{ .Values.database.password }}
