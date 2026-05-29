@@ -23,11 +23,11 @@ spec:
               name: postgres-api
           resources:
             requests:
-              cpu: "50m"
-              memory: "32Mi"
+              cpu: "100m"
+              memory: "256Mi"
             limits:
               cpu: "500m"
-              memory: "256Mi"
+              memory: "512Mi"
           env:
             - name: POSTGRES_DB
               value: logbook_service
