@@ -10,6 +10,7 @@ RUN chmod +x gradlew
 COPY src ./src
 RUN ./gradlew --no-daemon clean bootJar
 
+
 FROM eclipse-temurin:21-jre
 
 WORKDIR /app
