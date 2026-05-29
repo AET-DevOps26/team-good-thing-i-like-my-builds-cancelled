@@ -1,4 +1,4 @@
-name: Build GenAI Service
+name: Build GenAI
 
 on:
   push:
