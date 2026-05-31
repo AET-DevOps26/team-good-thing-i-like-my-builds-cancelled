@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: route
+  labels:
+    app: route
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: route
+  template:
+    metadata:
+      labels:
+        app: route
+    spec:
+      containers:
+        - name: route
+          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/{{ .Values.images.route }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: route-api
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
