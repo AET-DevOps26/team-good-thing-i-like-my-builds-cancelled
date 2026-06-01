@@ -48,8 +48,30 @@ jobs:
           # ensure jq is available
           if ! command -v jq >/dev/null; then sudo apt-get update -y && sudo apt-get install -y jq; fi
           printf '%s' "${{ secrets.AZURE_CREDENTIALS }}" | tr -d '\r' > "$RUNNER_TEMP/azure_creds.json"
-          # parse robustly: slurp raw input then fromjson to handle multiline/escaped content
-          jq -R -s -e 'fromjson? | .clientId and .clientSecret and .tenantId and .subscriptionId' "$RUNNER_TEMP/azure_creds.json"
+          secret_file="$RUNNER_TEMP/azure_creds.json"
+          len=$(wc -c < "$secret_file" | tr -d ' ')
+          echo "AZURE_CREDENTIALS length: $len"
+          first_byte=$(head -c1 "$secret_file" | od -An -t u1 | tr -d ' ')
+          echo "First byte (decimal): ${first_byte}"
+          if head -c1 "$secret_file" | grep -q '"'; then echo "Secret appears to start with a double quote (possibly double-encoded)."; fi
+          if head -c1 "$secret_file" | grep -q '{'; then echo "Secret appears to start with '{' (object)."; fi
+          brace_count=$(grep -o '{' "$secret_file" | wc -l || true)
+          echo "Count of '{' characters: ${brace_count}"
+
+          # Try parsing as double-encoded JSON (string containing JSON)
+          if jq -R -s 'fromjson' "$secret_file" >/dev/null 2>&1; then
+            echo "Parsed using fromjson (double-encoded JSON). Validating keys..."
+            jq -R -s 'fromjson | .clientId and .clientSecret and .tenantId and .subscriptionId' "$secret_file" || { echo "Parsed JSON is missing required keys"; exit 1; }
+          else
+            # Try parsing as raw JSON
+            if jq -e '.clientId and .clientSecret and .tenantId and .subscriptionId' "$secret_file" >/dev/null 2>&1; then
+              echo "Parsed as raw JSON and required keys exist."
+            else
+              echo "Failed to parse AZURE_CREDENTIALS as JSON. Ensure the repository secret contains the raw JSON object (use: jq -c '.' creds.json)." >&2
+              echo "Diagnostics: length=${len}, first_byte=${first_byte}, brace_count=${brace_count}" >&2
+              exit 1
+            fi
+          fi
 
       - name: Azure Login
         uses: azure/login@v2
