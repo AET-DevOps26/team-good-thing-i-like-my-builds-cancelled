@@ -47,7 +47,7 @@ jobs:
           set -euo pipefail
           # ensure jq is available
           if ! command -v jq >/dev/null; then sudo apt-get update -y && sudo apt-get install -y jq; fi
-          echo "${{ secrets.AZURE_CREDENTIALS }}" > "$RUNNER_TEMP/azure_creds.json"
+          printf '%s' "${{ secrets.AZURE_CREDENTIALS }}" | tr -d '\r' > "$RUNNER_TEMP/azure_creds.json"
           jq -e '.clientId and .clientSecret and .tenantId and .subscriptionId' "$RUNNER_TEMP/azure_creds.json"
 
       - name: Azure Login
