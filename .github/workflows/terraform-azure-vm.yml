@@ -4,8 +4,13 @@ name: Run Azure Login without subscription
 
 jobs:
 
+  permissions:
+    id-token: write
+    contents: read
+
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
 
       - name: Azure Login
