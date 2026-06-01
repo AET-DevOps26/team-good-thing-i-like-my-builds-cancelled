@@ -1,138 +1,31 @@
-name: Terraform Azure VM
+on: [push]
 
-on:
-  push:
-    branches:
-      - main
-
-    paths:
-      - "infra/terraform/**"
-      - ".github/workflows/terraform-azure-vm.yml"
-
-  pull_request:
-    branches:
-      - main
-
-    paths:
-      - "infra/terraform/**"
-      - ".github/workflows/terraform-azure-vm.yml"
+name: Run Azure Login without subscription
 
 jobs:
-  deploy-vm:
+
+  build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      TF_IN_AUTOMATION: "true"
-      TF_INPUT: "false"
-
-      TF_STATE_RG: ${{ vars.TF_STATE_RG || 'GTILMBC' }}
-      TF_STATE_LOCATION: ${{ vars.TF_STATE_LOCATION || 'swedencentral' }}
-      TF_STATE_STORAGE_ACCOUNT: ${{ vars.TF_STATE_STORAGE_ACCOUNT || 'traveljournalterraform' }}
-      TF_STATE_CONTAINER: ${{ vars.TF_STATE_CONTAINER || 'travel-journal' }}
-
-      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      TF_VAR_ssh_allowed_cidrs: ${{ vars.TF_SSH_ALLOWED_CIDRS || '["51.12.216.63/32"]' }}
-      TF_VAR_web_allowed_cidrs: ${{ vars.TF_WEB_ALLOWED_CIDRS || '["0.0.0.0/0"]' }}
-
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
     steps:
-      - uses: actions/checkout@v4
-
-#      - name: Validate AZURE_CREDENTIALS
-#        shell: bash
-#        run: |
-#          set -euo pipefail
-#          # ensure jq is available
-#          if ! command -v jq >/dev/null; then sudo apt-get update -y && sudo apt-get install -y jq; fi
-#          printf '%s' "${{ secrets.AZURE_CREDENTIALS }}" | tr -d '\r' > "$RUNNER_TEMP/azure_creds.json"
-#          secret_file="$RUNNER_TEMP/azure_creds.json"
-#          len=$(wc -c < "$secret_file" | tr -d ' ')
-#          echo "AZURE_CREDENTIALS length: $len"
-#          first_byte=$(head -c1 "$secret_file" | od -An -t u1 | tr -d ' ')
-#          echo "First byte (decimal): ${first_byte}"
-#          if head -c1 "$secret_file" | grep -q '"'; then echo "Secret appears to start with a double quote (possibly double-encoded)."; fi
-#          if head -c1 "$secret_file" | grep -q '{'; then echo "Secret appears to start with '{' (object)."; fi
-#          brace_count=$(grep -o '{' "$secret_file" | wc -l || true)
-#          echo "Count of '{' characters: ${brace_count}"
-#
-#          # Try parsing as double-encoded JSON (string containing JSON)
-#          if jq -R -s 'fromjson' "$secret_file" >/dev/null 2>&1; then
-#            echo "Parsed using fromjson (double-encoded JSON). Validating keys..."
-#            jq -R -s 'fromjson | .clientId and .clientSecret and .tenantId and .subscriptionId' "$secret_file" || { echo "Parsed JSON is missing required keys"; exit 1; }
-#          else
-#            # Try parsing as raw JSON
-#            if jq -e '.clientId and .clientSecret and .tenantId and .subscriptionId' "$secret_file" >/dev/null 2>&1; then
-#              echo "Parsed as raw JSON and required keys exist."
-#            else
-#              echo "Failed to parse AZURE_CREDENTIALS as JSON. Ensure the repository secret contains the raw JSON object (use: jq -c '.' creds.json)." >&2
-#              echo "Diagnostics: length=${len}, first_byte=${first_byte}, brace_count=${brace_count}" >&2
-#              exit 1
-#            fi
-#          fi
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
-#          creds: ${{ secrets.AZURE_CREDENTIALS }}
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           allow-no-subscriptions: true
-
-      - name: Ensure Terraform state storage
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          az group create --name "$TF_STATE_RG" --location "$TF_STATE_LOCATION" --output none
-
-          if ! az storage account show --name "$TF_STATE_STORAGE_ACCOUNT" --resource-group "$TF_STATE_RG" --output none 2>/dev/null; then
-            az storage account create \
-              --name "$TF_STATE_STORAGE_ACCOUNT" \
-              --resource-group "$TF_STATE_RG" \
-              --location "$TF_STATE_LOCATION" \
-              --sku Standard_LRS \
-              --kind StorageV2 \
-              --allow-blob-public-access false \
-              --output none
-          fi
-
-          account_key=$(az storage account keys list \
-            --account-name "$TF_STATE_STORAGE_ACCOUNT" \
-            --resource-group "$TF_STATE_RG" \
-            --query '[0].value' \
-            --output tsv)
-          echo "ARM_ACCESS_KEY=$account_key" >> "$GITHUB_ENV"
-
-          az storage container create \
-            --name "$TF_STATE_CONTAINER" \
-            --account-name "$TF_STATE_STORAGE_ACCOUNT" \
-            --account-key "$account_key" \
-            --output none
-
-      - name: Write SSH public key
-        shell: bash
-        run: |
-          set -euo pipefail
-          key_path="$RUNNER_TEMP/ssh_key.pub"
-          echo "${{ secrets.SSH_PUBLIC_KEY }}" > "$key_path"
-          chmod 600 "$key_path"
-          echo "TF_VAR_admin_ssh_public_key_path=$key_path" >> "$GITHUB_ENV"
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Terraform Init
-        working-directory: infra/terraform
-        run: |
-          terraform init \
-            -backend-config="resource_group_name=$TF_STATE_RG" \
-            -backend-config="storage_account_name=$TF_STATE_STORAGE_ACCOUNT" \
-            -backend-config="container_name=$TF_STATE_CONTAINER" \
-            -backend-config="key=vm.tfstate"
-
-      - name: Terraform Apply
-        working-directory: infra/terraform
-        run: terraform apply -auto-approve
+          enable-AzPSSession: true
+#
+#      - name: Azure CLI script
+#        uses: azure/cli@v2
+#        with:
+#          azcliversion: latest
+#          inlineScript: |
+#            az account show
+#
+#      - name: Run Azure PowerShell
+#        uses: azure/powershell@v3
+#        with:
+#          azPSVersion: "latest"
+#          inlineScript: |
+#            Get-AzContext
