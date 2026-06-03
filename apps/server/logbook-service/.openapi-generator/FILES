@@ -1,0 +1,4 @@
+src/main/java/dev/gtilmbc/logbookservice/generated/api/ApiUtil.java
+src/main/java/dev/gtilmbc/logbookservice/generated/api/LogbookApi.java
+src/main/java/dev/gtilmbc/logbookservice/generated/api/RouteApi.java
+src/main/java/dev/gtilmbc/logbookservice/generated/model/Station.java
