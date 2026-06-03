@@ -19,7 +19,7 @@ import jakarta.annotation.Generated;
  * Station
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-04T01:38:51.947438+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-04T01:53:02.346861+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 public class Station {
 
   private @Nullable String id;
