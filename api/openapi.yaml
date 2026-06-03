@@ -3,7 +3,7 @@ info:
   title: Cancelled API
   version: 1.0.0
 servers:
-- {url: 'https://bla.invalid/api', description: Generated server url}
+- {url: 'https://cancelled.stud.k8s.aet.cit.tum.de/api', description: Server url}
 paths:
   /v1/route/stations:
     get:
