@@ -85,6 +85,9 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     needs: test
     if: github.event_name != 'pull_request'
     steps:

@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+  labels:
+    app: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      containers:
+        - name: pgadmin
+          image: dpage/pgadmin4:9.15
+          ports:
+            - containerPort: 80
+              name: pgadmin-api
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          env:
+            - name: TZ
+              value: Europe/Berlin
+            - name: PGADMIN_DEFAULT_EMAIL
+              value: admin@local.dev
+            - name: PGADMIN_DEFAULT_PASSWORD
+              value: admin123

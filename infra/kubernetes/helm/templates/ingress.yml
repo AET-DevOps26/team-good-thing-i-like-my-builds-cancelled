@@ -1,0 +1,51 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cancelled-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging # TODO: Prod when working
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host | quote }}
+      secretName: cancelled-tls
+  rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/api/v1/route"
+            backend:
+              service:
+                name: route-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/api/v1/suggestion"
+            backend:
+              service:
+                name: suggestion-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/api/v1/examples" # TODO: Change path when implementing logbook service
+            backend:
+              service:
+                name: logbook-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/pgadmin"
+            backend:
+              service:
+                name: pgadmin-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: client-service
+                port:
+                  number: 80
