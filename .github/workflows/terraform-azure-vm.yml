@@ -1,5 +1,9 @@
 name: Run Azure Login with OIDC
-on: push
+on:
+  pull_request:
+  push:
+    branches:
+      main
 
 permissions:
   id-token: write
@@ -16,7 +20,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Azure CLI script
-        uses: azure/cli@v2
+        uses: azure/cli@v3
         with:
           azcliversion: latest
           inlineScript: |
