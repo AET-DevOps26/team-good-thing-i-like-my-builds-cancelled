@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logbook
+  labels:
+    app: logbook
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logbook
+  template:
+    metadata:
+      labels:
+        app: logbook
+    spec:
+      containers:
+        - name: logbook
+          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/{{ .Values.images.logbook }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: logbook-api
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          env:
+            - name: TZ
+              value: Europe/Berlin
+
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres-service:5432/logbook_service
+
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.database.user }}
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.database.password }}

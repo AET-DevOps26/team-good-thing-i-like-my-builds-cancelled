@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: suggestion
+  labels:
+    app: suggestion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: suggestion
+  template:
+    metadata:
+      labels:
+        app: suggestion
+    spec:
+      containers:
+        - name: suggestion
+          image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/{{ .Values.images.genai }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9200
+              name: suggestion-api
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
