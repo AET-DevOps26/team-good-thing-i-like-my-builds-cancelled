@@ -4,17 +4,17 @@ variable "subscription_id" {
   default     = null
 }
 
-variable "prefix" {
-  type        = string
-  description = "Prefix used for all resource names."
-  default     = "tgtilmbc"
-}
+# variable "prefix" {
+#   type        = string
+#   description = "Prefix used for all resource names."
+#   default     = "tgtilmbc"
+# }
 
-variable "location" {
-  type        = string
-  description = "Azure region."
-  default     = "swedencentral"
-}
+# variable "location" {
+#   type        = string
+#   description = "Azure region."
+#   default     = "swedencentral"
+# }
 
 variable "resource_group_name" {
   type        = string
@@ -22,11 +22,11 @@ variable "resource_group_name" {
   default     = null
 }
 
-variable "admin_username" {
-  type        = string
-  description = "Admin username for the VM."
-  default     = "azureuser"
-}
+# variable "admin_username" {
+#   type        = string
+#   description = "Admin username for the VM."
+#   default     = "azureuser"
+# }
 
 variable "admin_ssh_public_key_path" {
   type        = string
