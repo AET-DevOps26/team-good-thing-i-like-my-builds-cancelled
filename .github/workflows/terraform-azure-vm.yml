@@ -1,27 +1,60 @@
-name: Run Azure Login with OIDC
+name: Terraform Azure VM
+
 on:
   pull_request:
   push:
     branches:
-      main
+      - main
 
 permissions:
   id-token: write
   contents: read
+
 jobs:
-  build-and-deploy:
+  terraform:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Azure login
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: '1.5.7'
+
+      - name: Azure Login (OIDC)
         uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Azure CLI script
-        uses: azure/cli@v3
+      - name: Terraform Init
+        working-directory: infra/terraform
+        run: terraform init -input=false
+
+      - name: Terraform Format
+        working-directory: infra/terraform
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        working-directory: infra/terraform
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: infra/terraform
+        run: terraform plan -out=tfplan -input=false
+
+      - name: Upload plan artifact (for PRs)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v7
         with:
-          azcliversion: latest
-          inlineScript: |
-            az account show
+          name: tfplan
+          path: infra/terraform/tfplan
+
+      - name: Terraform Apply (only on main)
+        if: github.ref == 'refs/heads/main'
+        working-directory: infra/terraform
+        run: terraform apply -input=false -auto-approve tfplan
