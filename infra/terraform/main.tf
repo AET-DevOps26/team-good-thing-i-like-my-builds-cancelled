@@ -1,8 +1,4 @@
 provider "azurerm" { features = {} }
-variable "location" { default = "swedencentral" }
-variable "prefix" { default = "GTILMBC" }
-variable "admin_username" { default = "azureuser" }
-variable "ssh_public_key_path" { default = "/absolute/path/to/id_rsa.pub" }
 
 locals {
   rg     = "${var.prefix}-rg"
@@ -64,7 +60,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   disable_password_authentication = true
   admin_ssh_key {
     username   = var.admin_username
-    public_key = file(var.ssh_public_key_path)
+    public_key = file(var.admin_ssh_public_key_path)
   }
   os_disk {
     caching              = "ReadWrite"

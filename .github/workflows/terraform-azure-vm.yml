@@ -30,6 +30,20 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Generate ephemeral SSH key
+        run: |
+          set -e
+          mkdir -p /tmp/ci_ssh
+          ssh-keygen -t ed25519 -f /tmp/ci_ssh/id_ed25519 -N "" -C "ci-${{ github.run_id }}"
+          chmod 600 /tmp/ci_ssh/id_ed25519
+          echo "TF_VAR_admin_ssh_public_key_path=/tmp/ci_ssh/id_ed25519.pub" >> $GITHUB_ENV
+          echo "SSH_PRIVATE_KEY_PATH=/tmp/ci_ssh/id_ed25519" >> $GITHUB_ENV
+
+      - name: Add private key to ssh-agent
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add /tmp/ci_ssh/id_ed25519 || true
+
       - name: Terraform Init
         working-directory: infra/terraform
         run: terraform init -input=false
@@ -55,6 +69,6 @@ jobs:
           path: infra/terraform/tfplan
 
       - name: Terraform Apply (only on main)
-        if: github.ref == 'refs/heads/main'
+#        if: github.ref == 'refs/heads/main'
         working-directory: infra/terraform
         run: terraform apply -input=false -auto-approve tfplan
