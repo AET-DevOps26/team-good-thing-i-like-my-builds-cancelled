@@ -14,6 +14,14 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
+    env:
+      TF_IN_AUTOMATION: true
+      TF_INPUT: false
+      TF_BACKEND_STORAGE_ACCOUNT: ${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}
+      TF_BACKEND_CONTAINER: ${{ secrets.TF_BACKEND_CONTAINER }}
+      TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
+      TF_BACKEND_ACCESS_KEY: ${{ secrets.TF_BACKEND_ACCESS_KEY }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -46,7 +54,12 @@ jobs:
 
       - name: Terraform Init
         working-directory: infra/terraform
-        run: terraform init -input=false
+        run: |
+          terraform init -input=false \
+            -backend-config="storage_account_name=${TF_BACKEND_STORAGE_ACCOUNT}" \
+            -backend-config="container_name=${TF_BACKEND_CONTAINER}" \
+            -backend-config="key=${TF_BACKEND_KEY}" \
+            -backend-config="access_key=${TF_BACKEND_ACCESS_KEY}"
 
       - name: Terraform Format
         working-directory: infra/terraform
