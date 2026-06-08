@@ -42,15 +42,15 @@ jobs:
         run: |
           set -e
           mkdir -p /tmp/ci_ssh
-          ssh-keygen -t ed25519 -f /tmp/ci_ssh/id_ed25519 -N "" -C "ci-${{ github.run_id }}"
-          chmod 600 /tmp/ci_ssh/id_ed25519
-          echo "TF_VAR_admin_ssh_public_key_path=/tmp/ci_ssh/id_ed25519.pub" >> $GITHUB_ENV
-          echo "SSH_PRIVATE_KEY_PATH=/tmp/ci_ssh/id_ed25519" >> $GITHUB_ENV
+          ssh-keygen -t rsa -b 4096 -f /tmp/ci_ssh/id_rsa -N "" -C "ci-${{ github.run_id }}"
+          chmod 600 /tmp/ci_ssh/id_rsa
+          echo "TF_VAR_admin_ssh_public_key_path=/tmp/ci_ssh/id_rsa.pub" >> $GITHUB_ENV
+          echo "SSH_PRIVATE_KEY_PATH=/tmp/ci_ssh/id_rsa" >> $GITHUB_ENV
 
       - name: Add private key to ssh-agent
         run: |
           eval "$(ssh-agent -s)"
-          ssh-add /tmp/ci_ssh/id_ed25519 || true
+          ssh-add /tmp/ci_ssh/id_rsa || true
 
       - name: Terraform Init
         working-directory: infra/terraform
