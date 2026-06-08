@@ -19,7 +19,7 @@ variable "location" {
 variable "resource_group_name" {
   type        = string
   description = "Resource group name. Leave null to derive from prefix."
-  default     = null
+  default     = "GTILMBC"
 }
 
 variable "admin_username" {

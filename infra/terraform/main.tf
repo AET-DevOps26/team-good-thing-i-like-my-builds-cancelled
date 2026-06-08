@@ -1,5 +1,3 @@
-provider "azurerm" { features = {} }
-
 locals {
   rg     = "${var.prefix}-rg"
   vnet   = "${var.prefix}-vnet"
