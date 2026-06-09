@@ -52,6 +52,8 @@ paths:
 components:
   schemas:
     Station:
+      tags:
+        - route
       type: object
       properties:
         id: {type: string}

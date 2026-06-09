@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-09T23:19:27.546410+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-09T23:28:33.671978+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 @Validated
 @Tag(name = "route", description = "the route API")
 public interface RouteApi {

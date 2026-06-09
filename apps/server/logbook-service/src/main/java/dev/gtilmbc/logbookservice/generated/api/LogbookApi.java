@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-09T23:19:28.623118+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-09T23:28:34.740344+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 @Validated
 @Tag(name = "logbook", description = "the logbook API")
 public interface LogbookApi {
