@@ -1,0 +1,61 @@
+openapi: 3.1.0
+info:
+  title: Cancelled API
+  version: 1.0.0
+servers:
+- {url: 'https://cancelled.stud.k8s.aet.cit.tum.de/api', description: Server url}
+paths:
+  /v1/route/stations:
+    get:
+      tags:
+        - route
+      operationId: getStations
+      parameters:
+      - name: q
+        in: query
+        required: true
+        schema: {type: string}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/Station'}
+# TODO: Finish Route API
+
+  /v1/logbook/entries:
+    get:
+      tags: [logbook]
+      operationId: getLogbookEntries
+      responses:
+        '200':
+          description: OK
+          # Add model here
+    # post:
+      # tags: [logbook]
+      # operationId: addLogbookEntry
+      # requestBody:
+        # content:
+          # application/json:
+            # Add model
+        # required: true
+      # responses:
+        # '201':
+          # description: Created
+          # Add model
+# TODO: Finish Logbook API
+
+# TODO: Add genai API
+
+components:
+  schemas:
+    Station:
+      tags:
+        - route
+      type: object
+      properties:
+        id: {type: string}
+        title: {type: string}
+        # Additional metdata later if needed
