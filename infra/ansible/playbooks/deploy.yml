@@ -1,0 +1,36 @@
+---
+- name: Minimal deploy - pull images and restart containers
+  hosts: all
+  become: true
+  vars:
+    app_dir: "{{ lookup('env','APP_DIR') | default('/opt/gtilmbc', true) }}"
+    ghcr_registry: "{{ lookup('env','GHCR_REGISTRY') | default('ghcr.io', true) }}"
+    ghcr_username: "{{ lookup('env','GHCR_USERNAME') | default('', true) }}"
+    ghcr_token: "{{ lookup('env','GHCR_TOKEN') | default('', true) }}"
+  tasks:
+    - name: Ensure application directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: '0755'
+      tags: [deploy]
+
+    - name: Login to GHCR (if credentials present)
+      block:
+        - name: Login to GHCR
+          ansible.builtin.command: "docker login {{ ghcr_registry }} -u {{ ghcr_username }} -p {{ ghcr_token }}"
+          no_log: true
+      when: ghcr_username | length > 0 and ghcr_token | length > 0
+      tags: [deploy]
+
+    - name: Pull images
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml pull"
+      args:
+        chdir: "{{ app_dir }}"
+      tags: [deploy]
+
+    - name: Start services
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d"
+      args:
+        chdir: "{{ app_dir }}"
+      tags: [deploy]
