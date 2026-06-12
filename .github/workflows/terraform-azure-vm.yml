@@ -1,10 +1,7 @@
 name: Terraform Azure VM
 
 on:
-  pull_request:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -80,6 +77,14 @@ jobs:
         with:
           name: tfplan
           path: infra/terraform/tfplan
+
+#      - name: Terraform Destroy and Replan (only on main)
+#        if: github.ref == 'refs/heads/main'
+#        working-directory: infra/terraform
+#        run: |
+#          set -e
+#          terraform destroy -auto-approve -input=false || true
+#          terraform plan -out=tfplan -input=false
 
       - name: Terraform Apply (only on main)
 #        if: github.ref == 'refs/heads/main'

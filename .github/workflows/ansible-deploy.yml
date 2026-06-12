@@ -38,10 +38,10 @@ jobs:
       PGADMIN_PASSWORD: ${{ secrets.PGADMIN_PASSWORD }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Azure Login
-        uses: azure/login@v2
+        uses: azure/login@v3
         with:
           creds: >
             {"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}"}
@@ -78,7 +78,7 @@ jobs:
             --output none
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
 
       - name: Terraform Init
         working-directory: infra/terraform
@@ -104,7 +104,7 @@ jobs:
           key_path="$RUNNER_TEMP/ssh_key"
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$key_path"
           chmod 600 "$key_path"
-          ansible-playbook infra/ansible/playbooks/site.yml \
+          ansible-playbook infra/ansible/playbooks/deploy.yml \
             -i "${PUBLIC_IP}," \
             -u "$VM_ADMIN_USER" \
             --private-key "$key_path"
