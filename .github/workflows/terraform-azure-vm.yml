@@ -3,6 +3,9 @@ name: Terraform Azure VM
 on:
   workflow_dispatch:
   pull_request:
+    paths:
+      - 'infra/terraform/**'
+      - '.github/workflows/terraform-azure-vm.yml'
 
 permissions:
   id-token: write
@@ -35,15 +38,6 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-#      - name: Generate ephemeral SSH key
-#        run: |
-#          set -e
-#          mkdir -p /tmp/ci_ssh
-#          ssh-keygen -t rsa -b 4096 -f /tmp/ci_ssh/id_rsa -N "" -C "ci-${{ github.run_id }}"
-#          chmod 600 /tmp/ci_ssh/id_rsa
-#          echo "TF_VAR_admin_ssh_public_key_path=/tmp/ci_ssh/id_rsa.pub" >> $GITHUB_ENV
-#          echo "SSH_PRIVATE_KEY_PATH=/tmp/ci_ssh/id_rsa" >> $GITHUB_ENV
 
       - name: Setup SSH key from secret
         run: |
@@ -87,15 +81,7 @@ jobs:
           name: tfplan
           path: infra/terraform/tfplan
 
-#      - name: Terraform Destroy and Replan (only on main)
-#        if: github.ref == 'refs/heads/main'
-#        working-directory: infra/terraform
-#        run: |
-#          set -e
-#          terraform destroy -auto-approve -input=false || true
-#          terraform plan -out=tfplan -input=false
-
       - name: Terraform Apply (only on main)
-#        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         working-directory: infra/terraform
         run: terraform apply -input=false -auto-approve tfplan
