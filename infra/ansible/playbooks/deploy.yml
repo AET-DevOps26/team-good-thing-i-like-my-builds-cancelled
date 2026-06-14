@@ -7,9 +7,9 @@
     compose_project_name: "{{ lookup('env', 'COMPOSE_PROJECT_NAME') | default('gtilmbc', true) }}"
     timezone: "{{ lookup('env', 'TIMEZONE') | default('Europe/Berlin', true) }}"
 
-    client_image: "{{ lookup('env', 'CLIENT_IMAGE') | default('ghcr.io/ORG/REPO/client:latest', true) }}"
-    logbook_image: "{{ lookup('env', 'LOGBOOK_IMAGE') | default('ghcr.io/ORG/REPO/logbook-service:latest', true) }}"
-    route_image: "{{ lookup('env', 'ROUTE_IMAGE') | default('ghcr.io/ORG/REPO/route-service:latest', true) }}"
+    client_image: "{{ lookup('env', 'CLIENT_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/client:latest', true) }}"
+    logbook_image: "{{ lookup('env', 'LOGBOOK_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/logbook-service:latest', true) }}"
+    route_image: "{{ lookup('env', 'ROUTE_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/route-service:latest', true) }}"
     db_image: "{{ lookup('env', 'DB_IMAGE') | default('postgres:14.23', true) }}"
     pgadmin_image: "{{ lookup('env', 'PGADMIN_IMAGE') | default('dpage/pgadmin4:9.15', true) }}"
 
@@ -23,7 +23,7 @@
     postgres_user: "{{ lookup('env', 'POSTGRES_USER') | default('logbook_user', true) }}"
     postgres_password: "{{ lookup('env', 'POSTGRES_PASSWORD') | default('logbook_password', true) }}"
     pgadmin_email: "{{ lookup('env', 'PGADMIN_EMAIL') | default('admin@local.dev', true) }}"
-    pgadmin_password: "{{ lookup('env', 'PGADMIN_PASSWORD') | default('CHANGE_ME', true) }}"
+    pgadmin_password: "{{ lookup('env', 'PGADMIN_PASSWORD') | default('pgadmin_password', true) }}"
 
     ghcr_registry: "{{ lookup('env', 'GHCR_REGISTRY') | default('ghcr.io', true) }}"
     ghcr_username: "{{ lookup('env', 'GHCR_USERNAME') | default('', true) }}"
