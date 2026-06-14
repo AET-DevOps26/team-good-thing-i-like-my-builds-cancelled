@@ -87,13 +87,13 @@ jobs:
           name: tfplan
           path: infra/terraform/tfplan
 
-#      - name: Terraform Destroy and Replan (only on main)
+      - name: Terraform Destroy and Replan #(only on main)
 #        if: github.ref == 'refs/heads/main'
-#        working-directory: infra/terraform
-#        run: |
-#          set -e
-#          terraform destroy -auto-approve -input=false || true
-#          terraform plan -out=tfplan -input=false
+        working-directory: infra/terraform
+        run: |
+          set -e
+          terraform destroy -auto-approve -input=false || true
+          terraform plan -out=tfplan -input=false
 
       - name: Terraform Apply (only on main)
 #        if: github.ref == 'refs/heads/main'
