@@ -44,6 +44,7 @@ jobs:
 #          chmod 600 /tmp/ci_ssh/id_rsa
 #          echo "TF_VAR_admin_ssh_public_key_path=/tmp/ci_ssh/id_rsa.pub" >> $GITHUB_ENV
 #          echo "SSH_PRIVATE_KEY_PATH=/tmp/ci_ssh/id_rsa" >> $GITHUB_ENV
+
       - name: Setup SSH key from secret
         run: |
           mkdir -p /tmp/ci_ssh

@@ -94,5 +94,44 @@ resource "azurerm_linux_virtual_machine" "vm" {
     sku       = "22_04-lts"
     version   = "latest"
   }
+  user_data = base64encode(<<-EOF
+              #!/bin/bash
+              set -euo pipefail
+              
+              # Update package lists
+              apt-get update
+              
+              # Install Docker dependencies
+              apt-get install -y \
+                ca-certificates \
+                curl \
+                gnupg \
+                lsb-release
+              
+              # Add Docker GPG key
+              curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+              
+              # Add Docker repository
+              echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+              
+              # Update package lists again
+              apt-get update
+              
+              # Install Docker and Docker Compose
+              apt-get install -y \
+                docker-ce \
+                docker-ce-cli \
+                containerd.io \
+                docker-compose-plugin
+              
+              # Start Docker
+              systemctl start docker
+              systemctl enable docker
+              
+              # Add admin user to docker group (so no sudo needed)
+              usermod -aG docker ${var.admin_username}
+              EOF
+  )
   tags = local.tags
 }
+
