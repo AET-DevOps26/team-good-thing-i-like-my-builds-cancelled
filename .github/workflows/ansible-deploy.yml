@@ -10,6 +10,7 @@ on:
 permissions:
   id-token: write
   contents: read
+  packages: read
 
 
 jobs:
@@ -28,12 +29,12 @@ jobs:
       VM_ADMIN_USER: ${{ vars.VM_ADMIN_USER || 'azureuser' }}
 
       GHCR_REGISTRY: ${{ vars.GHCR_REGISTRY || 'ghcr.io' }}
-      GHCR_USERNAME: ${{ secrets.GHCR_USERNAME }}
-      GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
+      GHCR_USERNAME: ${{ github.actor }}
+      GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      CLIENT_IMAGE: ${{ vars.CLIENT_IMAGE || 'ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/client:latest' }}
-      LOGBOOK_IMAGE: ${{ vars.LOGBOOK_IMAGE || 'ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/logbook-service:latest' }}
-      ROUTE_IMAGE: ${{ vars.ROUTE_IMAGE || 'ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/route-service:latest' }}
+      CLIENT_IMAGE: ${{ vars.CLIENT_IMAGE || 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/client:latest' }}
+      LOGBOOK_IMAGE: ${{ vars.LOGBOOK_IMAGE || 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/logbook-service:latest' }}
+      ROUTE_IMAGE: ${{ vars.ROUTE_IMAGE || 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/route-service:latest' }}
       DB_IMAGE: ${{ vars.DB_IMAGE || 'postgres:14.23' }}
       PGADMIN_IMAGE: ${{ vars.PGADMIN_IMAGE || 'dpage/pgadmin4:9.15' }}
 
