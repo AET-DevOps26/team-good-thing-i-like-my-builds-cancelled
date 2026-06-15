@@ -10,7 +10,7 @@
 
 
 export interface Station { 
-    id?: string;
-    title?: string;
+    id: string;
+    name?: string;
 }
 
