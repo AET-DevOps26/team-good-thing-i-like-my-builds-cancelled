@@ -1,0 +1,83 @@
+name: Ansible Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TF_IN_AUTOMATION: "true"
+      TF_INPUT: "false"
+      ANSIBLE_HOST_KEY_CHECKING: "false"
+
+      TF_BACKEND_STORAGE_ACCOUNT: ${{ secrets.TF_BACKEND_STORAGE_ACCOUNT }}
+      TF_BACKEND_CONTAINER: ${{ secrets.TF_BACKEND_CONTAINER }}
+      TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
+      TF_BACKEND_ACCESS_KEY: ${{ secrets.TF_BACKEND_ACCESS_KEY }}
+
+      VM_ADMIN_USER: ${{ vars.VM_ADMIN_USER || 'azureuser' }}
+
+      GHCR_REGISTRY: ${{ vars.GHCR_REGISTRY || 'ghcr.io' }}
+      GHCR_USERNAME: ${{ github.actor }}
+      GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      CLIENT_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/client:fix-gh-actions-ghcr-publish-permissions' }}
+      LOGBOOK_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/logbook-service:feature-microservice-gh-actions' }}
+      ROUTE_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/route-service:feature-microservice-gh-actions' }}
+      GENAI_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/genai-service:feature-gen-ai-service-dockerfile-and-action' }}
+      DB_IMAGE: ${{ 'postgres:14.23' }}
+      PGADMIN_IMAGE: ${{ 'dpage/pgadmin4:9.15' }}
+
+      POSTGRES_DB: ${{ vars.POSTGRES_DB || 'logbook_service' }}
+      POSTGRES_USER: ${{ vars.POSTGRES_USER || 'logbook_user' }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      PGADMIN_EMAIL: ${{ vars.PGADMIN_EMAIL || 'admin@local.dev' }}
+      PGADMIN_PASSWORD: ${{ secrets.PGADMIN_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+
+      - name: Terraform Init
+        working-directory: infra/terraform
+        run: |
+          terraform init \
+            -backend-config="storage_account_name=$TF_BACKEND_STORAGE_ACCOUNT" \
+            -backend-config="container_name=$TF_BACKEND_CONTAINER" \
+            -backend-config="key=$TF_BACKEND_KEY" \
+            -backend-config="access_key=$TF_BACKEND_ACCESS_KEY"
+          terraform output
+          terraform state list
+          terraform state show azurerm_public_ip.pip
+
+      - name: Read VM public IP
+        working-directory: infra/terraform
+        run: |
+          echo "PUBLIC_IP=$(terraform output -raw public_ip_address)" >> "$GITHUB_ENV"
+
+      - name: Install Ansible
+        run: python -m pip install --upgrade pip ansible
+
+      - name: Run Ansible Playbook
+        shell: bash
+        run: |
+          set -euo pipefail
+          key_path="$RUNNER_TEMP/ssh_key"
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$key_path"
+          chmod 600 "$key_path"
+          ansible-playbook infra/ansible/playbooks/deploy.yml \
+            -i "${PUBLIC_IP}," \
+            -u "$VM_ADMIN_USER" \
+            --private-key "$key_path"

@@ -1,0 +1,64 @@
+---
+- name: Minimal deploy - pull images and restart containers
+  hosts: all
+  become: true
+  vars:
+    app_dir: "{{ lookup('env', 'APP_DIR') | default('/opt/gtilmbc', true) }}"
+    compose_project_name: "{{ lookup('env', 'COMPOSE_PROJECT_NAME') | default('gtilmbc', true) }}"
+    timezone: "{{ lookup('env', 'TIMEZONE') | default('Europe/Berlin', true) }}"
+
+    client_image: "{{ lookup('env', 'CLIENT_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/client:latest', true) }}"
+    logbook_image: "{{ lookup('env', 'LOGBOOK_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/logbook-service:latest', true) }}"
+    route_image: "{{ lookup('env', 'ROUTE_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/route-service:latest', true) }}"
+    db_image: "{{ lookup('env', 'DB_IMAGE') | default('postgres:14.23', true) }}"
+    pgadmin_image: "{{ lookup('env', 'PGADMIN_IMAGE') | default('dpage/pgadmin4:9.15', true) }}"
+
+    client_port: "{{ lookup('env', 'CLIENT_PORT') | default('4567', true) }}"
+    db_port: "{{ lookup('env', 'DB_PORT') | default('55002', true) }}"
+    pgadmin_port: "{{ lookup('env', 'PGADMIN_PORT') | default('5050', true) }}"
+    logbook_port: "{{ lookup('env', 'LOGBOOK_PORT') | default('9100', true) }}"
+    route_port: "{{ lookup('env', 'ROUTE_PORT') | default('9200', true) }}"
+
+    postgres_db: "{{ lookup('env', 'POSTGRES_DB') | default('logbook_service', true) }}"
+    postgres_user: "{{ lookup('env', 'POSTGRES_USER') | default('logbook_user', true) }}"
+    postgres_password: "{{ lookup('env', 'POSTGRES_PASSWORD') | default('logbook_password', true) }}"
+    pgadmin_email: "{{ lookup('env', 'PGADMIN_EMAIL') | default('admin@local.dev', true) }}"
+    pgadmin_password: "{{ lookup('env', 'PGADMIN_PASSWORD') | default('pgadmin_password', true) }}"
+
+    ghcr_registry: "{{ lookup('env', 'GHCR_REGISTRY') | default('ghcr.io', true) }}"
+    ghcr_username: "{{ lookup('env', 'GHCR_USERNAME') | default('', true) }}"
+    ghcr_token: "{{ lookup('env', 'GHCR_TOKEN') | default('', true) }}"
+  tasks:
+    - name: Ensure application directory exists
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: '0755'
+      tags: [deploy]
+
+    - name: Write docker-compose.yml
+      ansible.builtin.template:
+        src: ../templates/docker-compose.yml.j2
+        dest: "{{ app_dir }}/docker-compose.yml"
+        mode: "0644"
+      tags: [deploy]
+
+    - name: Login to GHCR (if credentials present)
+      block:
+        - name: Login to GHCR
+          ansible.builtin.command: "docker login {{ ghcr_registry }} -u {{ ghcr_username }} -p {{ ghcr_token }}"
+          no_log: true
+      when: ghcr_username | length > 0 and ghcr_token | length > 0
+      tags: [deploy]
+
+    - name: Pull images
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml pull"
+      args:
+        chdir: "{{ app_dir }}"
+      tags: [deploy]
+
+    - name: Start services
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d"
+      args:
+        chdir: "{{ app_dir }}"
+      tags: [deploy]

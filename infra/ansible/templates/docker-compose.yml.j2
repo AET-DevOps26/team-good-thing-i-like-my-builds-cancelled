@@ -1,0 +1,60 @@
+name: {{ compose_project_name }}
+services:
+  client:
+    image: {{ client_image }}
+    hostname: client
+    environment:
+      TZ: "{{ timezone }}"
+    ports:
+      - "{{ client_port }}:80"
+
+  db:
+    image: {{ db_image }}
+    hostname: db
+    environment:
+      TZ: "{{ timezone }}"
+      POSTGRES_DB: "{{ postgres_db }}"
+      POSTGRES_USER: "{{ postgres_user }}"
+      POSTGRES_PASSWORD: "{{ postgres_password }}"
+    ports:
+      - "{{ db_port }}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{ postgres_user }} -d {{ postgres_db }}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pg_admin:
+    image: {{ pgadmin_image }}
+    hostname: pg_admin
+    environment:
+      TZ: "{{ timezone }}"
+      PGADMIN_DEFAULT_EMAIL: "{{ pgadmin_email }}"
+      PGADMIN_DEFAULT_PASSWORD: "{{ pgadmin_password }}"
+    ports:
+      - "{{ pgadmin_port }}:80"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  logbook_service:
+    image: {{ logbook_image }}
+    hostname: logbook_service
+    environment:
+      TZ: "{{ timezone }}"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/{{ postgres_db }}"
+      SPRING_DATASOURCE_USERNAME: "{{ postgres_user }}"
+      SPRING_DATASOURCE_PASSWORD: "{{ postgres_password }}"
+    ports:
+      - "{{ logbook_port }}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  route_service:
+    image: {{ route_image }}
+    hostname: route_service
+    environment:
+      TZ: "{{ timezone }}"
+    ports:
+      - "{{ route_port }}:8080"
