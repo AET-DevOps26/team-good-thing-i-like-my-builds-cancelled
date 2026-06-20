@@ -55,7 +55,8 @@ components:
       tags:
         - route
       type: object
+      required:
+        - id
       properties:
         id: {type: string}
-        title: {type: string}
-        # Additional metdata later if needed
+        name: {type: string}

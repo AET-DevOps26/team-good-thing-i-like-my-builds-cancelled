@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-09T23:28:33.671978+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-15T16:09:25.991652+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 @Validated
 @Tag(name = "route", description = "the route API")
 public interface RouteApi {
@@ -69,7 +69,7 @@ public interface RouteApi {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "[ { \"id\" : \"id\", \"title\" : \"title\" }, { \"id\" : \"id\", \"title\" : \"title\" } ]";
+                    String exampleString = "[ { \"name\" : \"name\", \"id\" : \"id\" }, { \"name\" : \"name\", \"id\" : \"id\" } ]";
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }

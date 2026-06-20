@@ -19,14 +19,25 @@ import jakarta.annotation.Generated;
  * Station
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-09T23:28:33.671978+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-15T16:09:25.991652+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 public class Station {
 
-  private @Nullable String id;
+  private String id;
 
-  private @Nullable String title;
+  private @Nullable String name;
 
-  public Station id(@Nullable String id) {
+  public Station() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public Station(String id) {
+    this.id = id;
+  }
+
+  public Station id(String id) {
     this.id = id;
     return this;
   }
@@ -35,37 +46,37 @@ public class Station {
    * Get id
    * @return id
    */
-  
-  @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
-  public @Nullable String getId() {
+  public String getId() {
     return id;
   }
 
   @JsonProperty("id")
-  public void setId(@Nullable String id) {
+  public void setId(String id) {
     this.id = id;
   }
 
-  public Station title(@Nullable String title) {
-    this.title = title;
+  public Station name(@Nullable String name) {
+    this.name = name;
     return this;
   }
 
   /**
-   * Get title
-   * @return title
+   * Get name
+   * @return name
    */
   
-  @Schema(name = "title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("title")
-  public @Nullable String getTitle() {
-    return title;
+  @Schema(name = "name", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("name")
+  public @Nullable String getName() {
+    return name;
   }
 
-  @JsonProperty("title")
-  public void setTitle(@Nullable String title) {
-    this.title = title;
+  @JsonProperty("name")
+  public void setName(@Nullable String name) {
+    this.name = name;
   }
 
   @Override
@@ -78,12 +89,12 @@ public class Station {
     }
     Station station = (Station) o;
     return Objects.equals(this.id, station.id) &&
-        Objects.equals(this.title, station.title);
+        Objects.equals(this.name, station.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, title);
+    return Objects.hash(id, name);
   }
 
   @Override
@@ -91,7 +102,7 @@ public class Station {
     StringBuilder sb = new StringBuilder();
     sb.append("class Station {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    title: ").append(toIndentedString(title)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");
     return sb.toString();
   }
