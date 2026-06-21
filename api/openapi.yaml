@@ -23,7 +23,38 @@ paths:
               schema:
                 type: array
                 items: {$ref: '#/components/schemas/Station'}
-# TODO: Finish Route API
+  /v1/route:
+    get:
+      tags:
+        - route
+      operationId: getConnections
+      parameters:
+      - name: time
+        in: query
+        required: true
+        schema: {type: string, format: date-time}
+      - name: startStationId
+        in: query
+        required: true
+        schema: {type: string}
+      - name: destinationStationId
+        in: query
+        required: true
+        schema: {type: string}
+      - name: viaStationIds
+        in: query
+        required: false
+        schema:
+          type: array
+          items: {type: string}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/TrainConnection'}
 
   /v1/logbook/entries:
     get:
@@ -60,3 +91,34 @@ components:
       properties:
         id: {type: string}
         name: {type: string}
+    TrainConnection:
+      tags:
+        - route
+      type: object
+      required:
+        - segments
+        - arrivalTime
+        - departureTime
+      properties:
+        departureTime: {type: string, format: date-time}
+        arrivalTime: {type: string, format: date-time}
+        segments:
+          type: array
+          items: {$ref: '#/components/schemas/TrainSegment'}
+    TrainSegment:
+      tags:
+        - route
+      type: object
+      required:
+        - arrivalTime
+        - departureTime
+        - start
+        - end
+      properties:
+        departureTime: {type: string, format: date-time}
+        arrivalTime: {type: string, format: date-time}
+        start: {$ref: '#/components/schemas/Station'}
+        end: {$ref: '#/components/schemas/Station'}
+        stops:
+          type: array
+          items: {$ref: '#/components/schemas/Station'}
