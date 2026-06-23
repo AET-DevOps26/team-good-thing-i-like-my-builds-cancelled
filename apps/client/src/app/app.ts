@@ -4,10 +4,13 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Example, ExampleCreateRequest, ExamplesService } from './examples.service';
+import {RouterOutlet} from '@angular/router';
+import {Header} from './layout/header/header';
+import {Footer} from './layout/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterOutlet, Header, Footer],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

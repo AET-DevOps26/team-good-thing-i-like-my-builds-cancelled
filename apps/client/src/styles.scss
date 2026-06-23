@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  font-family: Inter, "Segoe UI", sans-serif;
+}
+
+html, body {
+  background-color: #eee;
+}
+
+.btn {
+  color: white;
+  background-color: red;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  text-decoration: none;
+}

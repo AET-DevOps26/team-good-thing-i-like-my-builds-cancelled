@@ -1,0 +1,21 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: calc(100% - 48px);
+  background-color: white;
+  box-shadow: 0px 0px 4px gray;
+  padding: 8px 24px;
+  display: grid;
+  grid-template-columns: 150px 1fr 100px;
+  align-items: baseline;
+
+  h1 {
+    margin: 0;
+    display: inline-block;
+  }
+
+  app-nav {
+    display: inline-block;
+  }
+}
