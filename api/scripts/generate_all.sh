@@ -6,3 +6,4 @@ set -euo pipefail
 
 $(dirname "$0")/generate_spring.sh
 $(dirname "$0")/generate_typescript.sh
+$(dirname "$0")/generate_python.sh
