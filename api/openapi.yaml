@@ -78,28 +78,7 @@ paths:
           # Add model
 # TODO: Finish Logbook API
 
-  /v1/ai/suggest-continuation:
-    post:
-      tags: [ai]
-      operationId: suggestReportContinuation
-      summary: Suggest how to continue a travel report at the current cursor position
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SuggestContinuationRequest'
-      responses:
-        '200':
-          description: A single continuation suggestion
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuggestContinuationResponse'
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
+# GenAI suggestion endpoint is a WebSocket — see asyncapi.yaml
 
 components:
   schemas:
@@ -144,27 +123,47 @@ components:
           type: array
           items: {$ref: '#/components/schemas/Station'}
 
-    SuggestContinuationRequest:
+    # WebSocket message schemas — see asyncapi.yaml for the channel definition
+    TextUpdate:
       type: object
-      required:
-        - textBefore
+      required: [type, textBefore]
       properties:
+        type:
+          type: string
+          const: text_update
         textBefore:
           type: string
-          minLength: 1
-          description: Report text before the cursor position.
+          description: Report text before the cursor.
           example: "Today I arrived in Marburg and walked through the old town."
         textAfter:
           type: string
-          description: Report text after the cursor position, if any.
+          description: Report text after the cursor, if any.
           example: "The weather was perfect."
 
-    SuggestContinuationResponse:
+    CancelSuggestion:
       type: object
-      required:
-        - suggestion
+      required: [type]
       properties:
-        suggestion:
+        type:
           type: string
-          description: Suggested text to insert at the cursor position.
-          example: " The castle on the hill was breathtaking."
+          const: cancel
+
+    SuggestionToken:
+      type: object
+      required: [type, token]
+      properties:
+        type:
+          type: string
+          const: token
+        token:
+          type: string
+          description: A single text token to append to the inline suggestion.
+          example: " The castle"
+
+    SuggestionDone:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          const: done

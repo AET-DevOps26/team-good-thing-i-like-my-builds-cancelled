@@ -8,7 +8,7 @@ echo "Generating code for genai-service..."
 
 npx @openapitools/openapi-generator-cli generate \
     -g python-fastapi \
-    --global-property apis=Ai,models=SuggestContinuationRequest:SuggestContinuationResponse,supportingFiles=false \
+    --global-property apis=Ai,models=TextUpdate:CancelSuggestion:SuggestionToken:SuggestionDone,supportingFiles=false \
     -i api/openapi.yaml \
     -o apps/server/genai-service/src/generated \
     --additional-properties=packageName=app.generated,useTags=true

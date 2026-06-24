@@ -1,0 +1,99 @@
+asyncapi: 3.0.0
+info:
+  title: GenAI WebSocket API
+  version: 1.0.0
+
+servers:
+  production:
+    host: cancelled.stud.k8s.aet.cit.tum.de
+    pathname: /api/v1/ai/suggest
+    protocol: wss
+
+channels:
+  suggest:
+    address: /api/v1/ai/suggest
+    description: >
+      Persistent WebSocket connection for inline travel report suggestions.
+      The client sends text updates whenever the report changes; the server
+      streams suggestion tokens back in real time. A new text update from the
+      client implicitly cancels any suggestion currently in progress.
+    messages:
+      textUpdate:
+        $ref: '#/components/messages/TextUpdate'
+      cancelSuggestion:
+        $ref: '#/components/messages/CancelSuggestion'
+      suggestionToken:
+        $ref: '#/components/messages/SuggestionToken'
+      suggestionDone:
+        $ref: '#/components/messages/SuggestionDone'
+
+operations:
+  sendTextUpdate:
+    action: send
+    channel:
+      $ref: '#/channels/suggest'
+    messages:
+      - $ref: '#/channels/suggest/messages/textUpdate'
+      - $ref: '#/channels/suggest/messages/cancelSuggestion'
+
+  receiveSuggestion:
+    action: receive
+    channel:
+      $ref: '#/channels/suggest'
+    messages:
+      - $ref: '#/channels/suggest/messages/suggestionToken'
+      - $ref: '#/channels/suggest/messages/suggestionDone'
+
+components:
+  messages:
+    TextUpdate:
+      summary: Sent by the client whenever the report text changes.
+      payload:
+        type: object
+        required: [type, textBefore]
+        properties:
+          type:
+            type: string
+            const: text_update
+          textBefore:
+            type: string
+            description: Report text before the cursor.
+            example: "Today I arrived in Marburg and walked through the old town."
+          textAfter:
+            type: string
+            description: Report text after the cursor, if any.
+            example: "The weather was perfect."
+
+    CancelSuggestion:
+      summary: Sent by the client to explicitly cancel a running suggestion.
+      payload:
+        type: object
+        required: [type]
+        properties:
+          type:
+            type: string
+            const: cancel
+
+    SuggestionToken:
+      summary: One streamed token of the suggestion, sent by the server.
+      payload:
+        type: object
+        required: [type, token]
+        properties:
+          type:
+            type: string
+            const: token
+          token:
+            type: string
+            description: A single text token to append to the inline suggestion.
+            example: " The castle"
+
+    SuggestionDone:
+      summary: Sent by the server when the suggestion is complete or cancelled.
+      payload:
+        type: object
+        required: [type]
+        properties:
+          type:
+            type: string
+            const: done

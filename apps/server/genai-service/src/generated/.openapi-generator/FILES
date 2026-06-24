@@ -1,2 +1,4 @@
-src/app/generated/models/suggest_continuation_request.py
-src/app/generated/models/suggest_continuation_response.py
+src/app/generated/models/cancel_suggestion.py
+src/app/generated/models/suggestion_done.py
+src/app/generated/models/suggestion_token.py
+src/app/generated/models/text_update.py
