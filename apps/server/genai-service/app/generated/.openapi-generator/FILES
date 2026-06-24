@@ -1,0 +1,4 @@
+app/generated/models/cancel_suggestion.py
+app/generated/models/suggestion_done.py
+app/generated/models/suggestion_token.py
+app/generated/models/text_update.py

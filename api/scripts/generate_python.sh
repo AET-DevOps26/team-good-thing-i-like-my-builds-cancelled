@@ -10,5 +10,5 @@ npx @openapitools/openapi-generator-cli generate \
     -g python-fastapi \
     --global-property apis=Ai,models=TextUpdate:CancelSuggestion:SuggestionToken:SuggestionDone,supportingFiles=false \
     -i api/openapi.yaml \
-    -o apps/server/genai-service/src/generated \
+    -o apps/server/genai-service \
     --additional-properties=packageName=app.generated,useTags=true
