@@ -5,7 +5,11 @@
  */
 package dev.gtilmbc.routeservice.generated.api;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
 import dev.gtilmbc.routeservice.generated.model.Station;
+import dev.gtilmbc.routeservice.generated.model.TrainConnection;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,7 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-15T16:09:25.991652+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-21T17:32:23.036015+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 @Validated
 @Tag(name = "route", description = "the route API")
 public interface RouteApi {
@@ -41,6 +45,50 @@ public interface RouteApi {
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
     }
+
+    String PATH_GET_CONNECTIONS = "/v1/route";
+    /**
+     * GET /v1/route
+     *
+     * @param time  (required)
+     * @param startStationId  (required)
+     * @param destinationStationId  (required)
+     * @param viaStationIds  (optional)
+     * @return OK (status code 200)
+     */
+    @Operation(
+        operationId = "getConnections",
+        tags = { "route" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TrainConnection.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = RouteApi.PATH_GET_CONNECTIONS,
+        produces = { "application/json" }
+    )
+    default ResponseEntity<List<TrainConnection>> getConnections(
+        @NotNull @Parameter(name = "time", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "time", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime time,
+        @NotNull @Parameter(name = "startStationId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "startStationId", required = true) String startStationId,
+        @NotNull @Parameter(name = "destinationStationId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "destinationStationId", required = true) String destinationStationId,
+        @Parameter(name = "viaStationIds", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "viaStationIds", required = false) @Nullable List<String> viaStationIds
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "[ { \"departureTime\" : \"2000-01-23T04:56:07.000+00:00\", \"arrivalTime\" : \"2000-01-23T04:56:07.000+00:00\", \"segments\" : [ { \"departureTime\" : \"2000-01-23T04:56:07.000+00:00\", \"arrivalTime\" : \"2000-01-23T04:56:07.000+00:00\", \"start\" : { \"name\" : \"name\", \"id\" : \"id\" }, \"end\" : { \"name\" : \"name\", \"id\" : \"id\" }, \"stops\" : [ { \"name\" : \"name\", \"id\" : \"id\" }, { \"name\" : \"name\", \"id\" : \"id\" } ] }, { \"departureTime\" : \"2000-01-23T04:56:07.000+00:00\", \"arrivalTime\" : \"2000-01-23T04:56:07.000+00:00\", \"start\" : { \"name\" : \"name\", \"id\" : \"id\" }, \"end\" : { \"name\" : \"name\", \"id\" : \"id\" }, \"stops\" : [ { \"name\" : \"name\", \"id\" : \"id\" }, { \"name\" : \"name\", \"id\" : \"id\" } ] } ] }, { \"departureTime\" : \"2000-01-23T04:56:07.000+00:00\", \"arrivalTime\" : \"2000-01-23T04:56:07.000+00:00\", \"segments\" : [ { \"departureTime\" : \"2000-01-23T04:56:07.000+00:00\", \"arrivalTime\" : \"2000-01-23T04:56:07.000+00:00\", \"start\" : { \"name\" : \"name\", \"id\" : \"id\" }, \"end\" : { \"name\" : \"name\", \"id\" : \"id\" }, \"stops\" : [ { \"name\" : \"name\", \"id\" : \"id\" }, { \"name\" : \"name\", \"id\" : \"id\" } ] }, { \"departureTime\" : \"2000-01-23T04:56:07.000+00:00\", \"arrivalTime\" : \"2000-01-23T04:56:07.000+00:00\", \"start\" : { \"name\" : \"name\", \"id\" : \"id\" }, \"end\" : { \"name\" : \"name\", \"id\" : \"id\" }, \"stops\" : [ { \"name\" : \"name\", \"id\" : \"id\" }, { \"name\" : \"name\", \"id\" : \"id\" } ] } ] } ]";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
 
     String PATH_GET_STATIONS = "/v1/route/stations";
     /**

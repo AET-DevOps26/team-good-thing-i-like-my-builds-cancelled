@@ -19,7 +19,7 @@ import jakarta.annotation.Generated;
  * Station
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-15T16:09:27.046897+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-21T17:32:24.143535+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 public class Station {
 
   private String id;
