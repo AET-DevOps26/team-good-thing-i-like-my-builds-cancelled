@@ -56,7 +56,7 @@ export class Plan implements OnInit {
       // Here you would typically call a service to fetch the routes based on the selected stations and date.
 
       const [h, m] = this.selectedTime()!.split(':')
-      let time = this.selectedDate()!;
+      const time = this.selectedDate()!;
       time.setHours(+h, +m, 0, 0);
 
 

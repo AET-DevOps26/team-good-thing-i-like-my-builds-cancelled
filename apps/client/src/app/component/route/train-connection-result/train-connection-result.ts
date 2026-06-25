@@ -1,4 +1,4 @@
-import {Component, computed, input, Signal} from '@angular/core';
+import {Component, computed, input} from '@angular/core';
 import {TrainConnection} from '@/generated';
 import {ZardAccordionItemComponent} from '@/shared/components/accordion';
 
@@ -22,7 +22,7 @@ export class TrainConnectionResult {
   });
 
   getTimeString(dateString: string): string {
-    let date = new Date(dateString);
+    const date = new Date(dateString);
     return `${date.getHours()}:${date.getMinutes()}`;
   }
 }

@@ -1,7 +1,7 @@
-import {Component, computed, inject, input, output, signal} from '@angular/core';
+import {Component, inject, input, output, signal} from '@angular/core';
 import {ZardInputDirective} from '@/shared/components/input';
 import {HttpClient} from '@angular/common/http';
-import {debounceTime, distinctUntilChanged, Observable, Subject, switchMap} from 'rxjs';
+import {debounceTime, distinctUntilChanged, Subject, switchMap} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import {Station} from '@/generated';
 import {FormsModule} from '@angular/forms';
