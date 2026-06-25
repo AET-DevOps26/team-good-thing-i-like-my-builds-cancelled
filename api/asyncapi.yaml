@@ -6,12 +6,12 @@ info:
 servers:
   production:
     host: cancelled.stud.k8s.aet.cit.tum.de
-    pathname: /api/v1/ai/suggest
+    pathname: /api/v1/suggestion
     protocol: wss
 
 channels:
   suggest:
-    address: /api/v1/ai/suggest
+    address: /api/v1/suggestion
     description: >
       Persistent WebSocket connection for inline travel report suggestions.
       The client sends text updates whenever the report changes; the server
@@ -49,51 +49,19 @@ components:
     TextUpdate:
       summary: Sent by the client whenever the report text changes.
       payload:
-        type: object
-        required: [type, textBefore]
-        properties:
-          type:
-            type: string
-            const: text_update
-          textBefore:
-            type: string
-            description: Report text before the cursor.
-            example: "Today I arrived in Marburg and walked through the old town."
-          textAfter:
-            type: string
-            description: Report text after the cursor, if any.
-            example: "The weather was perfect."
+        $ref: './openapi.yaml#/components/schemas/TextUpdate'
 
     CancelSuggestion:
       summary: Sent by the client to explicitly cancel a running suggestion.
       payload:
-        type: object
-        required: [type]
-        properties:
-          type:
-            type: string
-            const: cancel
+        $ref: './openapi.yaml#/components/schemas/CancelSuggestion'
 
     SuggestionToken:
       summary: One streamed token of the suggestion, sent by the server.
       payload:
-        type: object
-        required: [type, token]
-        properties:
-          type:
-            type: string
-            const: token
-          token:
-            type: string
-            description: A single text token to append to the inline suggestion.
-            example: " The castle"
+        $ref: './openapi.yaml#/components/schemas/SuggestionToken'
 
     SuggestionDone:
       summary: Sent by the server when the suggestion is complete or cancelled.
       payload:
-        type: object
-        required: [type]
-        properties:
-          type:
-            type: string
-            const: done
+        $ref: './openapi.yaml#/components/schemas/SuggestionDone'
