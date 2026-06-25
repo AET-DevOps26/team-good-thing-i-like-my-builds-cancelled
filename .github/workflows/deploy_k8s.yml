@@ -1,0 +1,14 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up kubeconfig
+        run: echo "TODO"
+
+      - name: Deploy to k8s
+        working-directory: infra/kubernetes/helm
+        run: |
+          helm -n cancelled upgrade --install cancelled .
