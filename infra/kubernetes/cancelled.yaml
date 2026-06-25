@@ -27,4 +27,3 @@ current-context: "stud"
 users:
 - name: "rancher"
   user:
-    token: ""
