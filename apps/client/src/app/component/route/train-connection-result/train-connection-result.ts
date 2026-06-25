@@ -11,7 +11,8 @@ import {ZardAccordionItemComponent} from '@/shared/components/accordion';
   styleUrl: './train-connection-result.scss',
 })
 export class TrainConnectionResult {
-  connection = input<TrainConnection>({} as TrainConnection);
+  connection = input<TrainConnection>(
+    {departureTime: "2026-06-25T13:34:00+02:00", arrivalTime: "2026-06-25T14:15:00+02:00", segments: []} as TrainConnection);
 
   startAt = computed(() => {
     return this.getTimeString(this.connection().departureTime);
