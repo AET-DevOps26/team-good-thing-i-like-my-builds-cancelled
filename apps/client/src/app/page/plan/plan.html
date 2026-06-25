@@ -1,2 +1,30 @@
 <h1>Reise planen</h1>
 <p>Auf dieser Seite kann mittels der Fahrplanauskunft eine Reise geplant werden und mit Ki-Unterstüzung um interessante Ziele erweitert werden.</p>
+
+<form class="flex flex-col gap-3 mt-4">
+  <app-autocomplete placeholder="Start" (selectedStation)="selectedStartStation = $event; this.searched.set(false);"></app-autocomplete>
+  <app-autocomplete placeholder="Ziel" (selectedStation)="selectedEndStation = $event; this.searched.set(false);"></app-autocomplete>
+  <div class="flex flex-row gap-2">
+    <z-date-picker [value]="selectedDate()" placeholder="Pick a date" (dateChange)="onDateChange($event)" />
+    <input z-input type="time" class="w-20" [(value)]="selectedTime" />
+  </div>
+  <button (click)="fetchRoutes()" type="button" z-button>Suchen</button>
+</form>
+
+@if (fetching()) {
+  <div class="m-24 p-12">
+    <z-loader></z-loader>
+    <br>
+    <p class="mt-4 text-center">Verbindungen werden geladen...</p>
+  </div>
+} @else if (connections().length > 0) {
+  <z-accordion>
+    @for (connection of connections(); track connection) {
+      <app-train-connection-result [connection]="connection"></app-train-connection-result>
+    }
+  </z-accordion>
+} @else if (searched()) {
+  <p class="mt-4">Keine Direktverbindungen gefunden.</p>
+} @else {
+  <p class="mt-4">Bitte gib Start und Ziel ein und klicke auf "Suchen".</p>
+}

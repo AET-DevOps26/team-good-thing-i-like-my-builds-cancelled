@@ -9,4 +9,4 @@ echo "Generating client code..."
 npx @openapitools/openapi-generator-cli generate \
   -i ./api/openapi.yaml \
   -g typescript-angular \
-  -o apps/client/src/generated
+  -o apps/client/src/app/generated

@@ -1,0 +1,23 @@
+<div class="relative">
+  <input
+    z-input
+    [placeholder]="placeholder()"
+    (input)="onInput($event)"
+    [ngModel]="currentText"
+  >
+
+  @if (results$ | async; as results) {
+    @if (!cleared() && results.length > 0) {
+      <div class="absolute w-full border rounded bg-background shadow-md z-10">
+        @for (item of results; track item) {
+          <div
+            class="px-3 py-2 cursor-pointer hover:bg-muted"
+            (click)="select(item)">
+            {{ item.name ?? '-' }}
+          </div>
+        }
+      </div>
+    }
+
+  }
+</div>
