@@ -7,7 +7,7 @@ const angular = require('angular-eslint');
 module.exports = defineConfig([
   {
     files: ['**/*.ts'],
-    ignores: ['src/generated/**'],
+    ignores: ['src/app/generated/**', 'src/app/shared/**'],
     extends: [
       eslint.configs.recommended,
       tseslint.configs.recommended,

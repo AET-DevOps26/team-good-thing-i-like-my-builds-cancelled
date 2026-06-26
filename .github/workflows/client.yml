@@ -74,7 +74,13 @@ jobs:
           cache-dependency-path: apps/client/package-lock.json
 
       -   run: npm link @angular/cli@${{ env.CLI_VERSION }}
-      -   run: npm run build
+      - name: Build Angular
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            npm run build:main
+          else
+            npm run build:develop
+          fi
       - name: Cache build output
         uses: actions/cache/save@v4
         env:

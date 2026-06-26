@@ -1,0 +1,19 @@
+<z-accordion-item zTitle="{{startAt()}} - {{endAt()}}; {{connection().segments.length - 1}}x umsteigen">
+  <ul>
+    <li>Abfahrt: <b>{{ startAt() }}</b></li>
+    @for (segment of connection().segments; track segment) {
+      <ul>
+        <li>
+          <div class="flex flex-row gap-2">
+            <span>{{ segment.start.name }}</span>
+            <span>({{ getTimeString(segment.departureTime) }})</span>
+            <span>→</span>
+            <span>{{ segment.end.name }}</span>
+            <span>({{ getTimeString(segment.arrivalTime) }})</span>
+          </div>
+        </li>
+      </ul>
+    }
+    <li>Ankunft: <b>{{ endAt() }}</b></li>
+  </ul>
+</z-accordion-item>

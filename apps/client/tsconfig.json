@@ -5,7 +5,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@contracts/openapi": ["../../libs/contracts/openapi/src/index.ts"]
+      "@contracts/openapi": [
+        "../../libs/contracts/openapi/src/index.ts"
+      ],
+      "@/*": [
+        "src/app/*"
+      ]
     },
     "strict": true,
     "noImplicitOverride": true,

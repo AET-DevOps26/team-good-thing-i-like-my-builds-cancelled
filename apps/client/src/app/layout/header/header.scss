@@ -1,0 +1,22 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 0 4px gray;
+  padding: 8px 24px;
+  display: grid;
+  grid-template-columns: 150px 1fr 100px;
+  align-items: baseline;
+  z-index: 500;
+
+  h1 {
+    margin: 0;
+    display: inline-block;
+  }
+
+  app-nav {
+    display: inline-block;
+  }
+}
