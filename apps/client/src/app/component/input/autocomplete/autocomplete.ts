@@ -3,7 +3,7 @@ import {ZardInputDirective} from '@/shared/components/input';
 import {HttpClient} from '@angular/common/http';
 import {debounceTime, distinctUntilChanged, Subject, switchMap} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
-import {Station} from '@/generated';
+import {RouteService, Station} from '@/generated';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -17,7 +17,7 @@ import {FormsModule} from '@angular/forms';
   styleUrl: './autocomplete.scss',
 })
 export class Autocomplete {
-  private http = inject(HttpClient);
+  private routeService = inject(RouteService);
 
   placeholder = input<string>('Suche...');
   selectedStation = output<Station>();
@@ -32,7 +32,7 @@ export class Autocomplete {
     debounceTime(300),
     distinctUntilChanged(),
     switchMap(query =>
-      this.http.get<Station[]>(`http://localhost:8080/api/v1/route/stations?q=${encodeURIComponent(query)}`)
+      this.routeService.getStations(query)
     )
   );
 

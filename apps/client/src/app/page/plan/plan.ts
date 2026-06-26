@@ -2,7 +2,7 @@ import {Component, inject, model, OnInit, signal} from '@angular/core';
 import {ZardInputDirective} from '@/shared/components/input';
 import {ZardDatePickerComponent} from '@/shared/components/date-picker';
 import {Autocomplete} from '@/component/input/autocomplete/autocomplete';
-import {Station, TrainConnection} from '@/generated';
+import {RouteService, Station, TrainConnection} from '@/generated';
 import {ZardButtonComponent} from '@/shared/components/button';
 import {HttpClient} from '@angular/common/http';
 import {TrainConnectionResult} from '@/component/route/train-connection-result/train-connection-result';
@@ -25,6 +25,7 @@ import {ZardLoaderComponent} from '@/shared/components/loader';
 })
 export class Plan implements OnInit {
   private http = inject(HttpClient);
+  private routeService = inject(RouteService);
 
   selectedStartStation: Station | null = null;
   selectedEndStation: Station | null = null;
@@ -59,8 +60,7 @@ export class Plan implements OnInit {
       const time = this.selectedDate()!;
       time.setHours(+h, +m, 0, 0);
 
-
-      this.http.get<TrainConnection[]>(`http://localhost:8080/api/v1/route?startStationId=${this.selectedStartStation.id}&destinationStationId=${this.selectedEndStation.id}&time=${time.toISOString()}`).subscribe({
+      this.routeService.getConnections(time.toISOString(), this.selectedStartStation.id!, this.selectedEndStation.id!).subscribe({
         next: value => {
           this.connections.set(value);
         }, error: error => {
