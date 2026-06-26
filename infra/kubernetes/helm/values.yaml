@@ -3,10 +3,10 @@ image:
   owner: aet-devops26/team-good-thing-i-like-my-builds-cancelled
 
 images:
-  genai: genai-service:feature-gen-ai-service-dockerfile-and-action
-  route: route-service:feature-microservice-gh-actions
-  logbook: logbook-service:feature-microservice-gh-actions
-  client: client:fix-gh-actions-ghcr-publish-permissions
+  genai: genai-service:main
+  route: route-service:main
+  logbook: logbook-service:main
+  client: client:main
 
 ingress:
   enabled: true

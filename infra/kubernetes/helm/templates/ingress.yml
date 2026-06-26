@@ -4,7 +4,8 @@ kind: Ingress
 metadata:
   name: cancelled-ingress
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-staging # TODO: Prod when working
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
 spec:
   tls:
     - hosts:

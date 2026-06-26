@@ -1,0 +1,24 @@
+name: Deploy to K8s
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      K8S_TOKEN: ${{ secrets.K8S_TOKEN }}
+      
+    steps:
+      - uses: actions/checkout@v6
+      
+      - name: Set up kubeconfig
+        working-directory: infra/kubernetes
+        run: |
+          mkdir -p ~/.kube
+          envsubst < cancelled.yaml > ~/.kube/config
+
+      - name: Deploy to k8s
+        working-directory: infra/kubernetes/helm
+        run: |
+          helm -n cancelled upgrade --install cancelled .
