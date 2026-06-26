@@ -31,10 +31,10 @@ jobs:
       GHCR_USERNAME: ${{ github.actor }}
       GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      CLIENT_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/client:fix-gh-actions-ghcr-publish-permissions' }}
-      LOGBOOK_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/logbook-service:feature-microservice-gh-actions' }}
-      ROUTE_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/route-service:feature-microservice-gh-actions' }}
-      GENAI_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/genai-service:feature-gen-ai-service-dockerfile-and-action' }}
+      CLIENT_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/client:main' }}
+      LOGBOOK_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/logbook-service:main' }}
+      ROUTE_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/route-service:main' }}
+      GENAI_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/genai-service:main' }}
       DB_IMAGE: ${{ 'postgres:14.23' }}
       PGADMIN_IMAGE: ${{ 'dpage/pgadmin4:9.15' }}
 
