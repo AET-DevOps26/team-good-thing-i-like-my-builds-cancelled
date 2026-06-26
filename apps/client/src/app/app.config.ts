@@ -6,7 +6,7 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideZard } from '@/shared/core/provider/providezard';
 import {BASE_PATH} from '@/generated';
-import {environment} from '../environments/environments';
+import {environment} from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
