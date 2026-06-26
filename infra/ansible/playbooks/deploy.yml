@@ -58,7 +58,7 @@
       tags: [deploy]
 
     - name: Start services
-      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d"
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d --force-recreate"
       args:
         chdir: "{{ app_dir }}"
       tags: [deploy]

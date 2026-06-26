@@ -1,9 +1,10 @@
 name: Ansible Deploy
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Build Server", "Build Client", "Build GenAI"]
+    branches: [main]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
