@@ -1,0 +1,67 @@
+asyncapi: 3.0.0
+info:
+  title: GenAI WebSocket API
+  version: 1.0.0
+
+servers:
+  production:
+    host: cancelled.stud.k8s.aet.cit.tum.de
+    pathname: /api/v1/suggestion
+    protocol: wss
+
+channels:
+  suggest:
+    address: /api/v1/suggestion
+    description: >
+      Persistent WebSocket connection for inline travel report suggestions.
+      The client sends text updates whenever the report changes; the server
+      streams suggestion tokens back in real time. A new text update from the
+      client implicitly cancels any suggestion currently in progress.
+    messages:
+      textUpdate:
+        $ref: '#/components/messages/TextUpdate'
+      cancelSuggestion:
+        $ref: '#/components/messages/CancelSuggestion'
+      suggestionToken:
+        $ref: '#/components/messages/SuggestionToken'
+      suggestionDone:
+        $ref: '#/components/messages/SuggestionDone'
+
+operations:
+  sendTextUpdate:
+    action: send
+    channel:
+      $ref: '#/channels/suggest'
+    messages:
+      - $ref: '#/channels/suggest/messages/textUpdate'
+      - $ref: '#/channels/suggest/messages/cancelSuggestion'
+
+  receiveSuggestion:
+    action: receive
+    channel:
+      $ref: '#/channels/suggest'
+    messages:
+      - $ref: '#/channels/suggest/messages/suggestionToken'
+      - $ref: '#/channels/suggest/messages/suggestionDone'
+
+components:
+  messages:
+    TextUpdate:
+      summary: Sent by the client whenever the report text changes.
+      payload:
+        $ref: './openapi.yaml#/components/schemas/TextUpdate'
+
+    CancelSuggestion:
+      summary: Sent by the client to explicitly cancel a running suggestion.
+      payload:
+        $ref: './openapi.yaml#/components/schemas/CancelSuggestion'
+
+    SuggestionToken:
+      summary: One streamed token of the suggestion, sent by the server.
+      payload:
+        $ref: './openapi.yaml#/components/schemas/SuggestionToken'
+
+    SuggestionDone:
+      summary: Sent by the server when the suggestion is complete or cancelled.
+      payload:
+        $ref: './openapi.yaml#/components/schemas/SuggestionDone'
