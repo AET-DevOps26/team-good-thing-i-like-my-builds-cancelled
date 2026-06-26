@@ -78,7 +78,7 @@ paths:
           # Add model
 # TODO: Finish Logbook API
 
-# TODO: Add genai API
+# GenAI suggestion endpoint is a WebSocket — see asyncapi.yaml
 
 components:
   schemas:
@@ -122,3 +122,48 @@ components:
         stops:
           type: array
           items: {$ref: '#/components/schemas/Station'}
+
+    # WebSocket message schemas — see asyncapi.yaml for the channel definition
+    TextUpdate:
+      type: object
+      required: [type, textBefore]
+      properties:
+        type:
+          type: string
+          const: text_update
+        textBefore:
+          type: string
+          description: Report text before the cursor.
+          example: "Today I arrived in Marburg and walked through the old town."
+        textAfter:
+          type: string
+          description: Report text after the cursor, if any.
+          example: "The weather was perfect."
+
+    CancelSuggestion:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          const: cancel
+
+    SuggestionToken:
+      type: object
+      required: [type, token]
+      properties:
+        type:
+          type: string
+          const: token
+        token:
+          type: string
+          description: A single text token to append to the inline suggestion.
+          example: " The castle"
+
+    SuggestionDone:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          const: done
