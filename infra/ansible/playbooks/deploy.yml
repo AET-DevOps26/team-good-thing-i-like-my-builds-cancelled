@@ -52,8 +52,14 @@
       when: ghcr_username | length > 0 and ghcr_token | length > 0
       tags: [deploy]
 
+    - name: Pull images
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml pull"
+      args:
+        chdir: "{{ app_dir }}"
+      tags: [deploy]
+
     - name: Start services
-      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d --force-recreate --pull always"
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d --force-recreate"
       args:
         chdir: "{{ app_dir }}"
       tags: [deploy]
