@@ -54,7 +54,6 @@ export class Plan implements OnInit {
       this.fetching.set(true)
       this.searched.set(true);
       console.log('Fetching routes from', this.selectedStartStation.name, 'to', this.selectedEndStation.name, 'on', this.selectedDate(), 'at', this.selectedTime());
-      // Here you would typically call a service to fetch the routes based on the selected stations and date.
 
       const [h, m] = this.selectedTime()!.split(':')
       const time = this.selectedDate()!;
