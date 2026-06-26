@@ -4,7 +4,6 @@ import {ZardDatePickerComponent} from '@/shared/components/date-picker';
 import {Autocomplete} from '@/component/input/autocomplete/autocomplete';
 import {RouteService, Station, TrainConnection} from '@/generated';
 import {ZardButtonComponent} from '@/shared/components/button';
-import {HttpClient} from '@angular/common/http';
 import {TrainConnectionResult} from '@/component/route/train-connection-result/train-connection-result';
 import {ZardAccordionComponent} from '@/shared/components/accordion';
 import {ZardLoaderComponent} from '@/shared/components/loader';
@@ -24,7 +23,6 @@ import {ZardLoaderComponent} from '@/shared/components/loader';
   styleUrl: './plan.scss',
 })
 export class Plan implements OnInit {
-  private http = inject(HttpClient);
   private routeService = inject(RouteService);
 
   selectedStartStation: Station | null = null;
