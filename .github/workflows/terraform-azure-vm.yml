@@ -79,7 +79,7 @@ jobs:
         working-directory: infra/terraform
         run: |
           REPLACE_FLAG=""
-          if [ "${{ inputs.recreate_vm }}" = "true" ]; then
+          if [ "true" = "true" ]; then
             REPLACE_FLAG="-replace=azurerm_linux_virtual_machine.vm"
           fi
           terraform plan -out=tfplan -input=false $REPLACE_FLAG
@@ -92,6 +92,6 @@ jobs:
           path: infra/terraform/tfplan
 
       - name: Terraform Apply (only on main)
-        if: github.ref == 'refs/heads/main'
+        # if: github.ref == 'refs/heads/main'
         working-directory: infra/terraform
         run: terraform apply -input=false -auto-approve tfplan
