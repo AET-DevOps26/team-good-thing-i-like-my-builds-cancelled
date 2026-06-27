@@ -63,3 +63,13 @@
       args:
         chdir: "{{ app_dir }}"
       tags: [deploy]
+
+    - name: Show running container images
+      ansible.builtin.command: "docker ps --no-trunc --format 'table {{.Names}}\t{{.Image}}'"
+      register: running_containers
+      tags: [deploy]
+
+    - name: Print running container images
+      ansible.builtin.debug:
+        msg: "{{ running_containers.stdout_lines }}"
+      tags: [deploy]
