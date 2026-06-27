@@ -64,12 +64,16 @@
         chdir: "{{ app_dir }}"
       tags: [deploy]
 
-    - name: Show running container images
-      ansible.builtin.command: "docker ps --no-trunc --format {% raw %}'table {{.Names}}\t{{.Image}}'{% endraw %}"
-      register: running_containers
+    - name: Show running container image digests
+      ansible.builtin.command: "docker inspect --format {% raw %}'{{.Name}}: {{.Image}}'{% endraw %} {{ item }}"
+      loop:
+        - gtilmbc-client-1
+        - gtilmbc-logbook_service-1
+        - gtilmbc-route_service-1
+      register: container_digests
       tags: [deploy]
 
-    - name: Print running container images
+    - name: Print running container image digests
       ansible.builtin.debug:
-        msg: "{{ running_containers.stdout_lines }}"
+        msg: "{{ container_digests.results | map(attribute='stdout') | list }}"
       tags: [deploy]
