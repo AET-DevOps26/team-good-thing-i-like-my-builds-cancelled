@@ -65,7 +65,7 @@
       tags: [deploy]
 
     - name: Show running container images
-      ansible.builtin.command: "docker ps --no-trunc --format 'table {{.Names}}\t{{.Image}}'"
+      ansible.builtin.command: "docker ps --no-trunc --format {% raw %}'table {{.Names}}\t{{.Image}}'{% endraw %}"
       register: running_containers
       tags: [deploy]
 
