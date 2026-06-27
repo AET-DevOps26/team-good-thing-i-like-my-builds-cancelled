@@ -32,10 +32,10 @@ jobs:
       GHCR_USERNAME: ${{ github.actor }}
       GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      CLIENT_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/client@sha256:fd7e4123b08b3ba0504c8a15a3bc9ca4b5a60780a952ecba7d06dc99a4ff816d' }}
-      LOGBOOK_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/logbook-service:sha-a939d6f' }}
-      ROUTE_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/route-service:sha-a939d6f' }}
-      GENAI_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/genai-service:sha-4d5eac9' }}
+      CLIENT_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/client:main' }}
+      LOGBOOK_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/logbook-service:main' }}
+      ROUTE_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/route-service:main' }}
+      GENAI_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/genai-service:main' }}
       DB_IMAGE: ${{ 'postgres:14.23' }}
       PGADMIN_IMAGE: ${{ 'dpage/pgadmin4:9.15' }}
 

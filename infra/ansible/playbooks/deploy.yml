@@ -52,24 +52,6 @@
       when: ghcr_username | length > 0 and ghcr_token | length > 0
       tags: [deploy]
 
-    - name: Stop Docker
-      ansible.builtin.systemd:
-        name: docker
-        state: stopped
-      tags: [deploy]
-
-    - name: Wipe Docker storage
-      ansible.builtin.file:
-        path: /var/lib/docker
-        state: absent
-      tags: [deploy]
-
-    - name: Start Docker
-      ansible.builtin.systemd:
-        name: docker
-        state: started
-      tags: [deploy]
-
     - name: Pull images
       ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml pull"
       args:

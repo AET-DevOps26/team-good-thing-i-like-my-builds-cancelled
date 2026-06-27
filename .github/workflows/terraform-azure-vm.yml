@@ -2,6 +2,11 @@ name: Terraform Azure VM
 
 on:
   workflow_dispatch:
+    inputs:
+      recreate_vm:
+        description: 'Force VM recreation (destroys and recreates the VM)'
+        type: boolean
+        default: false
   pull_request:
     paths:
       - 'infra/terraform/**'
@@ -72,7 +77,12 @@ jobs:
       - name: Terraform Plan
         id: plan
         working-directory: infra/terraform
-        run: terraform plan -out=tfplan -input=false
+        run: |
+          REPLACE_FLAG=""
+          if [ "${{ inputs.recreate_vm }}" = "true" ]; then
+            REPLACE_FLAG="-replace=azurerm_linux_virtual_machine.vm"
+          fi
+          terraform plan -out=tfplan -input=false $REPLACE_FLAG
 
       - name: Upload plan artifact (for PRs)
         if: github.event_name == 'pull_request'
