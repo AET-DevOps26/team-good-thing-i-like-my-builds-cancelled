@@ -2,6 +2,7 @@ name: {{ compose_project_name }}
 services:
   client:
     image: {{ client_image }}
+    pull_policy: always
     hostname: client
     environment:
       TZ: "{{ timezone }}"
@@ -39,6 +40,7 @@ services:
 
   logbook_service:
     image: {{ logbook_image }}
+    pull_policy: always
     hostname: logbook_service
     environment:
       TZ: "{{ timezone }}"
@@ -53,6 +55,7 @@ services:
 
   route_service:
     image: {{ route_image }}
+    pull_policy: always
     hostname: route_service
     environment:
       TZ: "{{ timezone }}"

@@ -10,6 +10,7 @@
     client_image: "{{ lookup('env', 'CLIENT_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/client:latest', true) }}"
     logbook_image: "{{ lookup('env', 'LOGBOOK_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/logbook-service:latest', true) }}"
     route_image: "{{ lookup('env', 'ROUTE_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/route-service:latest', true) }}"
+    genai_image: "{{ lookup('env', 'GENAI_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/genai-service:latest', true) }}"
     db_image: "{{ lookup('env', 'DB_IMAGE') | default('postgres:14.23', true) }}"
     pgadmin_image: "{{ lookup('env', 'PGADMIN_IMAGE') | default('dpage/pgadmin4:9.15', true) }}"
 
@@ -58,7 +59,21 @@
       tags: [deploy]
 
     - name: Start services
-      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d"
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d --force-recreate"
       args:
         chdir: "{{ app_dir }}"
+      tags: [deploy]
+
+    - name: Show running container image digests
+      ansible.builtin.command: "docker inspect --format {% raw %}'{{.Name}}: {{.Image}}'{% endraw %} {{ item }}"
+      loop:
+        - gtilmbc-client-1
+        - gtilmbc-logbook_service-1
+        - gtilmbc-route_service-1
+      register: container_digests
+      tags: [deploy]
+
+    - name: Print running container image digests
+      ansible.builtin.debug:
+        msg: "{{ container_digests.results | map(attribute='stdout') | list }}"
       tags: [deploy]
