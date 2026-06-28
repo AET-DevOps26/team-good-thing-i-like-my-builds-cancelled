@@ -60,8 +60,6 @@ services:
             LMSTUDIO_BASE_URL: "https://logos.aet.cit.tum.de"
             LMSTUDIO_MODEL: "openai/gpt-oss-120b"
             LMSTUDIO_API_KEY: "${LMSTUDIO_API_KEY}"
-        extra_hosts:
-            - "host.docker.internal:host-gateway"
         ports:
             - "9300:8080"
 

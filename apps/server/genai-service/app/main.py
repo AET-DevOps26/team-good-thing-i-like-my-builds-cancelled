@@ -1,8 +1,8 @@
 import logging
 
-from fastapi import FastAPI
-
 logging.basicConfig(level=logging.INFO)
+
+from fastapi import FastAPI
 
 from app.api.ai_routes import router as ai_router
 from app.api.suggestion_routes import router as suggestion_router

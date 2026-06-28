@@ -29,7 +29,6 @@ export class Log implements OnInit, OnDestroy {
   readonly ghostText = signal('');
   readonly isStreaming = signal(false);
 
-  /** Text shown in the textarea placeholder area */
   readonly placeholder = 'Schreibe deinen Reisebericht hier...';
 
   ngOnInit(): void {
