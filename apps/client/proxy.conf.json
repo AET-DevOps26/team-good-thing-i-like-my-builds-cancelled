@@ -6,12 +6,6 @@
     "ws": true,
     "logLevel": "warn"
   },
-  "/api/v1/ai": {
-    "target": "http://localhost:9300",
-    "secure": false,
-    "changeOrigin": true,
-    "logLevel": "warn"
-  },
   "/api": {
     "target": "http://localhost:9100",
     "secure": false,

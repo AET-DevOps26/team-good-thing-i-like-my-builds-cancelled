@@ -5,6 +5,9 @@ import os
 
 import httpx
 
+from src.generated.models.suggestion_done import SuggestionDone
+from src.generated.models.suggestion_token import SuggestionToken
+
 logger = logging.getLogger(__name__)
 
 _LMSTUDIO_BASE_URL = os.getenv("LMSTUDIO_BASE_URL", "http://127.0.0.1:1234")
@@ -103,14 +106,16 @@ async def stream_suggestion(
                         # for thinking models (Gemma 4) that only use that field.
                         delta = d.get("content") or d.get("reasoning_content") or ""
                         if delta:
-                            await websocket.send_json({"type": "token", "token": delta})
+                            token_msg = SuggestionToken(type="token", token=delta)
+                            await websocket.send_json(token_msg.to_dict())
                     except (json.JSONDecodeError, KeyError, IndexError):
                         continue
 
-        await websocket.send_json({"type": "done"})
+        done_msg = SuggestionDone(type="done")
+        await websocket.send_json(done_msg.to_dict())
         logger.info("Suggestion complete")
     except asyncio.CancelledError:
         raise
     except Exception as exc:
         logger.exception("Error streaming suggestion: %s", exc)
-        await websocket.send_json({"type": "done"})
+        await websocket.send_json(SuggestionDone(type="done").to_dict())
