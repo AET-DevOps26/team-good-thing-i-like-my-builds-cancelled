@@ -59,7 +59,7 @@ services:
             APP_PORT: "8080"
             # LMStudio runs on the host machine — host.docker.internal resolves to it
             LMSTUDIO_BASE_URL: "http://host.docker.internal:1234"
-            LMSTUDIO_MODEL: "google/gemma-4-e4b"
+            LMSTUDIO_MODEL: "meta-llama-3-8b-instruct"
         extra_hosts:
             - "host.docker.internal:host-gateway"
         ports:

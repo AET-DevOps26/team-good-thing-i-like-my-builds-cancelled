@@ -66,7 +66,6 @@ async def stream_suggestion(
         ],
         "max_tokens": 256,
         "temperature": 0.7,
-        "reasoning_effort": "none",   # disable thinking for thinking models
     }
 
     logger.info("POST %s/v1/chat/completions (model=%s)", _LMSTUDIO_BASE_URL, model)
