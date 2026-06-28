@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 _LMSTUDIO_BASE_URL = os.getenv("LMSTUDIO_BASE_URL", "http://127.0.0.1:1234")
 _MODEL_OVERRIDE = os.getenv("LMSTUDIO_MODEL", "")
+_API_KEY = os.getenv("LMSTUDIO_API_KEY", "")
 
 _SYSTEM_PROMPT = """\
 You are an inline autocomplete assistant for travel report writing. \
@@ -68,6 +69,10 @@ async def stream_suggestion(
         "temperature": 0.7,
     }
 
+    headers: dict[str, str] = {"Accept": "text/event-stream"}
+    if _API_KEY:
+        headers["Authorization"] = f"Bearer {_API_KEY}"
+
     logger.info("POST %s/v1/chat/completions (model=%s)", _LMSTUDIO_BASE_URL, model)
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(5.0, read=120.0)) as client:
@@ -75,7 +80,7 @@ async def stream_suggestion(
                 "POST",
                 f"{_LMSTUDIO_BASE_URL}/v1/chat/completions",
                 json=payload,
-                headers={"Accept": "text/event-stream"},
+                headers=headers,
             ) as response:
                 if response.status_code >= 400:
                     body = await response.aread()

@@ -31,6 +31,11 @@ build/
 *.tfstate
 *.tfstate.*
 
+# Secrets
+.env
+.env.*
+!.env.example
+
 # Python
 .venv/
 __pycache__/
