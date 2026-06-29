@@ -65,7 +65,7 @@ services:
   genai_service:
     image: {{ genai_image }}
     pull_policy: always
-    hostname: genai_service
+    hostname: genai-service
     environment:
       TZ: "{{ timezone }}"
       APP_PORT: "8080"
