@@ -62,7 +62,7 @@ services:
     ports:
       - "{{ route_port }}:8080"
 
-  genai_service:
+  genai-service:
     image: {{ genai_image }}
     pull_policy: always
     hostname: genai-service
