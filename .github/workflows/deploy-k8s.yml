@@ -21,7 +21,8 @@ jobs:
       - name: Create/update k8s secret
         run: |
           kubectl create secret generic llm-secret \
-            --from-literal=LMSTUDIO_API_KEY="${{ secrets.LMSTUDIO_API_KEY }}"
+            --from-literal=LMSTUDIO_API_KEY="${{ secrets.LMSTUDIO_API_KEY }}" \
+            -n cancelled
 
       - name: Deploy to k8s
         working-directory: infra/kubernetes/helm
