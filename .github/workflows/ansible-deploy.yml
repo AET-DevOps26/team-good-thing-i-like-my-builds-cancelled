@@ -39,6 +39,8 @@ jobs:
       DB_IMAGE: ${{ 'postgres:14.23' }}
       PGADMIN_IMAGE: ${{ 'dpage/pgadmin4:9.15' }}
 
+      LMSTUDIO_API_KEY: ${{ secrets.LMSTUDIO_API_KEY }}
+
       POSTGRES_DB: ${{ vars.POSTGRES_DB || 'logbook_service' }}
       POSTGRES_USER: ${{ vars.POSTGRES_USER || 'logbook_user' }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
