@@ -19,6 +19,11 @@
     pgadmin_port: "{{ lookup('env', 'PGADMIN_PORT') | default('5050', true) }}"
     logbook_port: "{{ lookup('env', 'LOGBOOK_PORT') | default('9100', true) }}"
     route_port: "{{ lookup('env', 'ROUTE_PORT') | default('9200', true) }}"
+    genai_port: "{{ lookup('env', 'GENAI_PORT') | default('9300', true) }}"
+
+    lmstudio_base_url: "{{ lookup('env', 'LMSTUDIO_BASE_URL') | default('https://logos.aet.cit.tum.de', true) }}"
+    lmstudio_model: "{{ lookup('env', 'LMSTUDIO_MODEL') | default('openai/gpt-oss-120b', true) }}"
+    lmstudio_api_key: "{{ lookup('env', 'LMSTUDIO_API_KEY') | default('', true) }}"
 
     postgres_db: "{{ lookup('env', 'POSTGRES_DB') | default('logbook_service', true) }}"
     postgres_user: "{{ lookup('env', 'POSTGRES_USER') | default('logbook_user', true) }}"
