@@ -1,0 +1,93 @@
+$font-size:   0.9375rem;
+$line-height: 1.6;
+$pad-v:       0.75rem;
+$pad-h:       1rem;
+$radius:      0.5rem;
+$min-height:  20rem;
+
+.editor-wrapper {
+  position: relative;
+}
+
+%editor-text {
+  font-size:    $font-size;
+  line-height:  $line-height;
+  font-family:  inherit;
+  padding:      $pad-v $pad-h;
+  box-sizing:   border-box;
+  width:        100%;
+  white-space:  pre-wrap;
+  overflow-wrap: break-word;
+  border-radius: $radius;
+  border:       1px solid transparent;
+}
+
+.report-textarea {
+  @extend %editor-text;
+  display:    block;
+  position:   relative;
+  z-index:    1;
+  min-height: $min-height;
+  resize:     vertical;
+  outline:    none;
+  background: hsl(var(--background));
+  color:      hsl(var(--foreground));
+  border-color: hsl(var(--border));
+
+  &:focus {
+    border-color: hsl(var(--ring));
+    box-shadow:   0 0 0 2px hsl(var(--ring) / 0.2);
+  }
+}
+
+.ghost-overlay {
+  @extend %editor-text;
+  position:       absolute;
+  inset:          0;
+  z-index:        2;
+  pointer-events: none;
+  min-height:     $min-height;
+  overflow:       hidden;
+}
+
+.ghost-written {
+  color: transparent;
+}
+
+.ghost-suggestion {
+  color:      hsl(var(--muted-foreground));
+  opacity:    0.65;
+}
+
+.hint-text {
+  font-size: 0.8125rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.kbd {
+  display:      inline-block;
+  padding:      0.1em 0.4em;
+  font-size:    0.7rem;
+  font-family:  ui-monospace, monospace;
+  line-height:  1.4;
+  background:   hsl(var(--muted));
+  border:       1px solid hsl(var(--border));
+  border-radius: 0.25rem;
+}
+
+.streaming-indicator::after {
+  content:        '';
+  display:        inline-block;
+  width:          0.4em;
+  height:         0.85em;
+  margin-left:    0.2em;
+  background:     currentColor;
+  opacity:        0.7;
+  vertical-align: text-bottom;
+  animation:      blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 0; }
+}

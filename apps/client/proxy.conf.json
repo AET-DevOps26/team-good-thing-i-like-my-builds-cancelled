@@ -1,4 +1,11 @@
 {
+  "/api/v1/suggestion": {
+    "target": "ws://localhost:9300",
+    "secure": false,
+    "changeOrigin": true,
+    "ws": true,
+    "logLevel": "warn"
+  },
   "/api": {
     "target": "http://localhost:9100",
     "secure": false,

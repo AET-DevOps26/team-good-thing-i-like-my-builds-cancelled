@@ -1,4 +1,44 @@
 <h1>Logbuch</h1>
 <p>
-  Im Logbuch werden vergangene Reisen und deren Details gespeichert. Hier können Sie Ihre Reisehistorie einsehen und verwalten.
+  Schreibe hier deinen Reisebericht. Der KI-Assistent schlägt dir während des Schreibens
+  Textvervollständigungen vor — drücke <kbd class="kbd">Tab</kbd> um einen Vorschlag zu übernehmen oder
+  <kbd class="kbd">Esc</kbd> um ihn abzulehnen.
 </p>
+
+<div class="editor-wrapper mt-4">
+  <!--
+    Overlay sits behind the transparent textarea and renders:
+    - written text in normal colour (the textarea text is invisible)
+    - ghost suggestion in muted colour
+  -->
+  <div #overlay class="ghost-overlay" aria-hidden="true"><span
+      class="ghost-written">{{ reportText() }}</span><span
+      class="ghost-suggestion">{{ ghostText() }}</span></div>
+
+  <textarea
+    #editor
+    class="report-textarea"
+    placeholder="Schreibe deinen Reisebericht hier..."
+    [value]="reportText()"
+    (input)="onInput($event)"
+    (keydown)="onKeydown($event)"
+    (scroll)="onScroll($event)"
+    rows="16"
+    spellcheck="false"
+  ></textarea>
+</div>
+
+<div class="flex items-center gap-3 mt-2">
+  @if (ghostText()) {
+    <span class="hint-text flex-1">
+      <kbd class="kbd">Tab</kbd> übernehmen &nbsp;·&nbsp; <kbd class="kbd">Esc</kbd> ablehnen
+    </span>
+  } @else if (isStreaming()) {
+    <span class="hint-text flex-1 streaming-indicator">KI denkt nach…</span>
+  } @else {
+    <span class="flex-1"></span>
+  }
+  <button z-button zType="outline" (click)="clearReport()" [disabled]="!reportText()">
+    Leeren
+  </button>
+</div>

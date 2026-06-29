@@ -51,6 +51,18 @@ services:
             db:
                 condition: service_healthy
 
+    genai_service:
+        build: ../../../../apps/server/genai-service
+        hostname: genai_service
+        environment:
+            TZ: "Europe/Berlin"
+            APP_PORT: "8080"
+            LMSTUDIO_BASE_URL: "https://logos.aet.cit.tum.de"
+            LMSTUDIO_MODEL: "openai/gpt-oss-120b"
+            LMSTUDIO_API_KEY: "${LMSTUDIO_API_KEY}"
+        ports:
+            - "9300:8080"
+
     route_service:
         build: ../../../../apps/server/route-service
         hostname: route_service
@@ -58,4 +70,3 @@ services:
             TZ: "Europe/Berlin"
         ports:
             - "9200:8080"
-
