@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       K8S_TOKEN: ${{ secrets.K8S_TOKEN }}
-      LMSTUDIO_API_KEY: ${{ secrets.LMSTUDIO_API_KEY }}
       
     steps:
       - uses: actions/checkout@v6
