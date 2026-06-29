@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       K8S_TOKEN: ${{ secrets.K8S_TOKEN }}
+      LMSTUDIO_API_KEY: ${{ secrets.LMSTUDIO_API_KEY }}
       
     steps:
       - uses: actions/checkout@v6
@@ -21,4 +22,5 @@ jobs:
       - name: Deploy to k8s
         working-directory: infra/kubernetes/helm
         run: |
-          helm -n cancelled upgrade --install cancelled .
+          helm -n cancelled upgrade --install cancelled . \
+          --set-string secrets.LMSTUDIO_API_KEY="${{ secrets.LMSTUDIO_API_KEY }}"

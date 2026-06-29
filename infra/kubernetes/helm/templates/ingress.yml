@@ -26,7 +26,7 @@ spec:
             path: "/api/v1/suggestion"
             backend:
               service:
-                name: suggestion-service
+                name: genai-service
                 port:
                   number: 80
           - pathType: Prefix

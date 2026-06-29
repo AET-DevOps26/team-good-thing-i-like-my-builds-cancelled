@@ -15,3 +15,6 @@ ingress:
 database:
   user: logbook_user
   password: logbook_password
+
+secrets:
+  lmstudio: ""
