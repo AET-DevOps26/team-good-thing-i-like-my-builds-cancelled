@@ -23,4 +23,4 @@ jobs:
         working-directory: infra/kubernetes/helm
         run: |
           helm -n cancelled upgrade --install cancelled . \
-          --set-string secrets.LMSTUDIO_API_KEY="${{ secrets.LMSTUDIO_API_KEY }}"
+          --set-string secrets.lmstudio="${{ secrets.LMSTUDIO_API_KEY }}"
