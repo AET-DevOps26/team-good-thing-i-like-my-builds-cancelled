@@ -17,9 +17,13 @@ jobs:
         run: |
           mkdir -p ~/.kube
           envsubst < cancelled.yaml > ~/.kube/config
+          
+      - name: Create/update k8s secret
+        run: |
+          kubectl create secret generic llm-secret \
+            --from-literal=LMSTUDIO_API_KEY="${{ secrets.LMSTUDIO_API_KEY }}"
 
       - name: Deploy to k8s
         working-directory: infra/kubernetes/helm
         run: |
-          helm -n cancelled upgrade --install cancelled . \
-          --set-string secrets.lmstudio="${{ secrets.LMSTUDIO_API_KEY }}"
+          helm -n cancelled upgrade --install cancelled .

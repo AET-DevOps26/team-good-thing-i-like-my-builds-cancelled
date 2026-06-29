@@ -30,7 +30,6 @@ spec:
               cpu: "500m"
               memory: "512Mi"
           env:
-    
             - name: LMSTUDIO_API_KEY
               valueFrom:
                 secretKeyRef:
