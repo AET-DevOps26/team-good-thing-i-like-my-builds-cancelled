@@ -30,8 +30,12 @@ spec:
               cpu: "500m"
               memory: "512Mi"
           env:
+    
             - name: LMSTUDIO_API_KEY
-              value: {{ .Values.secrets.lmstudio | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: llm-secret
+                  key: LMSTUDIO_API_KEY
             
             - name: LMSTUDIO_MODEL
               value: "openai/gpt-oss-120b"
