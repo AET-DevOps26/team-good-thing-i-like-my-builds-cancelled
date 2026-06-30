@@ -3,17 +3,16 @@ services:
     client:
         build: ../../../../apps/client
         hostname: client
-        restart: unless-stopped
+
         environment:
             TZ: "Europe/Berlin"
         ports:
             -   "4567:80"
-        depends_on:
-            - genai-service
 
     db:
         image: postgres:14.23
         hostname: db
+
         environment:
             TZ: "Europe/Berlin"
             POSTGRES_DB: logbook_service
@@ -43,7 +42,7 @@ services:
     logbook_service:
         build: ../../../../apps/server/logbook-service
         hostname: logbook_service
-        restart: unless-stopped
+
         environment:
             TZ: "Europe/Berlin"
             SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/logbook_service
@@ -58,7 +57,7 @@ services:
     genai-service:
         build: ../../../../apps/server/genai-service
         hostname: genai-service
-        restart: unless-stopped
+
         environment:
             TZ: "Europe/Berlin"
             APP_PORT: "8080"
@@ -71,7 +70,7 @@ services:
     route_service:
         build: ../../../../apps/server/route-service
         hostname: route_service
-        restart: unless-stopped
+
         environment:
             TZ: "Europe/Berlin"
         ports:
