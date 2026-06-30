@@ -75,6 +75,7 @@
         - gtilmbc-client-1
         - gtilmbc-logbook-service-1
         - gtilmbc-route-service-1
+        - gtilmbc-genai-service-1
       register: container_digests
       tags: [deploy]
 
