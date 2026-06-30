@@ -41,10 +41,10 @@ services:
       db:
         condition: service_healthy
 
-  logbook_service:
+  logbook-service:
     image: {{ logbook_image }}
     pull_policy: always
-    hostname: logbook_service
+    hostname: logbook-service
     restart: unless-stopped
     environment:
       TZ: "{{ timezone }}"
@@ -57,10 +57,10 @@ services:
       db:
         condition: service_healthy
 
-  route_service:
+  route-service:
     image: {{ route_image }}
     pull_policy: always
-    hostname: route_service
+    hostname: route-service
     restart: unless-stopped
     environment:
       TZ: "{{ timezone }}"

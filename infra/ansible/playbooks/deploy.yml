@@ -73,8 +73,8 @@
       ansible.builtin.command: "docker inspect --format {% raw %}'{{.Name}}: {{.Image}}'{% endraw %} {{ item }}"
       loop:
         - gtilmbc-client-1
-        - gtilmbc-logbook_service-1
-        - gtilmbc-route_service-1
+        - gtilmbc-logbook-service-1
+        - gtilmbc-route-service-1
       register: container_digests
       tags: [deploy]
 
