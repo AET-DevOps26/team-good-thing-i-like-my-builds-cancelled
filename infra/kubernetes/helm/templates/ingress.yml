@@ -26,11 +26,11 @@ spec:
             path: "/api/v1/suggestion"
             backend:
               service:
-                name: suggestion-service
+                name: genai-service
                 port:
-                  number: 80
+                  number: 8080
           - pathType: Prefix
-            path: "/api/v1/examples" # TODO: Change path when implementing logbook service
+            path: "/api/v1/logbook"
             backend:
               service:
                 name: logbook-service

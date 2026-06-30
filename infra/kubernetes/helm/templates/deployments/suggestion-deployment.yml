@@ -20,7 +20,7 @@ spec:
           image: {{ .Values.image.registry }}/{{ .Values.image.owner }}/{{ .Values.images.genai }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 9200
+            - containerPort: 8080
               name: suggestion-api
           resources:
             requests:
@@ -29,3 +29,15 @@ spec:
             limits:
               cpu: "500m"
               memory: "512Mi"
+          env:
+            - name: LMSTUDIO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: llm-secret
+                  key: LMSTUDIO_API_KEY
+            
+            - name: LMSTUDIO_MODEL
+              value: "openai/gpt-oss-120b"
+            
+            - name: LMSTUDIO_BASE_URL
+              value: "https://logos.aet.cit.tum.de"
