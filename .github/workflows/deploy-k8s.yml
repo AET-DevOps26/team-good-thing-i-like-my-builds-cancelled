@@ -1,6 +1,10 @@
 name: Deploy to K8s
 
 on:
+  workflow_run:
+    workflows: ["Build Server", "Build Client", "Build GenAI"]
+    branches: [main]
+    types: [completed]
   workflow_dispatch:
 
 jobs:
@@ -22,9 +26,18 @@ jobs:
         run: |
           kubectl create secret generic llm-secret \
             --from-literal=LMSTUDIO_API_KEY="${{ secrets.LMSTUDIO_API_KEY }}" \
-            -n cancelled
+            -n cancelled \
+            --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy to k8s
         working-directory: infra/kubernetes/helm
         run: |
           helm -n cancelled upgrade --install cancelled .
+
+      - name: Restart containers
+        run: |
+          deployments=$(kubectl get deployments -n cancelled -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || true)
+          for deploy in $deployments; do
+            kubectl rollout restart deployment "$deploy" -n cancelled
+          done
+
