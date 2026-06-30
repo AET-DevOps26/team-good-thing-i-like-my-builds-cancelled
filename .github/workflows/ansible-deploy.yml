@@ -32,7 +32,7 @@ jobs:
       GHCR_USERNAME: ${{ github.actor }}
       GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      CLIENT_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/client:bugfix-fix-nginx-reload-error-localhost-azure' }}
+      CLIENT_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/client:main' }}
       LOGBOOK_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/logbook-service:main' }}
       ROUTE_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/route-service:main' }}
       GENAI_IMAGE: ${{ 'ghcr.io/aet-devops26/team-good-thing-i-like-my-builds-cancelled/genai-service:main' }}
