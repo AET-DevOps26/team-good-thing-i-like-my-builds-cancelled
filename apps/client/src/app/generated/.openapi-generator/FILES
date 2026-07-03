@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.base.service.ts
 api.module.ts
@@ -10,10 +9,20 @@ configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/cancelSuggestion.ts
+model/createLogbookEntryRequest.ts
+model/errorResponse.ts
+model/logbookEntry.ts
+model/logbookEntryPage.ts
 model/models.ts
 model/station.ts
+model/suggestionDone.ts
+model/suggestionToken.ts
+model/textUpdate.ts
 model/trainConnection.ts
 model/trainSegment.ts
+model/transportMode.ts
+model/updateLogbookEntryRequest.ts
 param.ts
 provide-api.ts
 query.params.ts

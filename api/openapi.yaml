@@ -77,14 +77,6 @@ paths:
         in: query
         required: false
         schema: {$ref: '#/components/schemas/TransportMode'}
-      - name: startCity
-        in: query
-        required: false
-        schema: {type: string}
-      - name: endCity
-        in: query
-        required: false
-        schema: {type: string}
       - name: page
         in: query
         required: false
@@ -244,59 +236,6 @@ components:
         - WALK
         - OTHER
 
-    LocationRef:
-      type: object
-      required:
-        - city
-      properties:
-        city: {type: string}
-        countryCode:
-          type: string
-          minLength: 2
-          maxLength: 2
-          description: ISO 3166-1 alpha-2 country code.
-          example: DE
-        stationId:
-          type: string
-          description: Station id from route service when available.
-        stationName:
-          type: string
-          description: Human-readable station name.
-        latitude: {type: number, format: double}
-        longitude: {type: number, format: double}
-
-    JourneyLeg:
-      type: object
-      required:
-        - mode
-        - start
-        - end
-        - departureTime
-        - arrivalTime
-      properties:
-        mode: {$ref: '#/components/schemas/TransportMode'}
-        start: {$ref: '#/components/schemas/LocationRef'}
-        end: {$ref: '#/components/schemas/LocationRef'}
-        departureTime: {type: string, format: date-time}
-        arrivalTime: {type: string, format: date-time}
-        provider: {type: string, description: Carrier or provider name.}
-        line:
-          type: string
-          description: Optional line, flight number, or route code.
-        notes: {type: string}
-
-    RouteReference:
-      type: object
-      description: Reference to a connection selected from route-service results.
-      properties:
-        startStationId: {type: string}
-        destinationStationId: {type: string}
-        viaStationIds:
-          type: array
-          items: {type: string}
-        requestedTime: {type: string, format: date-time}
-        selectedConnection: {$ref: '#/components/schemas/TrainConnection'}
-
     LogbookEntry:
       type: object
       required:
@@ -304,9 +243,9 @@ components:
         - title
         - startTime
         - endTime
-        - start
-        - destination
-        - primaryTransportMode
+        - startCity
+        - destinationCity
+        - transportMode
         - createdAt
         - updatedAt
       properties:
@@ -315,35 +254,15 @@ components:
         description: {type: string, maxLength: 4000}
         startTime: {type: string, format: date-time}
         endTime: {type: string, format: date-time}
-        start: {$ref: '#/components/schemas/LocationRef'}
-        destination: {$ref: '#/components/schemas/LocationRef'}
-        primaryTransportMode: {$ref: '#/components/schemas/TransportMode'}
-        legs:
-          type: array
-          items: {$ref: '#/components/schemas/JourneyLeg'}
-          description: Optional detailed itinerary across one or more legs.
-        routeReference:
-          $ref: '#/components/schemas/RouteReference'
-        distanceKm:
-          type: number
-          format: double
-          minimum: 0
-        costAmount:
-          type: number
-          format: double
-          minimum: 0
-        costCurrency:
+        startCity: {type: string}
+        destinationCity: {type: string}
+        startStationId:
           type: string
-          minLength: 3
-          maxLength: 3
-          description: ISO 4217 currency code.
-          example: EUR
-        delayMinutes:
-          type: integer
-          minimum: 0
-        tags:
-          type: array
-          items: {type: string, maxLength: 40}
+          description: Optional station id from route service for train journeys.
+        destinationStationId:
+          type: string
+          description: Optional station id from route service for train journeys.
+        transportMode: {$ref: '#/components/schemas/TransportMode'}
         createdAt: {type: string, format: date-time}
         updatedAt: {type: string, format: date-time}
 
@@ -353,40 +272,23 @@ components:
         - title
         - startTime
         - endTime
-        - start
-        - destination
-        - primaryTransportMode
+        - startCity
+        - destinationCity
+        - transportMode
       properties:
         title: {type: string, minLength: 1, maxLength: 120}
         description: {type: string, maxLength: 4000}
         startTime: {type: string, format: date-time}
         endTime: {type: string, format: date-time}
-        start: {$ref: '#/components/schemas/LocationRef'}
-        destination: {$ref: '#/components/schemas/LocationRef'}
-        primaryTransportMode: {$ref: '#/components/schemas/TransportMode'}
-        legs:
-          type: array
-          items: {$ref: '#/components/schemas/JourneyLeg'}
-        routeReference:
-          $ref: '#/components/schemas/RouteReference'
-        distanceKm:
-          type: number
-          format: double
-          minimum: 0
-        costAmount:
-          type: number
-          format: double
-          minimum: 0
-        costCurrency:
+        startCity: {type: string}
+        destinationCity: {type: string}
+        startStationId:
           type: string
-          minLength: 3
-          maxLength: 3
-        delayMinutes:
-          type: integer
-          minimum: 0
-        tags:
-          type: array
-          items: {type: string, maxLength: 40}
+          description: Optional station id from route service for train journeys.
+        destinationStationId:
+          type: string
+          description: Optional station id from route service for train journeys.
+        transportMode: {$ref: '#/components/schemas/TransportMode'}
 
     UpdateLogbookEntryRequest:
       allOf:
