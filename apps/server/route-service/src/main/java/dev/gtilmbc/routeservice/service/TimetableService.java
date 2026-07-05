@@ -16,7 +16,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +28,7 @@ public class TimetableService {
 
     HttpClient client = HttpClient.newHttpClient();
     ObjectMapper mapper = new ObjectMapper();
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.GERMAN);
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.GERMAN).withZone(ZoneId.of("Europe/Berlin"));
 
     public TimetableService() {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -46,7 +47,7 @@ public class TimetableService {
         return List.of(stations);
     }
 
-    public List<TrainConnection> findConnections(String from, String to, LocalDateTime time) throws IOException, InterruptedException {
+    public List<TrainConnection> findConnections(String from, String to, OffsetDateTime time) throws IOException, InterruptedException {
         String requestBody = "{\"abfahrtsHalt\":\"" + from + "\",\"anfrageZeitpunkt\":\"" + time.format(dateFormatter) + "\",\"ankunftsHalt\":\"" + to + "\",\"ankunftSuche\":\"ABFAHRT\",\"klasse\":\"KLASSE_2\",\"maxUmstiege\":0,\"produktgattungen\":[\"ICE\",\"EC_IC\",\"IR\",\"REGIONAL\",\"SBAHN\",\"UBAHN\",\"TRAM\"],\"reisende\":[{\"typ\":\"ERWACHSENER\",\"ermaessigungen\":[{\"art\":\"KEINE_ERMAESSIGUNG\",\"klasse\":\"KLASSENLOS\"}],\"alter\":[],\"anzahl\":1}],\"schnelleVerbindungen\":true,\"autonomeReservierungOnly\":false,\"bikeCarriage\":false,\"reservierungsKontingenteVorhanden\":false,\"nurDeutschlandTicketVerbindungen\":false,\"deutschlandTicketVorhanden\":false}";
         HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create("https://www.bahn.de/web/api/angebote/fahrplan"))
