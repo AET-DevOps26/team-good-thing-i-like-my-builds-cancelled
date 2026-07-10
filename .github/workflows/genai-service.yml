@@ -22,7 +22,11 @@ env:
   SERVICE_PATH: apps/server/genai-service
 
 jobs:
+  test:
+    uses: ./.github/workflows/genai-tests.yml
+
   build-and-push:
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
