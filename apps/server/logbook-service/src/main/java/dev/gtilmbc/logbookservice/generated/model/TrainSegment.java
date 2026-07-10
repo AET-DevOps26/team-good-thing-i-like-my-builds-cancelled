@@ -25,7 +25,7 @@ import jakarta.annotation.Generated;
  * TrainSegment
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-21T17:32:24.143535+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-07-03T13:35:39.374777+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 public class TrainSegment {
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

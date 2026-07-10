@@ -5,6 +5,16 @@
  */
 package dev.gtilmbc.logbookservice.generated.api;
 
+import dev.gtilmbc.logbookservice.generated.model.CreateLogbookEntryRequest;
+import org.springframework.format.annotation.DateTimeFormat;
+import dev.gtilmbc.logbookservice.generated.model.ErrorResponse;
+import dev.gtilmbc.logbookservice.generated.model.LogbookEntry;
+import dev.gtilmbc.logbookservice.generated.model.LogbookEntryPage;
+import org.springframework.lang.Nullable;
+import java.time.OffsetDateTime;
+import dev.gtilmbc.logbookservice.generated.model.TransportMode;
+import java.util.UUID;
+import dev.gtilmbc.logbookservice.generated.model.UpdateLogbookEntryRequest;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,7 +42,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-21T17:32:24.143535+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-07-03T13:35:39.374777+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 @Validated
 @Tag(name = "logbook", description = "the logbook API")
 public interface LogbookApi {
@@ -41,26 +51,243 @@ public interface LogbookApi {
         return Optional.empty();
     }
 
+    String PATH_CREATE_LOGBOOK_ENTRY = "/v1/logbook/entries";
+    /**
+     * POST /v1/logbook/entries
+     *
+     * @param createLogbookEntryRequest  (required)
+     * @return Created (status code 201)
+     *         or Bad Request (status code 400)
+     */
+    @Operation(
+        operationId = "createLogbookEntry",
+        tags = { "logbook" },
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Created", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = LogbookEntry.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.POST,
+        value = LogbookApi.PATH_CREATE_LOGBOOK_ENTRY,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    default ResponseEntity<LogbookEntry> createLogbookEntry(
+        @Parameter(name = "CreateLogbookEntryRequest", description = "", required = true) @Valid @RequestBody CreateLogbookEntryRequest createLogbookEntryRequest
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"startCity\" : \"startCity\", \"destinationCity\" : \"destinationCity\", \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"description\", \"transportMode\" : \"TRAIN\", \"startTime\" : \"2000-01-23T04:56:07.000+00:00\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"endTime\" : \"2000-01-23T04:56:07.000+00:00\", \"title\" : \"title\", \"startStationId\" : \"startStationId\", \"destinationStationId\" : \"destinationStationId\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"code\" : \"code\", \"details\" : [ \"details\", \"details\" ], \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    String PATH_DELETE_LOGBOOK_ENTRY = "/v1/logbook/entries/{entryId}";
+    /**
+     * DELETE /v1/logbook/entries/{entryId}
+     *
+     * @param entryId  (required)
+     * @return No Content (status code 204)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "deleteLogbookEntry",
+        tags = { "logbook" },
+        responses = {
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.DELETE,
+        value = LogbookApi.PATH_DELETE_LOGBOOK_ENTRY,
+        produces = { "application/json" }
+    )
+    default ResponseEntity<Void> deleteLogbookEntry(
+        @Parameter(name = "entryId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("entryId") UUID entryId
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"code\" : \"code\", \"details\" : [ \"details\", \"details\" ], \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
     String PATH_GET_LOGBOOK_ENTRIES = "/v1/logbook/entries";
     /**
      * GET /v1/logbook/entries
      *
+     * @param from  (optional)
+     * @param to  (optional)
+     * @param q  (optional)
+     * @param transportMode  (optional)
+     * @param page  (optional, default to 0)
+     * @param size  (optional, default to 20)
      * @return OK (status code 200)
      */
     @Operation(
         operationId = "getLogbookEntries",
         tags = { "logbook" },
         responses = {
-            @ApiResponse(responseCode = "200", description = "OK")
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = LogbookEntryPage.class))
+            })
         }
     )
     @RequestMapping(
         method = RequestMethod.GET,
-        value = LogbookApi.PATH_GET_LOGBOOK_ENTRIES
+        value = LogbookApi.PATH_GET_LOGBOOK_ENTRIES,
+        produces = { "application/json" }
     )
-    default ResponseEntity<Void> getLogbookEntries(
-        
+    default ResponseEntity<LogbookEntryPage> getLogbookEntries(
+        @Parameter(name = "from", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "from", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @Nullable OffsetDateTime from,
+        @Parameter(name = "to", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "to", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @Nullable OffsetDateTime to,
+        @Parameter(name = "q", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "q", required = false) @Nullable String q,
+        @Parameter(name = "transportMode", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "transportMode", required = false) @Nullable TransportMode transportMode,
+        @Min(value = 0) @Parameter(name = "page", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+        @Min(value = 1) @Max(value = 100) @Parameter(name = "size", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "size", required = false, defaultValue = "20") Integer size
     ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"size\" : 1, \"page\" : 0, \"items\" : [ { \"startCity\" : \"startCity\", \"destinationCity\" : \"destinationCity\", \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"description\", \"transportMode\" : \"TRAIN\", \"startTime\" : \"2000-01-23T04:56:07.000+00:00\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"endTime\" : \"2000-01-23T04:56:07.000+00:00\", \"title\" : \"title\", \"startStationId\" : \"startStationId\", \"destinationStationId\" : \"destinationStationId\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }, { \"startCity\" : \"startCity\", \"destinationCity\" : \"destinationCity\", \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"description\", \"transportMode\" : \"TRAIN\", \"startTime\" : \"2000-01-23T04:56:07.000+00:00\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"endTime\" : \"2000-01-23T04:56:07.000+00:00\", \"title\" : \"title\", \"startStationId\" : \"startStationId\", \"destinationStationId\" : \"destinationStationId\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" } ], \"totalElements\" : 0 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    String PATH_GET_LOGBOOK_ENTRY_BY_ID = "/v1/logbook/entries/{entryId}";
+    /**
+     * GET /v1/logbook/entries/{entryId}
+     *
+     * @param entryId  (required)
+     * @return OK (status code 200)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "getLogbookEntryById",
+        tags = { "logbook" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = LogbookEntry.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = LogbookApi.PATH_GET_LOGBOOK_ENTRY_BY_ID,
+        produces = { "application/json" }
+    )
+    default ResponseEntity<LogbookEntry> getLogbookEntryById(
+        @Parameter(name = "entryId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("entryId") UUID entryId
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"startCity\" : \"startCity\", \"destinationCity\" : \"destinationCity\", \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"description\", \"transportMode\" : \"TRAIN\", \"startTime\" : \"2000-01-23T04:56:07.000+00:00\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"endTime\" : \"2000-01-23T04:56:07.000+00:00\", \"title\" : \"title\", \"startStationId\" : \"startStationId\", \"destinationStationId\" : \"destinationStationId\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"code\" : \"code\", \"details\" : [ \"details\", \"details\" ], \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    String PATH_UPDATE_LOGBOOK_ENTRY = "/v1/logbook/entries/{entryId}";
+    /**
+     * PUT /v1/logbook/entries/{entryId}
+     *
+     * @param entryId  (required)
+     * @param updateLogbookEntryRequest  (required)
+     * @return OK (status code 200)
+     *         or Bad Request (status code 400)
+     *         or Not Found (status code 404)
+     */
+    @Operation(
+        operationId = "updateLogbookEntry",
+        tags = { "logbook" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = LogbookEntry.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = LogbookApi.PATH_UPDATE_LOGBOOK_ENTRY,
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    default ResponseEntity<LogbookEntry> updateLogbookEntry(
+        @Parameter(name = "entryId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("entryId") UUID entryId,
+        @Parameter(name = "UpdateLogbookEntryRequest", description = "", required = true) @Valid @RequestBody UpdateLogbookEntryRequest updateLogbookEntryRequest
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"startCity\" : \"startCity\", \"destinationCity\" : \"destinationCity\", \"createdAt\" : \"2000-01-23T04:56:07.000+00:00\", \"description\" : \"description\", \"transportMode\" : \"TRAIN\", \"startTime\" : \"2000-01-23T04:56:07.000+00:00\", \"id\" : \"046b6c7f-0b8a-43b9-b35d-6489e6daee91\", \"endTime\" : \"2000-01-23T04:56:07.000+00:00\", \"title\" : \"title\", \"startStationId\" : \"startStationId\", \"destinationStationId\" : \"destinationStationId\", \"updatedAt\" : \"2000-01-23T04:56:07.000+00:00\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"code\" : \"code\", \"details\" : [ \"details\", \"details\" ], \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"code\" : \"code\", \"details\" : [ \"details\", \"details\" ], \"message\" : \"message\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
     }

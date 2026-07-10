@@ -1,5 +1,15 @@
 src/main/java/dev/gtilmbc/routeservice/generated/api/ApiUtil.java
 src/main/java/dev/gtilmbc/routeservice/generated/api/RouteApi.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/CancelSuggestion.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/CreateLogbookEntryRequest.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/ErrorResponse.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/LogbookEntry.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/LogbookEntryPage.java
 src/main/java/dev/gtilmbc/routeservice/generated/model/Station.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/SuggestionDone.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/SuggestionToken.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/TextUpdate.java
 src/main/java/dev/gtilmbc/routeservice/generated/model/TrainConnection.java
 src/main/java/dev/gtilmbc/routeservice/generated/model/TrainSegment.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/TransportMode.java
+src/main/java/dev/gtilmbc/routeservice/generated/model/UpdateLogbookEntryRequest.java
