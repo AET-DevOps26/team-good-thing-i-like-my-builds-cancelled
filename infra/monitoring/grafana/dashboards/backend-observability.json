@@ -43,8 +43,8 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_count[5m])) by (application)",
-          "legendFormat": "{{application}}"
+          "expr": "sum(rate(http_server_requests_seconds_count{job=~\"logbook-service|route-service\"}[5m])) by (job) or label_replace(sum(rate(app_http_requests_total{service=\"genai-service\"}[5m])) by (service), \"job\", \"$1\", \"service\", \"(.*)\")",
+          "legendFormat": "{{job}}"
         }
       ]
     },
@@ -72,8 +72,8 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "sum(rate(http_server_requests_seconds_count{status=~\"5..\"}[5m])) by (application) / clamp_min(sum(rate(http_server_requests_seconds_count[5m])) by (application), 0.0001)",
-          "legendFormat": "{{application}}"
+          "expr": "(sum(rate(http_server_requests_seconds_count{job=~\"logbook-service|route-service\",status=~\"5..\"}[5m])) by (job) / clamp_min(sum(rate(http_server_requests_seconds_count{job=~\"logbook-service|route-service\"}[5m])) by (job), 0.0001)) or label_replace((sum(rate(app_http_request_errors_total{service=\"genai-service\"}[5m])) by (service) / clamp_min(sum(rate(app_http_requests_total{service=\"genai-service\"}[5m])) by (service), 0.0001)), \"job\", \"$1\", \"service\", \"(.*)\")",
+          "legendFormat": "{{job}}"
         }
       ]
     },
@@ -99,8 +99,8 @@
       "type": "timeseries",
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum by (le, application) (rate(http_server_requests_seconds_bucket[5m])))",
-          "legendFormat": "{{application}}"
+          "expr": "histogram_quantile(0.95, sum by (le, job) (rate(http_server_requests_seconds_bucket{job=~\"logbook-service|route-service\"}[5m]))) or label_replace(histogram_quantile(0.95, sum by (le, service) (rate(app_http_request_duration_seconds_bucket{service=\"genai-service\"}[5m]))), \"job\", \"$1\", \"service\", \"(.*)\")",
+          "legendFormat": "{{job}}"
         }
       ]
     },
