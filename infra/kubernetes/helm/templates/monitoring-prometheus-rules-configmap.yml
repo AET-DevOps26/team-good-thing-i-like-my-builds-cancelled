@@ -1,0 +1,50 @@
+{{- if .Values.monitoring.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: {{ .Values.monitoring.namespace }}
+  labels:
+    app: prometheus
+data:
+  application-alerts.yml: |
+    groups:
+      - name: application-alerts
+        rules:
+          - alert: HighErrorRate
+            expr: |
+              (
+                sum(rate(http_server_requests_seconds_count{status=~"5.."}[5m]))
+                /
+                sum(rate(http_server_requests_seconds_count[5m]))
+              ) > 0.05
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: High HTTP 5xx error rate in Spring services
+              description: HTTP 5xx ratio is above 5% for at least 10 minutes.
+
+          - alert: HighLatencyP95
+            expr: |
+              histogram_quantile(
+                0.95,
+                sum by (le, application) (rate(http_server_requests_seconds_bucket[5m]))
+              ) > 1
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: High p95 latency in Spring services
+              description: p95 request latency is above 1s for at least 10 minutes.
+
+          - alert: ServiceDown
+            expr: up{job=~"logbook-service|route-service|genai-service"} == 0
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: Service scrape target is down
+              description: One or more backend services are unreachable by Prometheus.
+{{- end }}

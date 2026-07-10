@@ -1,0 +1,42 @@
+{{- if .Values.monitoring.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: {{ .Values.monitoring.namespace }}
+  labels:
+    app: prometheus
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: {{ .Values.monitoring.prometheus.scrapeInterval }}
+      evaluation_interval: {{ .Values.monitoring.prometheus.evaluationInterval }}
+
+    rule_files:
+      - /etc/prometheus/rules/*.yml
+
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets:
+              - localhost:9090
+
+      - job_name: logbook-service
+        metrics_path: /api/actuator/prometheus
+        static_configs:
+          - targets:
+              - logbook-service.{{ .Release.Namespace }}.svc.cluster.local:80
+
+      - job_name: route-service
+        metrics_path: /api/actuator/prometheus
+        static_configs:
+          - targets:
+              - route-service.{{ .Release.Namespace }}.svc.cluster.local:80
+
+      - job_name: genai-service
+        metrics_path: /metrics
+        static_configs:
+          - targets:
+              - genai-service.{{ .Release.Namespace }}.svc.cluster.local:8080
+{{- end }}

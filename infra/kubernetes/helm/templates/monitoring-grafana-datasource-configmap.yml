@@ -1,0 +1,21 @@
+{{- if .Values.monitoring.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: {{ .Values.monitoring.namespace }}
+  labels:
+    app: grafana
+data:
+  datasources.yml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        uid: prometheus
+        url: http://prometheus-service.{{ .Values.monitoring.namespace }}.svc.cluster.local:9090
+        isDefault: true
+        editable: false
+{{- end }}

@@ -15,3 +15,20 @@ ingress:
 database:
   user: logbook_user
   password: logbook_password
+
+monitoring:
+  enabled: true
+  namespace: monitoring
+  createNamespace: true
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    scrapeInterval: 15s
+    evaluationInterval: 15s
+    storageSize: 5Gi
+
+  grafana:
+    image: grafana/grafana:11.2.2
+    storageSize: 2Gi
+    adminUser: admin
+    adminPassword: admin

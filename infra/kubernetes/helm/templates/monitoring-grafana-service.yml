@@ -1,0 +1,18 @@
+{{- if .Values.monitoring.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+  namespace: {{ .Values.monitoring.namespace }}
+  labels:
+    app: grafana
+spec:
+  type: ClusterIP
+  selector:
+    app: grafana
+  ports:
+    - name: http
+      port: 3000
+      targetPort: grafana-http
+{{- end }}
