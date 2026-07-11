@@ -24,6 +24,11 @@ spec:
             - --config.file=/etc/prometheus/prometheus.yml
             - --storage.tsdb.path=/prometheus
             - --web.enable-lifecycle
+            - --web.external-url=https://$(INGRESS_HOST)/monitoring/prometheus
+            - --web.route-prefix=/monitoring/prometheus
+          env:
+            - name: INGRESS_HOST
+              value: {{ .Values.ingress.host | quote }}
           ports:
             - containerPort: 9090
               name: prometheus-http
