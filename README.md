@@ -14,7 +14,7 @@ Repository for team Good thing I like my builds Cancelled!
 - [Kubernetes (Rancher)](https://cancelled.stud.k8s.aet.cit.tum.de/)
 - [Azure](http://4.223.64.133:4567/plan)
 
-## AI Microservice 
+## AI Microservice
 The logbook suggestion service can be tested using the ansible deployment here: http://4.223.64.133:4567/. Navigate to the "Logbuch" page, type something, and watch the magic happen.
 
 ## TODO Lists
@@ -145,7 +145,7 @@ Prometheus + Grafana is now integrated for all deployment modes:
 
 - Local Docker Compose (`infra/docker/compose/local/docker-compose.yml`)
 - Azure/Ansible deployment (`infra/ansible/templates/docker-compose.yml.j2` + `infra/ansible/playbooks/deploy.yml`)
-- Kubernetes/Helm deployment (`infra/kubernetes/helm/templates/monitoring-*.yml`)
+- Kubernetes/Helm deployment (`infra/kubernetes/helm/templates/monitoring/monitoring-*.yml`)
 
 ### Collected Metrics
 
