@@ -30,5 +30,4 @@ monitoring:
   grafana:
     image: grafana/grafana:11.2.2
     storageSize: 2Gi
-    adminUser: admin
-    adminPassword: admin
+    existingSecret: grafana-admin-secret
