@@ -1,9 +1,0 @@
-{{- if and .Values.monitoring.enabled .Values.monitoring.createNamespace }}
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.monitoring.namespace }}
-  labels:
-    app.kubernetes.io/name: monitoring
-{{- end }}
