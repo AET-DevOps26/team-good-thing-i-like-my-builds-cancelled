@@ -5,6 +5,6 @@ datasources:
     type: prometheus
     access: proxy
     uid: prometheus
-    url: http://prometheus:9090
+    url: http://prometheus-service.{{ .Values.monitoring.namespace }}.svc.cluster.local:9090
     isDefault: true
     editable: false
