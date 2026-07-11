@@ -21,14 +21,19 @@ def text_update(text_before: str, text_after: str | None = None) -> dict:
 
 def test_text_update_streams_tokens(monkeypatch) -> None:
     async def fake_stream(websocket, text_before: str, text_after: str) -> None:
-        await websocket.send_json({"type": "token", "token": f"echo:{text_before}|{text_after}"})
+        await websocket.send_json(
+            {"type": "token", "token": f"echo:{text_before}|{text_after}"}
+        )
         await websocket.send_json({"type": "done"})
 
     monkeypatch.setattr(suggestion_routes, "stream_suggestion", fake_stream)
 
     with client.websocket_connect("/api/v1/suggestion") as ws:
         ws.send_json(text_update("Meine Reise nach", "war schön."))
-        assert ws.receive_json() == {"type": "token", "token": "echo:Meine Reise nach|war schön."}
+        assert ws.receive_json() == {
+            "type": "token",
+            "token": "echo:Meine Reise nach|war schön.",
+        }
         assert ws.receive_json() == {"type": "done"}
 
 

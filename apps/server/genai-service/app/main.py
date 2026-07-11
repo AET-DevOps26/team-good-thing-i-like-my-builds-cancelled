@@ -1,10 +1,10 @@
 import logging
 
-logging.basicConfig(level=logging.INFO)
-
 from fastapi import FastAPI
 
 from app.api.suggestion_routes import router as suggestion_router
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="GenAI Service", version="0.1.0")
 

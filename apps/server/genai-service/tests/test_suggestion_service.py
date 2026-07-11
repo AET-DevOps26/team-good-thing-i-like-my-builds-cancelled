@@ -52,11 +52,15 @@ def install_transport(monkeypatch, handler) -> None:
     monkeypatch.setattr(suggestion_service.httpx, "AsyncClient", _PatchedClient)
 
 
-def run_stream(monkeypatch, handler, text_before="Hello", text_after="") -> FakeWebSocket:
+def run_stream(
+    monkeypatch, handler, text_before="Hello", text_after=""
+) -> FakeWebSocket:
     monkeypatch.setattr(suggestion_service, "_MODEL_OVERRIDE", "test-model")
     install_transport(monkeypatch, handler)
     websocket = FakeWebSocket()
-    asyncio.run(suggestion_service.stream_suggestion(websocket, text_before, text_after))
+    asyncio.run(
+        suggestion_service.stream_suggestion(websocket, text_before, text_after)
+    )
     return websocket
 
 
@@ -151,7 +155,9 @@ def test_request_payload_contains_context(monkeypatch) -> None:
         captured["headers"] = request.headers
         return httpx.Response(200, content=sse_body([]))
 
-    run_stream(monkeypatch, handler, text_before="Wir fuhren nach", text_after="und dann heim.")
+    run_stream(
+        monkeypatch, handler, text_before="Wir fuhren nach", text_after="und dann heim."
+    )
 
     payload = captured["json"]
     assert payload["model"] == "test-model"
