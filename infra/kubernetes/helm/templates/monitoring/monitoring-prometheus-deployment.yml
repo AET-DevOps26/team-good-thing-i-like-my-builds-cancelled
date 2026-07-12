@@ -17,6 +17,9 @@ spec:
       labels:
         app: prometheus
     spec:
+      securityContext:
+        fsGroup: 65534
+        fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: prometheus
           image: {{ .Values.monitoring.prometheus.image }}
@@ -29,16 +32,12 @@ spec:
           env:
             - name: INGRESS_HOST
               value: {{ .Values.ingress.host | quote }}
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
           ports:
             - containerPort: 9090
               name: prometheus-http
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "1Gi"
           volumeMounts:
             - name: config
               mountPath: /etc/prometheus/prometheus.yml

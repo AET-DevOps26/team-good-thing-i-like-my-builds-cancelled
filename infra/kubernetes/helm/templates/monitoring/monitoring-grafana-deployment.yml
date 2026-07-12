@@ -17,6 +17,9 @@ spec:
       labels:
         app: grafana
     spec:
+      securityContext:
+        fsGroup: 472
+        fsGroupChangePolicy: OnRootMismatch
       containers:
         - name: grafana
           image: {{ .Values.monitoring.grafana.image }}
@@ -37,16 +40,12 @@ spec:
               value: https://{{ .Values.ingress.host }}/monitoring/grafana/
             - name: GF_SERVER_SERVE_FROM_SUB_PATH
               value: "true"
+          securityContext:
+            runAsUser: 472
+            runAsGroup: 472
           ports:
             - containerPort: 3000
               name: grafana-http
-          resources:
-            requests:
-              cpu: "100m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
           volumeMounts:
             - name: datasources
               mountPath: /etc/grafana/provisioning/datasources/datasources.yml
