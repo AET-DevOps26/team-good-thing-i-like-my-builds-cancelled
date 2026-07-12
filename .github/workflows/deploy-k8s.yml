@@ -29,6 +29,14 @@ jobs:
             -n cancelled \
             --dry-run=client -o yaml | kubectl apply -f -
 
+      - name: Create/update grafana admin secret
+        run: |
+          kubectl create secret generic grafana-admin-secret \
+            --from-literal=GF_SECURITY_ADMIN_USER="${{ secrets.GF_SECURITY_ADMIN_USER }}" \
+            --from-literal=GF_SECURITY_ADMIN_PASSWORD="${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}" \
+            -n cancelled-monitoring \
+            --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy to k8s
         working-directory: infra/kubernetes/helm
         run: |
