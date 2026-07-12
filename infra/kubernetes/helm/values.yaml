@@ -18,7 +18,7 @@ database:
 
 monitoring:
   enabled: true
-  namespace: monitoring
+  namespace: cancelled-monitoring
   createNamespace: true
 
   prometheus:
