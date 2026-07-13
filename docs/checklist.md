@@ -44,11 +44,11 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [x] CI fails reliably on broken code/tests.
 
 ### Observability Compliance
-- [ ] Prometheus is integrated for metrics collection.
-- [ ] Metrics include at least request count, latency, and error rate.
-- [ ] Grafana dashboards visualize meaningful system behavior.
-- [ ] Grafana dashboards are exported as `.json` files for submission.
-- [ ] At least one meaningful alert rule is configured and documented.
+- [x] Prometheus is integrated for metrics collection.
+- [x] Metrics include at least request count, latency, and error rate.
+- [x] Grafana dashboards visualize meaningful system behavior.
+- [x] Grafana dashboards are exported as `.json` files for submission.
+- [x] At least one meaningful alert rule is configured and documented.
 
 ### Testing Compliance
 - [x] Unit tests cover critical server logic.

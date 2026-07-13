@@ -1,6 +1,6 @@
 # CI/CD
 
-The project contains a list of CI/CD pipelines that are implemented using GitHub Actions. All build workflows test and lint their subsystem, build the code, package the Dockerfile into an image an push the image to the GitHub Container Registry (ghcr). Deployment workflows run after merging to main and deploy the built images to the given environment. 
+The project contains a list of CI/CD pipelines that are implemented using GitHub Actions. All build workflows test and lint their subsystem, build the code, package the Dockerfile into an image and push the image to the GitHub Container Registry (ghcr). Deployment workflows run after merging to main and deploy the built images to the given environment. 
 
 ## [Build Server](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/server.yml)
 
