@@ -5,6 +5,7 @@ metadata:
   name: route-service
   labels:
     app: route
+    monitoring: "true"
 spec:
   selector:
     app: route

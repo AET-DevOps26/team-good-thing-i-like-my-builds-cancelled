@@ -14,7 +14,7 @@ Repository for team Good thing I like my builds Cancelled!
 - [Kubernetes (Rancher)](https://cancelled.stud.k8s.aet.cit.tum.de/)
 - [Azure](http://4.223.64.133:4567/plan)
 
-## AI Microservice 
+## AI Microservice
 The logbook suggestion service can be tested using the ansible deployment here: http://4.223.64.133:4567/. Navigate to the "Logbuch" page, type something, and watch the magic happen.
 
 ## TODO Lists
@@ -62,11 +62,11 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [x] CI fails reliably on broken code/tests.
 
 #### Observability Compliance
-- [ ] Prometheus is integrated for metrics collection.
-- [ ] Metrics include at least request count, latency, and error rate.
-- [ ] Grafana dashboards visualize meaningful system behavior.
-- [ ] Grafana dashboards are exported as `.json` files for submission.
-- [ ] At least one meaningful alert rule is configured and documented.
+- [x] Prometheus is integrated for metrics collection.
+- [x] Metrics include at least request count, latency, and error rate.
+- [x] Grafana dashboards visualize meaningful system behavior.
+- [x] Grafana dashboards are exported as `.json` files for submission.
+- [x] At least one meaningful alert rule is configured and documented.
 
 #### Testing Compliance
 - [ ] Unit tests cover critical server logic.
@@ -79,7 +79,7 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [ ] Mandatory diagrams are present: Subsystem Decomposition, Use Case, Analysis Object Model.
 - [ ] API documentation and Swagger/OpenAPI references are in README/docs.
 - [ ] README documents setup, architecture, API docs, CI/CD, monitoring, and responsibilities.
-- [ ] Monitoring config, dashboards, and alerts are versioned in the repo.
+- [x] Monitoring config, dashboards, and alerts are versioned in the repo.
 - [ ] Testing instructions are documented.
 
 #### Presentation and Oral Exam Readiness
@@ -138,3 +138,50 @@ Use this as the functional roadmap for the Travel Journal product itself.
 - [ ] Scenario: user logs a current trip and receives AI writing help.
 - [ ] Scenario: frequent capital visitor receives smart next-capital recommendation.
 - [ ] Scenario: user analyzes delays and chooses a more reliable route.
+
+## Monitoring and Observability
+
+Prometheus + Grafana is now integrated for all deployment modes:
+
+- Local Docker Compose (`infra/docker/compose/local/docker-compose.yml`)
+- Azure/Ansible deployment (`infra/ansible/templates/docker-compose.yml.j2` + `infra/ansible/playbooks/deploy.yml`)
+- Kubernetes/Helm deployment (`infra/kubernetes/helm/templates/monitoring/monitoring-*.yml`)
+
+### Collected Metrics
+
+- `route-service` and `logbook-service`: Spring Boot Actuator Prometheus endpoint at `/actuator/prometheus`
+- `genai-service`: FastAPI Prometheus endpoint at `/metrics`
+- Core grading metrics are covered in dashboard/alerts:
+	- request count
+	- latency (p95)
+	- error rate (5xx ratio)
+
+### Alert Rules
+
+Prometheus alert rules are defined in:
+
+- `infra/monitoring/prometheus/rules/application-alerts.yml`
+
+Implemented alerts:
+
+- `HighErrorRate` (>5% 5xx for 10m)
+- `HighLatencyP95` (p95 > 1s for 10m)
+- `ServiceDown` (target unavailable for 2m)
+
+### Dashboard Export
+
+The exported dashboard JSON for submission is versioned in:
+
+- `infra/monitoring/grafana/dashboards/backend-observability.json`
+
+The same dashboard is also bundled in the Helm chart under:
+
+- `infra/kubernetes/helm/files/grafana/backend-observability.json`
+
+### Access
+
+- Local/Ansible Prometheus: `http://<host>:9090`
+- Local/Ansible Grafana: `http://<host>:3000` (default `admin/admin`)
+- Kubernetes:
+	- `kubectl -n monitoring port-forward svc/prometheus-service 9090:9090`
+	- `kubectl -n monitoring port-forward svc/grafana-service 3000:3000`
