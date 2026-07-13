@@ -10,7 +10,7 @@ Repository for team Good thing I like my builds Cancelled!
 | **Konrad** | Client      | Logbook Service    |
 
 > [!NOTE]
-> Due to a not squashed merge at the beginning of the project and because of a lot of generated client code the contribution of all members might seem less equal as it is! In terms of working hours and commit-complexity all contributors participated equally in the project!
+> Due to a not squashed merge at the beginning of the project and because of a lot of generated client code the contribution of all members might seem less equal than it is! In terms of working hours and commit-complexity all contributors participated equally in the project!
 
 ## Documentation
 
