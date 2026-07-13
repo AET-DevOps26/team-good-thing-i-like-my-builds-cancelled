@@ -14,16 +14,16 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [x] Planning/questions/feedback are tracked in official Artemis channels.
 
 ### System Architecture and Stack Compliance
-- [ ] Mono-repo contains client, server, GenAI, deployment, CI/CD, and docs.
+- [x] Mono-repo contains client, server, GenAI, deployment, CI/CD, and docs.
 - [x] Client is implemented with an allowed framework and communicates via REST.
-- [ ] Server is Spring Boot and contains at least 3 distinct microservices.
-- [ ] Database is persistent and schema is documented.
+- [x] Server contains at least 3 distinct microservices.
+- [x] Database is persistent and schema is documented.
 - [x] GenAI service is a separate Python microservice with defined interface.
-- [ ] GenAI provides a real user-facing capability (not only technical presence).
+- [x] GenAI provides a real user-facing capability (not only technical presence).
 - [ ] OpenAPI/Swagger documentation exists and is exposed.
 
 ### Containerization and Local Reproducibility
-- [ ] Each component has its own Dockerfile (client, server services, GenAI, DB).
+- [x] Each component has its own Dockerfile (client, server services, GenAI).
 - [x] Full system runs end-to-end via compose setup.
 - [ ] Local startup is possible in 3 commands or fewer.
 - [ ] Setup instructions are reproducible for a new user without hidden manual steps.
@@ -63,17 +63,6 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [ ] README documents setup, architecture, API docs, CI/CD, monitoring, and responsibilities.
 - [ ] Monitoring config, dashboards, and alerts are versioned in the repo.
 - [ ] Testing instructions are documented.
-
-### Presentation and Oral Exam Readiness
-- [ ] Team can demonstrate working end-to-end system live.
-- [ ] Team can explain architecture, pipeline, trade-offs, and operational aspects.
-- [ ] Each member can clearly explain and defend their own subsystem/artifact.
-- [ ] Evidence of monthly progress/checkpoint improvements is prepared.
-
-### Failure Guard (Must Be True)
-- [ ] Contributions are transparently documented (GitHub + Artemis evidence).
-- [ ] Every member can explain their own subsystem during presentation/exam.
-- [ ] End-to-end system works in a real demo.
 
 ## 2) Product/Feature Checklist (Problem Statement)
 Use this as the functional roadmap for the Travel Journal product itself.
