@@ -2,6 +2,10 @@
 
 The client is built using [Angular](https://angular.dev/) and can be found in `/apps/client/`.
 
+## Content
+
+## External UI Components
+
 ## Testing
 
 ### Component Testing

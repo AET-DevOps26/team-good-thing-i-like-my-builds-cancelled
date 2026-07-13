@@ -23,7 +23,7 @@ The full documentation can be found in the /docs folder with the following entri
 - [🟢 Monitoring](docs/monitoring.md)
 - [🟡 Problem Statement](docs/problem-statement.md)
 - [🔴 Server](docs/server.md)
-- [🔴 Testing](docs/testing.md)
+- [🟡 Testing](docs/testing.md)
 
 ## Deployed Live Demo
 
