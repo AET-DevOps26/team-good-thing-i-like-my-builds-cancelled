@@ -16,7 +16,7 @@ The full documentation can be found in the /docs folder with the following entri
 - [🟡 Architecture](docs/architecture.md)
 - [🟡 Checklist](docs/checklist.md)
 - [🟡 CI/CD](docs/ci-cd.md)
-- [🔴 Client](docs/client.md)
+- [🟡 Client](docs/client.md)
 - [🟢 Database](docs/database.md)
 - [🔴 Deployment](docs/deployment.md)
 - [🔴 GenAI](docs/genai.md)
