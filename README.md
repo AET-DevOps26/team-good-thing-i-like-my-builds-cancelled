@@ -3,11 +3,11 @@ Repository for team Good thing I like my builds Cancelled!
 
 ## Responsibilities
 
-| **Name**   | **User**     | **Systems** | **Feature**        |
-|------------|--------------|-------------|--------------------|
-| **Anian**  | @anian03     | Server      | Route Service      |
-| **Jan**    | @Jan-Thurner | GenAI       | Suggestion Service |
-| **Konrad** | @konrad2002  | Client      | Logbook Service    |
+| **Name**   | **User**                                       | **Systems** | **Feature**        |
+|------------|------------------------------------------------|-------------|--------------------|
+| **Anian**  | [@anian03](https://github.com/anian03)         | Server      | Route Service      |
+| **Jan**    | [@Jan-Thurner](https://github.com/Jan-Thurner) | GenAI       | Suggestion Service |
+| **Konrad** | [@konrad2002](https://github.com/konrad2002)   | Client      | Logbook Service    |
 
 > [!NOTE]
 > Due to a not squashed merge at the beginning of the project and because of a lot of generated client code the contribution of all members might seem less equal than it is! In terms of working hours and commit-complexity all contributors participated equally in the project!
