@@ -51,9 +51,9 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [ ] At least one meaningful alert rule is configured and documented.
 
 ### Testing Compliance
-- [ ] Unit tests cover critical server logic.
+- [x] Unit tests cover critical server logic.
 - [ ] Unit tests cover relevant GenAI logic.
-- [ ] Client tests cover key user workflows/interactions.
+- [x] Client tests cover key user workflows/interactions.
 - [ ] All tests run automatically in CI.
 
 ### Engineering Artifacts and Documentation Compliance
