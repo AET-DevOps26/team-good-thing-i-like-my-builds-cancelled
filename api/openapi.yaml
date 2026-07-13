@@ -41,12 +41,6 @@ paths:
         in: query
         required: true
         schema: {type: string}
-      - name: viaStationIds
-        in: query
-        required: false
-        schema:
-          type: array
-          items: {type: string}
       responses:
         '200':
           description: OK
