@@ -52,7 +52,7 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 
 ### Testing Compliance
 - [x] Unit tests cover critical server logic.
-- [ ] Unit tests cover relevant GenAI logic.
+- [x] Unit tests cover relevant GenAI logic.
 - [x] Client tests cover key user workflows/interactions.
 - [ ] All tests run automatically in CI.
 
