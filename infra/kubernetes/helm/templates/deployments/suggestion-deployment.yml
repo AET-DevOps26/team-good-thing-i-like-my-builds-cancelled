@@ -5,6 +5,7 @@ metadata:
   name: suggestion
   labels:
     app: suggestion
+    monitoring: "true"
 spec:
   replicas: 1
   selector:
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: suggestion
+        monitoring: "true"
     spec:
       containers:
         - name: suggestion
