@@ -64,6 +64,11 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [ ] Monitoring config, dashboards, and alerts are versioned in the repo.
 - [ ] Testing instructions are documented.
 
+### Failure Guard (Must Be True)
+- [x] Contributions are transparently documented (GitHub + Artemis evidence).
+- [x] Every member can explain their own subsystem during presentation/exam.
+- [x] End-to-end system works in a real demo.
+
 ## 2) Product/Feature Checklist (Problem Statement)
 Use this as the functional roadmap for the Travel Journal product itself.
 
