@@ -5,6 +5,10 @@ import { RouteService, Station, TrainConnection } from '@/generated';
 
 import { Plan } from './plan';
 
+type PlanTestAccess = Plan & {
+  fetchRoutes: () => void;
+};
+
 describe('Plan', () => {
   let component: Plan;
   let fixture: ComponentFixture<Plan>;
@@ -56,7 +60,7 @@ describe('Plan', () => {
     component.selectedDate.set(selectedDate);
     component.selectedTime.set('09:30');
 
-    (component as any).fetchRoutes();
+    (component as PlanTestAccess).fetchRoutes();
 
     expect(routeServiceMock.getConnections).toHaveBeenCalledTimes(1);
     expect(routeServiceMock.getConnections).toHaveBeenCalledWith(
@@ -75,7 +79,7 @@ describe('Plan', () => {
     component.selectedDate.set(new Date());
     component.selectedTime.set('09:30');
 
-    (component as any).fetchRoutes();
+    (component as PlanTestAccess).fetchRoutes();
 
     expect(routeServiceMock.getConnections).not.toHaveBeenCalled();
     expect(component.searched()).toBeFalsy();
