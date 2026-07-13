@@ -20,6 +20,8 @@ All tests can be executed using:
 npm run test
 ```
 
+![](assets/test-client.png)
+
 ### Linting
 
 This project uses ESLINT with a custom config (`eslint.config.js`) to run linting on the TypeScript code. Linting can be executed locally using:
