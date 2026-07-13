@@ -5,6 +5,7 @@ metadata:
   name: logbook-service
   labels:
     app: logbook
+    monitoring: "true"
 spec:
   selector:
     app: logbook
