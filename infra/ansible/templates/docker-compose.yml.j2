@@ -4,6 +4,7 @@ services:
     image: {{ client_image }}
     pull_policy: always
     hostname: client
+    restart: unless-stopped
     environment:
       TZ: "{{ timezone }}"
     ports:
@@ -12,6 +13,7 @@ services:
   db:
     image: {{ db_image }}
     hostname: db
+    restart: unless-stopped
     environment:
       TZ: "{{ timezone }}"
       POSTGRES_DB: "{{ postgres_db }}"
@@ -28,6 +30,7 @@ services:
   pg_admin:
     image: {{ pgadmin_image }}
     hostname: pg_admin
+    restart: unless-stopped
     environment:
       TZ: "{{ timezone }}"
       PGADMIN_DEFAULT_EMAIL: "{{ pgadmin_email }}"
@@ -38,10 +41,11 @@ services:
       db:
         condition: service_healthy
 
-  logbook_service:
+  logbook-service:
     image: {{ logbook_image }}
     pull_policy: always
-    hostname: logbook_service
+    hostname: logbook-service
+    restart: unless-stopped
     environment:
       TZ: "{{ timezone }}"
       SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/{{ postgres_db }}"
@@ -53,19 +57,21 @@ services:
       db:
         condition: service_healthy
 
-  route_service:
+  route-service:
     image: {{ route_image }}
     pull_policy: always
-    hostname: route_service
+    hostname: route-service
+    restart: unless-stopped
     environment:
       TZ: "{{ timezone }}"
     ports:
       - "{{ route_port }}:8080"
 
-  genai_service:
+  genai-service:
     image: {{ genai_image }}
     pull_policy: always
-    hostname: genai_service
+    hostname: genai-service
+    restart: unless-stopped
     environment:
       TZ: "{{ timezone }}"
       APP_PORT: "8080"

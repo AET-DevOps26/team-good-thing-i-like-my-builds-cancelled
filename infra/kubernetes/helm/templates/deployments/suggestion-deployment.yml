@@ -29,3 +29,15 @@ spec:
             limits:
               cpu: "200m"
               memory: "256Mi"
+          env:
+            - name: LMSTUDIO_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: llm-secret
+                  key: LMSTUDIO_API_KEY
+            
+            - name: LMSTUDIO_MODEL
+              value: "openai/gpt-oss-120b"
+            
+            - name: LMSTUDIO_BASE_URL
+              value: "https://logos.aet.cit.tum.de"

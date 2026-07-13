@@ -3,7 +3,138 @@ $line-height: 1.6;
 $pad-v:       0.75rem;
 $pad-h:       1rem;
 $radius:      0.5rem;
-$min-height:  20rem;
+$min-height:  14rem;
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 1100px) {
+  .grid-layout {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: start;
+  }
+}
+
+.form-panel,
+.list-panel {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: hsl(var(--background));
+}
+
+.form-head,
+.list-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.form-head h2,
+.list-head h2,
+.calendar-panel h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.head-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  width: min(30rem, 100%);
+}
+
+@media (min-width: 700px) {
+  .head-controls {
+    grid-template-columns: 1.5fr 1fr;
+  }
+}
+
+.entry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.entry-card {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  padding: 0.8rem;
+  background: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted) / 0.2));
+}
+
+.entry-card.active {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.15);
+}
+
+.entry-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.entry-card h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.badge-mode {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+}
+
+.route-line,
+.time-line,
+.desc-preview {
+  margin: 0.3rem 0 0;
+}
+
+.route-line {
+  font-weight: 500;
+}
+
+.time-line,
+.desc-preview {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.86rem;
+}
+
+.desc-preview {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.pagination-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
 
 .editor-wrapper {
   position: relative;
@@ -62,6 +193,18 @@ $min-height:  20rem;
 .hint-text {
   font-size: 0.8125rem;
   color: hsl(var(--muted-foreground));
+}
+
+.station-selection-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.calendar-panel {
+  border-top: 1px solid hsl(var(--border));
+  padding-top: 1rem;
 }
 
 .kbd {

@@ -64,7 +64,7 @@
       tags: [deploy]
 
     - name: Start services
-      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d --force-recreate"
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d --force-recreate --remove-orphans"
       args:
         chdir: "{{ app_dir }}"
       tags: [deploy]
@@ -73,8 +73,9 @@
       ansible.builtin.command: "docker inspect --format {% raw %}'{{.Name}}: {{.Image}}'{% endraw %} {{ item }}"
       loop:
         - gtilmbc-client-1
-        - gtilmbc-logbook_service-1
-        - gtilmbc-route_service-1
+        - gtilmbc-logbook-service-1
+        - gtilmbc-route-service-1
+        - gtilmbc-genai-service-1
       register: container_digests
       tags: [deploy]
 

@@ -1,44 +1,165 @@
 <h1>Logbuch</h1>
 <p>
-  Schreibe hier deinen Reisebericht. Der KI-Assistent schlägt dir während des Schreibens
-  Textvervollständigungen vor — drücke <kbd class="kbd">Tab</kbd> um einen Vorschlag zu übernehmen oder
-  <kbd class="kbd">Esc</kbd> um ihn abzulehnen.
+  Erstelle, bearbeite und durchsuche Reiseeinträge. Die Beschreibung kann mit dem
+  KI-Assistenten für Textvorschläge per <kbd class="kbd">Tab</kbd> / <kbd class="kbd">Esc</kbd> verbessert werden.
 </p>
 
-<div class="editor-wrapper mt-4">
-  <!--
-    Overlay sits behind the transparent textarea and renders:
-    - written text in normal colour (the textarea text is invisible)
-    - ghost suggestion in muted colour
-  -->
-  <div #overlay class="ghost-overlay" aria-hidden="true"><span
-      class="ghost-written">{{ reportText() }}</span><span
-      class="ghost-suggestion">{{ ghostText() }}</span></div>
+<div class="grid-layout mt-4">
+  <section class="form-panel">
+    <div class="form-head">
+      <h2>{{ editingEntryId() ? 'Eintrag bearbeiten' : 'Neuen Eintrag erstellen' }}</h2>
+      @if (editingEntryId()) {
+        <button z-button zType="outline" type="button" (click)="cancelEdit()">Neu anlegen</button>
+      }
+    </div>
 
-  <textarea
-    #editor
-    class="report-textarea"
-    placeholder="Schreibe deinen Reisebericht hier..."
-    [value]="reportText()"
-    (input)="onInput($event)"
-    (keydown)="onKeydown($event)"
-    (scroll)="onScroll($event)"
-    rows="16"
-    spellcheck="false"
-  ></textarea>
-</div>
+    <form class="flex flex-col gap-3" (submit)="$event.preventDefault(); saveEntry();">
+      <input z-input type="text" placeholder="Titel" [value]="title()" (input)="title.set($any($event.target).value)" required />
 
-<div class="flex items-center gap-3 mt-2">
-  @if (ghostText()) {
-    <span class="hint-text flex-1">
-      <kbd class="kbd">Tab</kbd> übernehmen &nbsp;·&nbsp; <kbd class="kbd">Esc</kbd> ablehnen
-    </span>
-  } @else if (isStreaming()) {
-    <span class="hint-text flex-1 streaming-indicator">KI denkt nach…</span>
-  } @else {
-    <span class="flex-1"></span>
-  }
-  <button z-button zType="outline" (click)="clearReport()" [disabled]="!reportText()">
-    Leeren
-  </button>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div class="flex flex-col gap-1">
+          <label for="startTime" class="label">Startzeit</label>
+          <input id="startTime" z-input type="datetime-local" [value]="startTime()" (input)="startTime.set($any($event.target).value)" required />
+        </div>
+        <div class="flex flex-col gap-1">
+          <label for="endTime" class="label">Endzeit</label>
+          <input id="endTime" z-input type="datetime-local" [value]="endTime()" (input)="endTime.set($any($event.target).value)" required />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <input z-input type="text" placeholder="Startstadt" [value]="startCity()" (input)="startCity.set($any($event.target).value)" required />
+        <input z-input type="text" placeholder="Zielstadt" [value]="destinationCity()" (input)="destinationCity.set($any($event.target).value)" required />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div class="flex flex-col gap-1">
+          <app-autocomplete
+            placeholder="Startstation suchen"
+            (selectedStation)="onStartStationSelected($event)"
+          ></app-autocomplete>
+          <div class="station-selection-row">
+            <span class="hint-text">Station-ID: {{ (startStationId()) ? 'ausgewählt' : 'keine Auswahl' }}</span>
+            @if (startStationId()) {
+              <button z-button zType="ghost" type="button" (click)="clearStartStationSelection()">Entfernen</button>
+            }
+          </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <app-autocomplete
+            placeholder="Zielstation suchen"
+            (selectedStation)="onDestinationStationSelected($event)"
+          ></app-autocomplete>
+          <div class="station-selection-row">
+            <span class="hint-text">Station-ID: {{ (destinationStationId()) ? 'ausgewählt' : 'keine Auswahl' }}</span>
+            @if (destinationStationId()) {
+              <button z-button zType="ghost" type="button" (click)="clearDestinationStationSelection()">Entfernen</button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label for="modeOfTransportation" class="label">Transportmittel</label>
+        <z-select id="modeOfTransportation" [zValue]="selectedTransportMode()" (zSelectionChange)="onTransportModeChange($event)">
+          @for (option of transportOptions; track option.value) {
+            <z-select-item [zValue]="option.value">{{ option.label }}</z-select-item>
+          }
+        </z-select>
+      </div>
+
+      <div class="editor-wrapper mt-2">
+        <div #overlay class="ghost-overlay" aria-hidden="true"><span
+            class="ghost-written">{{ reportText() }}</span><span
+            class="ghost-suggestion">{{ ghostText() }}</span></div>
+
+        <textarea
+          #editor
+          class="report-textarea"
+          placeholder="Schreibe deinen Reisebericht hier..."
+          [value]="reportText()"
+          (input)="onInput($event)"
+          (keydown)="onKeydown($event)"
+          (scroll)="onScroll($event)"
+          rows="10"
+          spellcheck="false"
+        ></textarea>
+      </div>
+
+      <div class="flex items-center gap-3 mt-1">
+        @if (ghostText()) {
+          <span class="hint-text flex-1">
+            <kbd class="kbd">Tab</kbd> übernehmen &nbsp;·&nbsp; <kbd class="kbd">Esc</kbd> ablehnen
+          </span>
+        } @else if (isStreaming()) {
+          <span class="hint-text flex-1 streaming-indicator">KI denkt nach…</span>
+        } @else {
+          <span class="flex-1"></span>
+        }
+        <button z-button zType="outline" type="button" (click)="clearReport()" [disabled]="!reportText()">
+          Beschreibung leeren
+        </button>
+      </div>
+
+      <div class="flex gap-2 mt-1">
+        <button z-button type="submit" [disabled]="isSaving() || !title().trim() || !startCity().trim() || !destinationCity().trim()">
+          {{ editingEntryId() ? 'Änderungen speichern' : 'Eintrag erstellen' }}
+        </button>
+        @if (editingEntryId()) {
+          <button z-button zType="outline" type="button" (click)="cancelEdit()">Abbrechen</button>
+        }
+      </div>
+    </form>
+  </section>
+
+  <section class="list-panel">
+    <div class="list-head">
+      <h2>Einträge</h2>
+      <div class="head-controls">
+        <input z-input type="text" placeholder="Suchen (Titel, Beschreibung, Stadt)" [value]="searchTerm()" (input)="onSearchInput($event)" />
+        <z-select [zValue]="selectedTransportFilter() ?? ''" [zPlaceholder]="'Transport filtern'" (zSelectionChange)="onFilterTransportChange($event)">
+          <z-select-item zValue="">Alle</z-select-item>
+          @for (option of transportOptions; track option.value) {
+            <z-select-item [zValue]="option.value">{{ option.label }}</z-select-item>
+          }
+        </z-select>
+      </div>
+    </div>
+
+    @if (isLoading()) {
+      <p class="hint-text mt-2">Einträge werden geladen…</p>
+    } @else if (entries().length === 0) {
+      <p class="hint-text mt-2">Keine Einträge gefunden.</p>
+    } @else {
+      <div class="entry-list mt-2">
+        @for (entry of entries(); track trackByEntryId($index, entry)) {
+          <article class="entry-card" [class.active]="editingEntryId() === entry.id">
+            <header>
+              <h3>{{ entry.title }}</h3>
+              <span class="badge-mode">{{ entry.transportMode }}</span>
+            </header>
+            <p class="route-line">{{ entry.startCity }} → {{ entry.destinationCity }}</p>
+            <p class="time-line">{{ entry.startTime | date: 'short' }} - {{ entry.endTime | date: 'short' }}</p>
+            @if (entry.description) {
+              <p class="desc-preview">{{ entry.description }}</p>
+            }
+            <div class="entry-actions">
+              <button z-button zType="outline" type="button" (click)="beginEdit(entry)">Bearbeiten</button>
+              <button z-button zType="ghost" type="button" (click)="deleteEntry(entry)">Löschen</button>
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <div class="pagination-row mt-3">
+      <span class="hint-text">{{ entryPageLabel() }}</span>
+      <z-pagination
+        [zPageIndex]="page() + 1"
+        [zTotal]="totalPages()"
+        [zDisabled]="isLoading()"
+        (zPageIndexChange)="onPaginationChange($event)"
+      />
+    </div>
+  </section>
 </div>

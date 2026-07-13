@@ -60,23 +60,122 @@ paths:
     get:
       tags: [logbook]
       operationId: getLogbookEntries
+      parameters:
+      - name: from
+        in: query
+        required: false
+        schema: {type: string, format: date-time}
+      - name: to
+        in: query
+        required: false
+        schema: {type: string, format: date-time}
+      - name: q
+        in: query
+        required: false
+        schema: {type: string}
+      - name: transportMode
+        in: query
+        required: false
+        schema: {$ref: '#/components/schemas/TransportMode'}
+      - name: page
+        in: query
+        required: false
+        schema: {type: integer, minimum: 0, default: 0}
+      - name: size
+        in: query
+        required: false
+        schema: {type: integer, minimum: 1, maximum: 100, default: 20}
       responses:
         '200':
           description: OK
-          # Add model here
-    # post:
-      # tags: [logbook]
-      # operationId: addLogbookEntry
-      # requestBody:
-        # content:
-          # application/json:
-            # Add model
-        # required: true
-      # responses:
-        # '201':
-          # description: Created
-          # Add model
-# TODO: Finish Logbook API
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/LogbookEntryPage'}
+    post:
+      tags: [logbook]
+      operationId: createLogbookEntry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CreateLogbookEntryRequest'}
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/LogbookEntry'}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /v1/logbook/entries/{entryId}:
+    get:
+      tags: [logbook]
+      operationId: getLogbookEntryById
+      parameters:
+      - name: entryId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/LogbookEntry'}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    put:
+      tags: [logbook]
+      operationId: updateLogbookEntry
+      parameters:
+      - name: entryId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/UpdateLogbookEntryRequest'}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/LogbookEntry'}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    delete:
+      tags: [logbook]
+      operationId: deleteLogbookEntry
+      parameters:
+      - name: entryId
+        in: path
+        required: true
+        schema: {type: string, format: uuid}
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
 
 # GenAI suggestion endpoint is a WebSocket — see asyncapi.yaml
 
@@ -122,6 +221,109 @@ components:
         stops:
           type: array
           items: {$ref: '#/components/schemas/Station'}
+
+    TransportMode:
+      type: string
+      enum:
+        - TRAIN
+        - BUS
+        - TRAM
+        - SUBWAY
+        - FERRY
+        - FLIGHT
+        - CAR
+        - BIKE
+        - WALK
+        - OTHER
+
+    LogbookEntry:
+      type: object
+      required:
+        - id
+        - title
+        - startTime
+        - endTime
+        - startCity
+        - destinationCity
+        - transportMode
+        - createdAt
+        - updatedAt
+      properties:
+        id: {type: string, format: uuid}
+        title: {type: string, minLength: 1, maxLength: 120}
+        description: {type: string, maxLength: 4000}
+        startTime: {type: string, format: date-time}
+        endTime: {type: string, format: date-time}
+        startCity: {type: string}
+        destinationCity: {type: string}
+        startStationId:
+          type: string
+          description: Optional station id from route service for train journeys.
+        destinationStationId:
+          type: string
+          description: Optional station id from route service for train journeys.
+        transportMode: {$ref: '#/components/schemas/TransportMode'}
+        createdAt: {type: string, format: date-time}
+        updatedAt: {type: string, format: date-time}
+
+    CreateLogbookEntryRequest:
+      type: object
+      required:
+        - title
+        - startTime
+        - endTime
+        - startCity
+        - destinationCity
+        - transportMode
+      properties:
+        title: {type: string, minLength: 1, maxLength: 120}
+        description: {type: string, maxLength: 4000}
+        startTime: {type: string, format: date-time}
+        endTime: {type: string, format: date-time}
+        startCity: {type: string}
+        destinationCity: {type: string}
+        startStationId:
+          type: string
+          description: Optional station id from route service for train journeys.
+        destinationStationId:
+          type: string
+          description: Optional station id from route service for train journeys.
+        transportMode: {$ref: '#/components/schemas/TransportMode'}
+
+    UpdateLogbookEntryRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateLogbookEntryRequest'
+
+    LogbookEntryPage:
+      type: object
+      required:
+        - items
+        - page
+        - size
+        - totalElements
+      properties:
+        items:
+          type: array
+          items: {$ref: '#/components/schemas/LogbookEntry'}
+        page:
+          type: integer
+          minimum: 0
+        size:
+          type: integer
+          minimum: 1
+        totalElements:
+          type: integer
+          minimum: 0
+
+    ErrorResponse:
+      type: object
+      required: [message]
+      properties:
+        message: {type: string}
+        code: {type: string}
+        details:
+          type: array
+          items: {type: string}
 
     # WebSocket message schemas — see asyncapi.yaml for the channel definition
     TextUpdate:

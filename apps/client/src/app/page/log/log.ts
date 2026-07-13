@@ -9,11 +9,32 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ZardButtonComponent } from '@/shared/components/button';
+import { ZardInputDirective } from '@/shared/components/input';
+import { ZardSelectComponent, ZardSelectItemComponent } from '@/shared/components/select';
+import { ZardPaginationComponent } from '@/shared/components/pagination';
+import { Autocomplete } from '@/component/input/autocomplete/autocomplete';
+import {
+  CreateLogbookEntryRequest,
+  LogbookEntry,
+  LogbookService,
+  Station,
+  TransportMode,
+  UpdateLogbookEntryRequest,
+} from '@/generated';
 import { SuggestionService } from '@/shared/services/suggestion.service';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-log',
-  imports: [ZardButtonComponent],
+  imports: [
+    ZardButtonComponent,
+    ZardInputDirective,
+    ZardSelectComponent,
+    ZardSelectItemComponent,
+    ZardPaginationComponent,
+    Autocomplete,
+    DatePipe,
+  ],
   templateUrl: './log.html',
   styleUrl: './log.scss',
 })
@@ -22,17 +43,51 @@ export class Log implements OnInit, OnDestroy {
   @ViewChild('overlay') overlayRef!: ElementRef<HTMLDivElement>;
 
   private suggestion = inject(SuggestionService);
+  private logbookService = inject(LogbookService);
   private sub!: Subscription;
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private searchTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly reportText = signal('');
   readonly ghostText = signal('');
   readonly isStreaming = signal(false);
+  readonly isLoading = signal(false);
+  readonly isSaving = signal(false);
 
-  readonly placeholder = 'Schreibe deinen Reisebericht hier...';
+  readonly entries = signal<LogbookEntry[]>([]);
+  readonly searchTerm = signal('');
+  readonly selectedTransportFilter = signal<TransportMode | null>(null);
+  readonly page = signal(0);
+  readonly size = signal(8);
+  readonly totalElements = signal(0);
+
+  readonly editingEntryId = signal<string | null>(null);
+  readonly title = signal('');
+  readonly startTime = signal(this.toLocalDateTimeInput(new Date()));
+  readonly endTime = signal(this.toLocalDateTimeInput(new Date(Date.now() + 60 * 60 * 1000)));
+  readonly startCity = signal('');
+  readonly destinationCity = signal('');
+  readonly startStationId = signal('');
+  readonly destinationStationId = signal('');
+  readonly selectedTransportMode = signal<TransportMode>(TransportMode.Train);
+  readonly calendarDate = signal<Date | null>(new Date());
+
+  readonly transportOptions: { label: string; value: TransportMode }[] = [
+    { label: 'Zug', value: TransportMode.Train },
+    { label: 'Bus', value: TransportMode.Bus },
+    { label: 'Tram', value: TransportMode.Tram },
+    { label: 'U-Bahn', value: TransportMode.Subway },
+    { label: 'Fähre', value: TransportMode.Ferry },
+    { label: 'Flugzeug', value: TransportMode.Flight },
+    { label: 'Auto', value: TransportMode.Car },
+    { label: 'Fahrrad', value: TransportMode.Bike },
+    { label: 'Zu Fuß', value: TransportMode.Walk },
+    { label: 'Sonstiges', value: TransportMode.Other },
+  ];
 
   ngOnInit(): void {
     this.suggestion.connect();
+    this.loadEntries();
     this.sub = this.suggestion.events$.subscribe((event) => {
       if (event.type === 'token') {
         this.ghostText.update((g) => g + event.token);
@@ -45,6 +100,7 @@ export class Log implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
+    if (this.searchTimer) clearTimeout(this.searchTimer);
   }
 
   onScroll(event: Event): void {
@@ -115,5 +171,232 @@ export class Log implements OnInit, OnDestroy {
     this.ghostText.set('');
     this.isStreaming.set(false);
     this.suggestion.sendCancel();
+  }
+
+  onSearchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchTerm.set(value);
+    if (this.searchTimer) clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => {
+      this.page.set(0);
+      this.loadEntries();
+    }, 300);
+  }
+
+  onFilterTransportChange(value: string | string[]): void {
+    const selected = Array.isArray(value) ? value[0] : value;
+    this.selectedTransportFilter.set(selected ? (selected as TransportMode) : null);
+    this.page.set(0);
+    this.loadEntries();
+  }
+
+  onTransportModeChange(value: string | string[]): void {
+    const selected = Array.isArray(value) ? value[0] : value;
+    if (selected) {
+      this.selectedTransportMode.set(selected as TransportMode);
+    }
+  }
+
+  onCalendarDateChange(date: Date | Date[]): void {
+    const selected = Array.isArray(date) ? date[0] : date;
+    if (!selected) {
+      return;
+    }
+    this.calendarDate.set(selected);
+    const start = new Date(this.startTime());
+    start.setFullYear(selected.getFullYear(), selected.getMonth(), selected.getDate());
+    const end = new Date(this.endTime());
+    end.setFullYear(selected.getFullYear(), selected.getMonth(), selected.getDate());
+    this.startTime.set(this.toLocalDateTimeInput(start));
+    this.endTime.set(this.toLocalDateTimeInput(end));
+  }
+
+  onStartStationSelected(station: Station): void {
+    this.startStationId.set(station.id ?? '');
+    if (station.name?.trim()) {
+      this.startCity.set(station.name.trim());
+    }
+  }
+
+  onDestinationStationSelected(station: Station): void {
+    this.destinationStationId.set(station.id ?? '');
+    if (station.name?.trim()) {
+      this.destinationCity.set(station.name.trim());
+    }
+  }
+
+  clearStartStationSelection(): void {
+    this.startStationId.set('');
+  }
+
+  clearDestinationStationSelection(): void {
+    this.destinationStationId.set('');
+  }
+
+  goToPreviousPage(): void {
+    if (this.page() <= 0) {
+      return;
+    }
+    this.page.update((p) => p - 1);
+    this.loadEntries();
+  }
+
+  goToNextPage(): void {
+    if ((this.page() + 1) * this.size() >= this.totalElements()) {
+      return;
+    }
+    this.page.update((p) => p + 1);
+    this.loadEntries();
+  }
+
+  onPaginationChange(nextPageIndexOneBased: number): void {
+    const nextZeroBased = Math.max(0, nextPageIndexOneBased - 1);
+    if (nextZeroBased === this.page()) {
+      return;
+    }
+    this.page.set(nextZeroBased);
+    this.loadEntries();
+  }
+
+  totalPages(): number {
+    return Math.max(1, Math.ceil(this.totalElements() / this.size()));
+  }
+
+  beginCreate(): void {
+    this.editingEntryId.set(null);
+    this.title.set('');
+    this.reportText.set('');
+    this.ghostText.set('');
+    const now = new Date();
+    this.startTime.set(this.toLocalDateTimeInput(now));
+    this.endTime.set(this.toLocalDateTimeInput(new Date(now.getTime() + 60 * 60 * 1000)));
+    this.startCity.set('');
+    this.destinationCity.set('');
+    this.startStationId.set('');
+    this.destinationStationId.set('');
+    this.selectedTransportMode.set(TransportMode.Train);
+    this.calendarDate.set(now);
+  }
+
+  beginEdit(entry: LogbookEntry): void {
+    this.editingEntryId.set(entry.id);
+    this.title.set(entry.title);
+    this.reportText.set(entry.description ?? '');
+    this.ghostText.set('');
+    this.startTime.set(this.toLocalDateTimeInput(new Date(entry.startTime)));
+    this.endTime.set(this.toLocalDateTimeInput(new Date(entry.endTime)));
+    this.startCity.set(entry.startCity);
+    this.destinationCity.set(entry.destinationCity);
+    this.startStationId.set(entry.startStationId ?? '');
+    this.destinationStationId.set(entry.destinationStationId ?? '');
+    this.selectedTransportMode.set(entry.transportMode);
+    this.calendarDate.set(new Date(entry.startTime));
+  }
+
+  deleteEntry(entry: LogbookEntry): void {
+    if (!confirm(`Eintrag "${entry.title}" wirklich loeschen?`)) {
+      return;
+    }
+    this.logbookService.deleteLogbookEntry(entry.id).subscribe({
+      next: () => {
+        if (this.editingEntryId() === entry.id) {
+          this.beginCreate();
+        }
+        this.loadEntries();
+      },
+      error: (err) => {
+        console.error('Delete failed', err);
+      },
+    });
+  }
+
+  saveEntry(): void {
+    if (!this.title().trim() || !this.startCity().trim() || !this.destinationCity().trim()) {
+      return;
+    }
+
+    const payload: CreateLogbookEntryRequest = {
+      title: this.title().trim(),
+      description: this.reportText().trim() || undefined,
+      startTime: new Date(this.startTime()).toISOString(),
+      endTime: new Date(this.endTime()).toISOString(),
+      startCity: this.startCity().trim(),
+      destinationCity: this.destinationCity().trim(),
+      startStationId: this.startStationId().trim() || undefined,
+      destinationStationId: this.destinationStationId().trim() || undefined,
+      transportMode: this.selectedTransportMode(),
+    };
+
+    this.isSaving.set(true);
+
+    const editingId = this.editingEntryId();
+    if (editingId) {
+      this.logbookService.updateLogbookEntry(editingId, payload as UpdateLogbookEntryRequest).subscribe({
+        next: () => {
+          this.isSaving.set(false);
+          this.loadEntries();
+        },
+        error: (err) => {
+          this.isSaving.set(false);
+          console.error('Update failed', err);
+        },
+      });
+      return;
+    }
+
+    this.logbookService.createLogbookEntry(payload).subscribe({
+      next: () => {
+        this.isSaving.set(false);
+        this.beginCreate();
+        this.page.set(0);
+        this.loadEntries();
+      },
+      error: (err) => {
+        this.isSaving.set(false);
+        console.error('Create failed', err);
+      },
+    });
+  }
+
+  cancelEdit(): void {
+    this.beginCreate();
+  }
+
+  trackByEntryId(_: number, entry: LogbookEntry): string {
+    return entry.id;
+  }
+
+  protected entryPageLabel(): string {
+    if (this.totalElements() === 0) {
+      return '0 von 0';
+    }
+    const start = this.page() * this.size() + 1;
+    const end = Math.min((this.page() + 1) * this.size(), this.totalElements());
+    return `${start}-${end} von ${this.totalElements()}`;
+  }
+
+  private loadEntries(): void {
+    this.isLoading.set(true);
+    const query = this.searchTerm().trim() || undefined;
+    const mode = this.selectedTransportFilter() ?? undefined;
+    this.logbookService
+      .getLogbookEntries(undefined, undefined, query, mode, this.page(), this.size())
+      .subscribe({
+        next: (result) => {
+          this.entries.set(result.items ?? []);
+          this.totalElements.set(result.totalElements ?? 0);
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          console.error('Load entries failed', err);
+        },
+      });
+  }
+
+  private toLocalDateTimeInput(date: Date): string {
+    const offset = date.getTimezoneOffset();
+    const local = new Date(date.getTime() - offset * 60 * 1000);
+    return local.toISOString().slice(0, 16);
   }
 }
