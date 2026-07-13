@@ -28,6 +28,8 @@ The full documentation can be found in the /docs folder with the following entri
 - [🔴 Server](docs/server.md)
 - [🟡 Testing](docs/testing.md)
 
+For local setup see ["Deployment > Local"](docs/deployment.md#local)
+
 ## Deployed Live Demo
 
 - [Kubernetes (Rancher)](https://cancelled.stud.k8s.aet.cit.tum.de/)
