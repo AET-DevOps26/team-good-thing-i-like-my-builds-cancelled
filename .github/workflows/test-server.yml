@@ -2,9 +2,6 @@ name: Test Server
 
 on:
   push:
-    paths:
-      - 'apps/server/logbook-service/**'
-      - 'apps/server/route-service/**'
   pull_request:
     branches: [ "main", "develop" ]
     paths:
