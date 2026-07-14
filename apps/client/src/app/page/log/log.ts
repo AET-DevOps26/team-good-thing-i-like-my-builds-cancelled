@@ -7,6 +7,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ZardButtonComponent } from '@/shared/components/button';
 import { ZardInputDirective } from '@/shared/components/input';
@@ -44,6 +45,7 @@ export class Log implements OnInit, OnDestroy {
 
   private suggestion = inject(SuggestionService);
   private logbookService = inject(LogbookService);
+  private route = inject(ActivatedRoute);
   private sub!: Subscription;
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
   private searchTimer: ReturnType<typeof setTimeout> | null = null;
@@ -86,6 +88,7 @@ export class Log implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
+    this.applyPrefillFromQueryParams();
     this.suggestion.connect();
     this.loadEntries();
     this.sub = this.suggestion.events$.subscribe((event) => {
@@ -398,5 +401,60 @@ export class Log implements OnInit, OnDestroy {
     const offset = date.getTimezoneOffset();
     const local = new Date(date.getTime() - offset * 60 * 1000);
     return local.toISOString().slice(0, 16);
+  }
+
+  private applyPrefillFromQueryParams(): void {
+    const params = this.route.snapshot.queryParamMap;
+    const startStationId = params.get('startStationId') ?? '';
+    const startStationName = params.get('startStationName') ?? '';
+    const destinationStationId = params.get('destinationStationId') ?? '';
+    const destinationStationName = params.get('destinationStationName') ?? '';
+    const startTime = params.get('startTime');
+    const endTime = params.get('endTime');
+    const description = params.get('description') ?? '';
+
+    if (!startStationId && !startStationName && !destinationStationId && !destinationStationName && !startTime && !endTime && !description) {
+      return;
+    }
+
+    this.editingEntryId.set(null);
+    this.ghostText.set('');
+    this.isStreaming.set(false);
+    this.selectedTransportMode.set(TransportMode.Train);
+
+    this.startStationId.set(startStationId);
+    this.destinationStationId.set(destinationStationId);
+    this.startCity.set(startStationName);
+    this.destinationCity.set(destinationStationName);
+    this.title.set(this.buildPrefillTitle(startStationName, destinationStationName));
+    this.reportText.set(description);
+
+    if (startTime) {
+      const startDate = new Date(startTime);
+      if (!Number.isNaN(startDate.getTime())) {
+        this.startTime.set(this.toLocalDateTimeInput(startDate));
+        this.calendarDate.set(startDate);
+      }
+    }
+
+    if (endTime) {
+      const endDate = new Date(endTime);
+      if (!Number.isNaN(endDate.getTime())) {
+        this.endTime.set(this.toLocalDateTimeInput(endDate));
+      }
+    }
+  }
+
+  private buildPrefillTitle(startStationName: string, destinationStationName: string): string {
+    if (!startStationName && !destinationStationName) {
+      return 'Reiseeintrag';
+    }
+    if (!startStationName) {
+      return `Anreise nach ${destinationStationName}`;
+    }
+    if (!destinationStationName) {
+      return `Abfahrt von ${startStationName}`;
+    }
+    return `Von ${startStationName} nach ${destinationStationName}`;
   }
 }
