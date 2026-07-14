@@ -41,13 +41,13 @@ class TimetableControllerTest {
     }
 
     @Test
-    void getStationsShouldReturnEmptyListWhenServiceFails() throws Exception {
+    void getStationsShouldReturnNoContentWhenServiceFails() throws Exception {
         when(timetableService.findByName("Munich")).thenThrow(new IOException("service unavailable"));
 
         ResponseEntity<List<Station>> response = controller.getStations("Munich");
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isEmpty();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getBody()).isNullOrEmpty();
         verify(timetableService).findByName("Munich");
     }
 
