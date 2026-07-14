@@ -60,8 +60,7 @@ class TimetableControllerTest {
         ResponseEntity<List<TrainConnection>> response = controller.getConnections(
             time,
             "8000261",
-            "8011160",
-            List.of("8000105")
+            "8011160"
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
