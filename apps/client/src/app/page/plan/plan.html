@@ -17,7 +17,7 @@
     <br>
     <p class="mt-4 text-center">Verbindungen werden geladen...</p>
   </div>
-} @else if (connections().length > 0) {
+} @else if (connections() && connections().length > 0) {
   <z-accordion>
     @for (connection of connections(); track connection) {
       <app-train-connection-result [connection]="connection"></app-train-connection-result>
