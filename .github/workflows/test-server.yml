@@ -96,16 +96,13 @@ jobs:
           case "${{ matrix.service }}" in
             logbook-service)
               echo "context=./apps/server/logbook-service" >> "$GITHUB_OUTPUT"
-              echo "dockerfile=./apps/server/logbook-service/Dockerfile" >> "$GITHUB_OUTPUT"
-              echo "image=logbook-service" >> "$GITHUB_OUTPUT"
               ;;
             route-service)
               echo "context=./apps/server/route-service" >> "$GITHUB_OUTPUT"
-              echo "dockerfile=./apps/server/route-service/Dockerfile" >> "$GITHUB_OUTPUT"
-              echo "image=route-service" >> "$GITHUB_OUTPUT"
               ;;
           esac
 
       - name: Run tests
+        working-directory: ${{ steps.service.outputs.context }}
         run: |
           ./gradlew clean test
