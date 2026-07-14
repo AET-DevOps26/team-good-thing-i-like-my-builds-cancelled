@@ -24,19 +24,18 @@ public class TimetableController implements RouteApi {
         try {
             return ResponseEntity.ok(timetableService.findByName(q));
         } catch (Exception e) {
-            e.printStackTrace(); // Error handling later -> Observability
-            return ResponseEntity.ok(List.of());
+            e.printStackTrace();
+            return ResponseEntity.noContent().build();
         }
     }
 
     @Override
-    public ResponseEntity<List<TrainConnection>> getConnections(OffsetDateTime time, String startStationId, String destinationStationId, List<String> viaStationIds) {
+    public ResponseEntity<List<TrainConnection>> getConnections(OffsetDateTime time, String startStationId, String destinationStationId) {
         try {
-            // TODO: Via-Stations (follow up)
             return ResponseEntity.ok(timetableService.findConnections(startStationId, destinationStationId, time));
         } catch (Exception e) {
-            e.printStackTrace(); // Error handling later -> Observability
-            return ResponseEntity.ok(List.of());
+            e.printStackTrace();
+            return ResponseEntity.noContent().build();
         }
     }
 }

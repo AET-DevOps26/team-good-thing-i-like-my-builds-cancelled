@@ -42,15 +42,14 @@ export class RouteService extends BaseService {
      * @param time 
      * @param startStationId 
      * @param destinationStationId 
-     * @param viaStationIds 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public getConnections(time: string, startStationId: string, destinationStationId: string, viaStationIds?: Array<string>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TrainConnection>>;
-    public getConnections(time: string, startStationId: string, destinationStationId: string, viaStationIds?: Array<string>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TrainConnection>>>;
-    public getConnections(time: string, startStationId: string, destinationStationId: string, viaStationIds?: Array<string>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TrainConnection>>>;
-    public getConnections(time: string, startStationId: string, destinationStationId: string, viaStationIds?: Array<string>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getConnections(time: string, startStationId: string, destinationStationId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TrainConnection>>;
+    public getConnections(time: string, startStationId: string, destinationStationId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TrainConnection>>>;
+    public getConnections(time: string, startStationId: string, destinationStationId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TrainConnection>>>;
+    public getConnections(time: string, startStationId: string, destinationStationId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (time === null || time === undefined) {
             throw new Error('Required parameter time was null or undefined when calling getConnections.');
         }
@@ -85,15 +84,6 @@ export class RouteService extends BaseService {
             localVarQueryParameters,
             'destinationStationId',
             <any>destinationStationId,
-            QueryParamStyle.Form,
-            true,
-        );
-
-
-        localVarQueryParameters = this.addToHttpParams(
-            localVarQueryParameters,
-            'viaStationIds',
-            <any>viaStationIds,
             QueryParamStyle.Form,
             true,
         );
