@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of, Subject } from 'rxjs';
 import { vi } from 'vitest';
 import { LogbookService, TransportMode } from '@/generated';
@@ -20,6 +21,11 @@ describe('Log', () => {
     events$: Subject<SuggestionEvent>;
     sendTextUpdate: ReturnType<typeof vi.fn>;
     sendCancel: ReturnType<typeof vi.fn>;
+  };
+  let activatedRouteMock: {
+    snapshot: {
+      queryParamMap: ReturnType<typeof convertToParamMap>;
+    };
   };
 
   beforeEach(async () => {
@@ -67,11 +73,18 @@ describe('Log', () => {
       sendCancel: vi.fn(),
     };
 
+    activatedRouteMock = {
+      snapshot: {
+        queryParamMap: convertToParamMap({}),
+      },
+    };
+
     await TestBed.configureTestingModule({
       imports: [Log],
       providers: [
         { provide: LogbookService, useValue: logbookServiceMock },
         { provide: SuggestionService, useValue: suggestionServiceMock },
+        { provide: ActivatedRoute, useValue: activatedRouteMock },
       ],
     }).compileComponents();
 
@@ -149,5 +162,29 @@ describe('Log', () => {
     expect(component.isStreaming()).toBeTruthy();
 
     vi.useRealTimers();
+  });
+
+  it('should prefill form values from query params', async () => {
+    activatedRouteMock.snapshot.queryParamMap = convertToParamMap({
+      startStationId: '8000105',
+      startStationName: 'Frankfurt(Main)Hbf',
+      destinationStationId: '8000261',
+      destinationStationName: 'Muenchen Hbf',
+      startTime: '2026-07-01T09:00:00.000Z',
+      endTime: '2026-07-01T12:00:00.000Z',
+      description: 'Uebernommener Fahrplan:\n09:00 - 12:00',
+    });
+
+    fixture = TestBed.createComponent(Log);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(component.startStationId()).toBe('8000105');
+    expect(component.destinationStationId()).toBe('8000261');
+    expect(component.startCity()).toBe('Frankfurt(Main)Hbf');
+    expect(component.destinationCity()).toBe('Muenchen Hbf');
+    expect(component.title()).toBe('Von Frankfurt(Main)Hbf nach Muenchen Hbf');
+    expect(component.reportText()).toContain('Uebernommener Fahrplan');
   });
 });
