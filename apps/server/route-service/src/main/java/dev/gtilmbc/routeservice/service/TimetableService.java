@@ -48,7 +48,7 @@ public class TimetableService {
     }
 
     public List<TrainConnection> findConnections(String from, String to, OffsetDateTime time) throws IOException, InterruptedException {
-        String requestBody = "{\"abfahrtsHalt\":\"" + from + "\",\"anfrageZeitpunkt\":\"" + time.format(dateFormatter) + "\",\"ankunftsHalt\":\"" + to + "\",\"ankunftSuche\":\"ABFAHRT\",\"klasse\":\"KLASSE_2\",\"maxUmstiege\":0,\"produktgattungen\":[\"ICE\",\"EC_IC\",\"IR\",\"REGIONAL\",\"SBAHN\",\"UBAHN\",\"TRAM\"],\"reisende\":[{\"typ\":\"ERWACHSENER\",\"ermaessigungen\":[{\"art\":\"KEINE_ERMAESSIGUNG\",\"klasse\":\"KLASSENLOS\"}],\"alter\":[],\"anzahl\":1}],\"schnelleVerbindungen\":true,\"autonomeReservierungOnly\":false,\"bikeCarriage\":false,\"reservierungsKontingenteVorhanden\":false,\"nurDeutschlandTicketVerbindungen\":false,\"deutschlandTicketVorhanden\":false}";
+        String requestBody = "{\"abfahrtsHalt\":\"" + from + "\",\"anfrageZeitpunkt\":\"" + time.format(dateFormatter) + "\",\"ankunftsHalt\":\"" + to + "\",\"ankunftSuche\":\"ABFAHRT\",\"klasse\":\"KLASSE_2\",\"produktgattungen\":[\"ICE\",\"EC_IC\",\"IR\",\"REGIONAL\",\"SBAHN\",\"UBAHN\",\"TRAM\"],\"reisende\":[{\"typ\":\"ERWACHSENER\",\"ermaessigungen\":[{\"art\":\"KEINE_ERMAESSIGUNG\",\"klasse\":\"KLASSENLOS\"}],\"alter\":[],\"anzahl\":1}],\"schnelleVerbindungen\":true,\"autonomeReservierungOnly\":false,\"bikeCarriage\":false,\"reservierungsKontingenteVorhanden\":false,\"nurDeutschlandTicketVerbindungen\":false,\"deutschlandTicketVorhanden\":false}";
         HttpRequest request = HttpRequest.newBuilder()
             .uri(URI.create("https://www.bahn.de/web/api/angebote/fahrplan"))
             .header("Content-Type", "application/json")
