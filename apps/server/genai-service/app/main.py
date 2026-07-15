@@ -15,10 +15,18 @@ app = FastAPI(title="GenAI Service", version="0.1.0")
 
 
 @app.exception_handler(RequestValidationError)
-async def validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
+async def validation_error_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
     """Map validation errors to the ErrorResponse shape from the OpenAPI spec."""
-    details = [f"{'.'.join(str(loc) for loc in err['loc'])}: {err['msg']}" for err in exc.errors()]
-    return JSONResponse(status_code=400, content={"message": "Invalid request", "details": details})
+    details = [
+        f"{'.'.join(str(loc) for loc in err['loc'])}: {err['msg']}"
+        for err in exc.errors()
+    ]
+    return JSONResponse(
+        status_code=400, content={"message": "Invalid request", "details": details}
+    )
+
 
 REQUEST_COUNT = Counter(
     "app_http_requests_total",
@@ -55,9 +63,12 @@ async def record_metrics(request: Request, call_next):
     REQUEST_LATENCY.labels(service=service, method=method, path=path).observe(duration)
 
     if response.status_code >= 500:
-        REQUEST_ERROR_COUNT.labels(service=service, method=method, path=path, status=status).inc()
+        REQUEST_ERROR_COUNT.labels(
+            service=service, method=method, path=path, status=status
+        ).inc()
 
     return response
+
 
 app.include_router(suggestion_router)
 app.include_router(activity_router)

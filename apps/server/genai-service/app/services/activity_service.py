@@ -89,7 +89,9 @@ async def suggest_activities(
         result = ActivitySuggestionResponse.from_dict(data)
     except Exception as exc:
         logger.error("Model JSON did not match expected schema: %s", exc)
-        raise ActivitySuggestionError("Model reply did not match expected schema") from exc
+        raise ActivitySuggestionError(
+            "Model reply did not match expected schema"
+        ) from exc
 
     logger.info("Activity suggestion complete (%d locations)", len(result.locations))
     return result

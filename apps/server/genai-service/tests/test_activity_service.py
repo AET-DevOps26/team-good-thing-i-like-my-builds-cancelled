@@ -4,7 +4,9 @@ from app.services.activity_service import ActivitySuggestionError, _extract_json
 
 
 def test_extract_json_plain() -> None:
-    data = _extract_json('{"locations": [{"location": "Marburg", "activities": ["Schloss"]}]}')
+    data = _extract_json(
+        '{"locations": [{"location": "Marburg", "activities": ["Schloss"]}]}'
+    )
     assert data["locations"][0]["location"] == "Marburg"
 
 
