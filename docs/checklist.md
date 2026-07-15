@@ -20,13 +20,13 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [x] Database is persistent and schema is documented.
 - [x] GenAI service is a separate Python microservice with defined interface.
 - [x] GenAI provides a real user-facing capability (not only technical presence).
-- [ ] OpenAPI/Swagger documentation exists and is exposed.
+- [x] OpenAPI/Swagger documentation exists and is exposed.
 
 ### Containerization and Local Reproducibility
 - [x] Each component has its own Dockerfile (client, server services, GenAI).
 - [x] Full system runs end-to-end via compose setup.
-- [ ] Local startup is possible in 3 commands or fewer.
-- [ ] Setup instructions are reproducible for a new user without hidden manual steps.
+- [x] Local startup is possible in 3 commands or fewer.
+- [x] Setup instructions are reproducible for a new user without hidden manual steps.
 
 ### Kubernetes and Deployment Compliance
 - [x] Deployment manifests/charts exist for Kubernetes.

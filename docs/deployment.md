@@ -22,6 +22,7 @@ docker compose -f infra/docker/compose/local/docker-compose.yml down
 ```
 
 ![](assets/deploy-local.png)
+![](assets/deploy-local-docker.png)
 
 ## Kubernetes
 
