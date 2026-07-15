@@ -71,6 +71,10 @@ export class TrainConnectionResult {
   }
 
   private navigateToLogbook(firstSegment: TrainSegment, lastSegment: TrainSegment, activitySuggestions: string): void {
+    const description = [this.buildScheduleDescription(), activitySuggestions]
+      .filter(part => part !== '')
+      .join('\n\n');
+
     this.router.navigate(['/log'], {
       queryParams: {
         startStationId: firstSegment.start.id,
@@ -79,7 +83,7 @@ export class TrainConnectionResult {
         destinationStationName: lastSegment.end.name ?? '',
         startTime: this.connection().departureTime,
         endTime: this.connection().arrivalTime,
-        description: activitySuggestions !== '' ? activitySuggestions : this.buildScheduleDescription(),
+        description,
       },
     });
   }
