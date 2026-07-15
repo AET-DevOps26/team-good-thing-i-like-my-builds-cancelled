@@ -30,7 +30,7 @@ spec:
               memory: "256Mi"
             limits:
               cpu: "200m"
-              memory: "256Mi"
+              memory: "350Mi"
           env:
             - name: TZ
               value: Europe/Berlin
