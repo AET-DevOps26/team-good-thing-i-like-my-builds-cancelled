@@ -1,18 +1,15 @@
 import asyncio
 import json
 import logging
-import os
 
 import httpx
 
 from src.generated.models.suggestion_done import SuggestionDone
 from src.generated.models.suggestion_token import SuggestionToken
 
-logger = logging.getLogger(__name__)
+from app.services.lmstudio import LMSTUDIO_BASE_URL, auth_headers, get_model
 
-_LMSTUDIO_BASE_URL = os.getenv("LMSTUDIO_BASE_URL", "http://127.0.0.1:1234")
-_MODEL_OVERRIDE = os.getenv("LMSTUDIO_MODEL", "")
-_API_KEY = os.getenv("LMSTUDIO_API_KEY", "")
+logger = logging.getLogger(__name__)
 
 _SYSTEM_PROMPT = """\
 You are an inline autocomplete assistant for travel report writing. \
@@ -29,26 +26,6 @@ Rules:
 """
 
 
-async def _get_model() -> str:
-    """Return the model name — env override or first loaded model from LMStudio."""
-    if _MODEL_OVERRIDE:
-        logger.info("Using model override: %s", _MODEL_OVERRIDE)
-        return _MODEL_OVERRIDE
-    try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            resp = await client.get(f"{_LMSTUDIO_BASE_URL}/v1/models")
-            resp.raise_for_status()
-            models = resp.json().get("data", [])
-            if models:
-                model_id = models[0]["id"]
-                logger.info("Auto-detected model: %s", model_id)
-                return model_id
-            logger.warning("LMStudio returned empty model list")
-    except Exception as exc:
-        logger.warning("Could not fetch model list: %s", exc)
-    return "local-model"
-
-
 async def stream_suggestion(
     websocket,
     text_before: str,
@@ -60,7 +37,7 @@ async def stream_suggestion(
         user_content += f"\n\nText after cursor:\n{text_after}"
     user_content += "\n\nPlease continue the text from the cursor position."
 
-    model = await _get_model()
+    model = await get_model()
     payload = {
         "model": model,
         "stream": True,
@@ -72,16 +49,14 @@ async def stream_suggestion(
         "temperature": 0.7,
     }
 
-    headers: dict[str, str] = {"Accept": "text/event-stream"}
-    if _API_KEY:
-        headers["Authorization"] = f"Bearer {_API_KEY}"
+    headers: dict[str, str] = {"Accept": "text/event-stream", **auth_headers()}
 
-    logger.info("POST %s/v1/chat/completions (model=%s)", _LMSTUDIO_BASE_URL, model)
+    logger.info("POST %s/v1/chat/completions (model=%s)", LMSTUDIO_BASE_URL, model)
     try:
         async with httpx.AsyncClient(timeout=httpx.Timeout(5.0, read=120.0)) as client:
             async with client.stream(
                 "POST",
-                f"{_LMSTUDIO_BASE_URL}/v1/chat/completions",
+                f"{LMSTUDIO_BASE_URL}/v1/chat/completions",
                 json=payload,
                 headers=headers,
             ) as response:

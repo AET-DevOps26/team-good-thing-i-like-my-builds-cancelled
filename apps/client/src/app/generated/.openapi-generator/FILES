@@ -5,13 +5,17 @@ api.module.ts
 api/api.ts
 api/logbook.service.ts
 api/route.service.ts
+api/suggestion.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/activitySuggestionRequest.ts
+model/activitySuggestionResponse.ts
 model/cancelSuggestion.ts
 model/createLogbookEntryRequest.ts
 model/errorResponse.ts
+model/locationSuggestion.ts
 model/logbookEntry.ts
 model/logbookEntryPage.ts
 model/models.ts
