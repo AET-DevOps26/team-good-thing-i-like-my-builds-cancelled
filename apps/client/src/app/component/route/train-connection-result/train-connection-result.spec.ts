@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { ActivitySuggestionResponse, SuggestionService, TrainConnection } from '@/generated';
 
@@ -94,6 +94,27 @@ describe('TrainConnectionResult', () => {
     expect(extras.queryParams['description']).toContain('Übernommener Fahrplan:');
     expect(extras.queryParams['description']).not.toContain('Vorschläge für unterwegs:');
     expect(component.fetchingSuggestions()).toBeFalsy();
+  });
+
+  it('should navigate without suggestions when the request times out', () => {
+    vi.useFakeTimers();
+    try {
+      suggestionServiceMock.suggestActivities.mockReturnValue(NEVER);
+      fixture.componentRef.setInput('connection', connection);
+
+      component.goToLogbook();
+      expect(navigateSpy).not.toHaveBeenCalled();
+
+      vi.advanceTimersByTime(10_001);
+
+      expect(navigateSpy).toHaveBeenCalledTimes(1);
+      const [, extras] = navigateSpy.mock.calls[0] as [string[], { queryParams: Record<string, string> }];
+      expect(extras.queryParams['description']).toContain('Übernommener Fahrplan:');
+      expect(extras.queryParams['description']).not.toContain('Vorschläge für unterwegs:');
+      expect(component.fetchingSuggestions()).toBeFalsy();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('should not navigate or fetch suggestions without segments', () => {

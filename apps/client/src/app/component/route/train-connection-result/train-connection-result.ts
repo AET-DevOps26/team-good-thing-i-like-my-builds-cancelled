@@ -1,5 +1,7 @@
-import {Component, computed, inject, input, signal} from '@angular/core';
+import {Component, computed, DestroyRef, inject, input, signal} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Router} from '@angular/router';
+import {timeout} from 'rxjs';
 import {ActivitySuggestionResponse, SuggestionService, TrainConnection, TrainSegment} from '@/generated';
 import {ZardAccordionItemComponent} from '@/shared/components/accordion';
 import {ZardButtonComponent} from '@/shared/components/button';
@@ -14,8 +16,11 @@ import {ZardButtonComponent} from '@/shared/components/button';
   styleUrl: './train-connection-result.scss',
 })
 export class TrainConnectionResult {
+  private static readonly SUGGESTION_TIMEOUT_MS = 10_000;
+
   private router = inject(Router);
   private suggestionService = inject(SuggestionService);
+  private destroyRef = inject(DestroyRef);
 
   connection = input<TrainConnection>(
     {departureTime: "2026-06-25T13:34:00+02:00", arrivalTime: "2026-06-25T14:15:00+02:00", segments: []} as TrainConnection);
@@ -55,19 +60,24 @@ export class TrainConnectionResult {
       .filter(name => name !== '');
 
     this.fetchingSuggestions.set(true);
-    this.suggestionService.suggestActivities({destination, interchanges}).subscribe({
-      next: response => {
-        this.navigateToLogbook(firstSegment, lastSegment, this.buildActivityDescription(response));
-      },
-      error: error => {
-        console.log(error);
-        this.fetchingSuggestions.set(false);
-        this.navigateToLogbook(firstSegment, lastSegment, '');
-      },
-      complete: () => {
-        this.fetchingSuggestions.set(false);
-      },
-    });
+    this.suggestionService.suggestActivities({destination, interchanges})
+      .pipe(
+        timeout({first: TrainConnectionResult.SUGGESTION_TIMEOUT_MS}),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: response => {
+          this.navigateToLogbook(firstSegment, lastSegment, this.buildActivityDescription(response));
+        },
+        error: error => {
+          console.error(error);
+          this.fetchingSuggestions.set(false);
+          this.navigateToLogbook(firstSegment, lastSegment, '');
+        },
+        complete: () => {
+          this.fetchingSuggestions.set(false);
+        },
+      });
   }
 
   private navigateToLogbook(firstSegment: TrainSegment, lastSegment: TrainSegment, activitySuggestions: string): void {
