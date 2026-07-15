@@ -13,6 +13,7 @@ What happens:
 - When testing with Logos, this is the logos api key
 - The key is saved to `infra/docker/compose/local/.env` for Docker Compose.
 - All local images are built and containers are started.
+- The merged docs portal opens at `http://localhost:4570`.
 
 Stop everything:
 

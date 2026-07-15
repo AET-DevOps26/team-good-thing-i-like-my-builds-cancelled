@@ -175,6 +175,7 @@ ok "Containers are up"
 echo
 echo -e "${C_BOLD}Local environment is ready.${C_RESET}"
 echo "Client:      http://localhost:4567"
+echo "Docs portal: http://localhost:4570"
 echo "Prometheus:  http://localhost:9090"
 echo "Grafana:     http://localhost:3000"
 echo "pgAdmin:     http://localhost:5050"
