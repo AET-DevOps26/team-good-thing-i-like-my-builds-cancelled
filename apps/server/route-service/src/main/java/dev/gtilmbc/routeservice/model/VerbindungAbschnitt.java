@@ -10,35 +10,32 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-public record VerbindungAbschnitt(String abfahrtsOrt, StationTimestamp abfahrt, String ankunftsOrt, StationTimestamp ankunft, List<Station> halte) {
-    TrainSegment asSegment() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.GERMAN);
-        TrainSegment segment = new TrainSegment();
+public record VerbindungAbschnitt(String abfahrtsOrt, StationTimestamp abfahrt, String ankunftsOrt,
+		StationTimestamp ankunft, List<Station> halte) {
+	TrainSegment asSegment() {
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.GERMAN);
+		TrainSegment segment = new TrainSegment();
 
-        String arrival = ankunft.sollzeit();
-        String departure = abfahrt.sollzeit();
+		String arrival = ankunft.sollzeit();
+		String departure = abfahrt.sollzeit();
 
-        OffsetDateTime arrivalTime = LocalDateTime
-            .parse(arrival, dateFormatter)
-            .atZone(ZoneId.of("Europe/Berlin"))
-            .toOffsetDateTime();
-        OffsetDateTime departureTime = LocalDateTime
-            .parse(departure, dateFormatter)
-            .atZone(ZoneId.of("Europe/Berlin"))
-            .toOffsetDateTime();
+		OffsetDateTime arrivalTime = LocalDateTime.parse(arrival, dateFormatter).atZone(ZoneId.of("Europe/Berlin"))
+				.toOffsetDateTime();
+		OffsetDateTime departureTime = LocalDateTime.parse(departure, dateFormatter).atZone(ZoneId.of("Europe/Berlin"))
+				.toOffsetDateTime();
 
-        segment.setArrivalTime(arrivalTime);
-        segment.setDepartureTime(departureTime);
+		segment.setArrivalTime(arrivalTime);
+		segment.setDepartureTime(departureTime);
 
-        segment.setStops(halte);
+		segment.setStops(halte);
 
-        if (halte.isEmpty()) {
-            return null;
-        }
+		if (halte.isEmpty()) {
+			return null;
+		}
 
-        segment.setStart(halte.getFirst());
-        segment.setEnd(halte.getLast());
+		segment.setStart(halte.getFirst());
+		segment.setEnd(halte.getLast());
 
-        return segment;
-    }
+		return segment;
+	}
 }
