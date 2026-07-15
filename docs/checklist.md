@@ -59,9 +59,9 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 ### Engineering Artifacts and Documentation Compliance
 - [ ] High-level architecture description is available and matches implementation.
 - [ ] Mandatory diagrams are present: Subsystem Decomposition, Use Case, Analysis Object Model.
-- [ ] API documentation and Swagger/OpenAPI references are in README/docs.
+- [x] API documentation and Swagger/OpenAPI references are in README/docs.
 - [ ] README documents setup, architecture, API docs, CI/CD, monitoring, and responsibilities.
-- [ ] Monitoring config, dashboards, and alerts are versioned in the repo.
+- [x] Monitoring config, dashboards, and alerts are versioned in the repo.
 - [ ] Testing instructions are documented.
 
 ### Failure Guard (Must Be True)

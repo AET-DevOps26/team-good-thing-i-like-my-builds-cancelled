@@ -16,7 +16,7 @@ Repository for team Good thing I like my builds Cancelled!
 
 The full documentation can be found in the /docs folder with the following entries:
 
-- [🟡 API](docs/api.md)
+- [🟢 API](docs/api.md)
 - [🟡 Architecture](docs/architecture.md)
 - [🟡 Checklist](docs/checklist.md)
 - [🟡 CI/CD](docs/ci-cd.md)
