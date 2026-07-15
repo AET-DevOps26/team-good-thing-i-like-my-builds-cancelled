@@ -37,6 +37,14 @@ jobs:
             -n cancelled-monitoring \
             --dry-run=client -o yaml | kubectl apply -f -
 
+      - name: Create/update database secrets
+        run: |
+          kubectl create secret generic database-secret \
+            --from-literal=POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
+            --from-literal=PGADMIN_PASSWORD="${{ secrets.PGADMIN_PASSWORD }}" \
+            -n cancelled-monitoring \
+            --dry-run=client -o yaml | kubectl apply -f -
+
       - name: Deploy to k8s
         working-directory: infra/kubernetes/helm
         run: |
