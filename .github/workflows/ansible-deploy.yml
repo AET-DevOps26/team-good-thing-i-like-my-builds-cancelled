@@ -48,7 +48,7 @@ jobs:
       PGADMIN_PASSWORD: ${{ secrets.PGADMIN_PASSWORD }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v4

@@ -1,0 +1,45 @@
+name: Run GenAI Tests
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: apps/server/genai-service
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Cache dependencies
+        id: cache-venv
+        uses: actions/cache@v6
+        with:
+          path: apps/server/genai-service/.venv
+          key: genai-tests-venv-${{ runner.os }}-py3.12-${{ hashFiles('apps/server/genai-service/requirements.txt') }}
+
+      - name: Install dependencies
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install -r requirements.txt
+
+      - name: Lint (ruff)
+        run: |
+          .venv/bin/ruff check .
+          .venv/bin/ruff format --check .
+
+      - name: Run tests
+        run: .venv/bin/python -m pytest tests/ -v

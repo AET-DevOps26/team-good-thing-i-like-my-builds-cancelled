@@ -1,12 +1,11 @@
 import logging
 import time
-
-logging.basicConfig(level=logging.INFO)
-
 from fastapi import FastAPI, Request, Response
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
 from app.api.suggestion_routes import router as suggestion_router
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="GenAI Service", version="0.1.0")
 
@@ -45,9 +44,12 @@ async def record_metrics(request: Request, call_next):
     REQUEST_LATENCY.labels(service=service, method=method, path=path).observe(duration)
 
     if response.status_code >= 500:
-        REQUEST_ERROR_COUNT.labels(service=service, method=method, path=path, status=status).inc()
+        REQUEST_ERROR_COUNT.labels(
+            service=service, method=method, path=path, status=status
+        ).inc()
 
     return response
+
 
 app.include_router(suggestion_router)
 

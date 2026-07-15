@@ -15,7 +15,9 @@ def get_report(description: str = Query(..., min_length=1)) -> GenerateReportRes
 
 
 @router.get("/recommend-destinations", response_model=RecommendDestinationsResponse)
-def get_recommendations(visited: str = Query(..., min_length=1)) -> RecommendDestinationsResponse:
+def get_recommendations(
+    visited: str = Query(..., min_length=1),
+) -> RecommendDestinationsResponse:
     """Recommend destinations based on a comma-separated list."""
     visited_list = [v.strip() for v in visited.split(",") if v.strip()]
     recommendations = recommend_destinations(visited_list)
