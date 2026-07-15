@@ -1,8 +1,5 @@
 import logging
 import time
-
-logging.basicConfig(level=logging.INFO)
-
 from fastapi import FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -10,6 +7,8 @@ from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_
 
 from app.api.activity_routes import router as activity_router
 from app.api.suggestion_routes import router as suggestion_router
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="GenAI Service", version="0.1.0")
 

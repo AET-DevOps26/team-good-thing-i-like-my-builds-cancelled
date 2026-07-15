@@ -49,19 +49,57 @@ components:
     TextUpdate:
       summary: Sent by the client whenever the report text changes.
       payload:
-        $ref: './openapi.yaml#/components/schemas/TextUpdate'
+        type: object
+        required:
+          - type
+          - textBefore
+        properties:
+          type:
+            type: string
+            const: text_update
+          textBefore:
+            type: string
+            description: Report text before the cursor.
+            example: "Today I arrived in Marburg and walked through the old town."
+          textAfter:
+            type: string
+            description: Report text after the cursor, if any.
+            example: "The weather was perfect."
 
     CancelSuggestion:
       summary: Sent by the client to explicitly cancel a running suggestion.
       payload:
-        $ref: './openapi.yaml#/components/schemas/CancelSuggestion'
+        type: object
+        required:
+          - type
+        properties:
+          type:
+            type: string
+            const: cancel
 
     SuggestionToken:
       summary: One streamed token of the suggestion, sent by the server.
       payload:
-        $ref: './openapi.yaml#/components/schemas/SuggestionToken'
+        type: object
+        required:
+          - type
+          - token
+        properties:
+          type:
+            type: string
+            const: token
+          token:
+            type: string
+            description: A single text token to append to the inline suggestion.
+            example: " The castle"
 
     SuggestionDone:
       summary: Sent by the server when the suggestion is complete or cancelled.
       payload:
-        $ref: './openapi.yaml#/components/schemas/SuggestionDone'
+        type: object
+        required:
+          - type
+        properties:
+          type:
+            type: string
+            const: done

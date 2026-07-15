@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cancelled API Docs</title>
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="stylesheet" href="https://unpkg.com/@asyncapi/react-component@3.1.4/styles/default.min.css" />
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #fff;
+      color: #111827;
+    }
+
+    .page {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f9fafb;
+      flex: 0 0 auto;
+    }
+
+    .tab-button {
+      appearance: none;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #374151;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .tab-button[aria-selected="true"] {
+      background: #111827;
+      color: #fff;
+      border-color: #111827;
+    }
+
+    .content {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    .panel {
+      display: none;
+      height: 100%;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .view {
+      height: 100%;
+      width: 100%;
+    }
+
+    #openapi-view {
+      overflow: auto;
+      background: #fff;
+    }
+
+    #asyncapi-view {
+      overflow: auto;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <nav class="tabs" aria-label="Documentation sections">
+      <button class="tab-button" data-tab="openapi" aria-selected="true">OpenAPI</button>
+      <button class="tab-button" data-tab="asyncapi" aria-selected="false">AsyncAPI</button>
+    </nav>
+
+    <section class="content">
+      <div id="openapi" class="panel active">
+        <div id="openapi-view" class="view"></div>
+      </div>
+
+      <div id="asyncapi" class="panel">
+        <div id="asyncapi-view" class="view"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
+  <script src="https://unpkg.com/@asyncapi/web-component@3.1.4/lib/asyncapi-web-component.js" defer></script>
+  <script>
+    Redoc.init('/specs/openapi.yaml', {}, document.getElementById('openapi-view'));
+
+    const asyncapiView = document.getElementById('asyncapi-view');
+    asyncapiView.innerHTML = `
+      <asyncapi-component
+        schemaUrl="/specs/asyncapi.yaml"
+        cssImportPath="https://unpkg.com/@asyncapi/react-component@3.1.4/styles/default.min.css"
+        config='{"show":{"sidebar":true,"info":true,"operations":true,"messages":true}}'>
+      </asyncapi-component>
+    `;
+
+    const tabs = Array.from(document.querySelectorAll('.tab-button'));
+    const panels = Array.from(document.querySelectorAll('.panel'));
+
+    function setActiveTab(tabName) {
+      tabs.forEach((button) => {
+        const isSelected = button.dataset.tab === tabName;
+        button.setAttribute('aria-selected', String(isSelected));
+      });
+
+      panels.forEach((panel) => {
+        panel.classList.toggle('active', panel.id === tabName);
+      });
+    }
+
+    tabs.forEach((button) => {
+      button.addEventListener('click', () => setActiveTab(button.dataset.tab));
+    });
+  </script>
+</body>
+</html>
