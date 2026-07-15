@@ -5,6 +5,7 @@ metadata:
   name: logbook
   labels:
     app: logbook
+    monitoring: "true"
 spec:
   replicas: 1
   selector:
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: logbook
+        monitoring: "true"
     spec:
       containers:
         - name: logbook
@@ -27,8 +29,8 @@ spec:
               cpu: "100m"
               memory: "256Mi"
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu: "200m"
+              memory: "256Mi"
           env:
             - name: TZ
               value: Europe/Berlin

@@ -5,6 +5,7 @@ metadata:
   name: route
   labels:
     app: route
+    monitoring: "true"
 spec:
   replicas: 1
   selector:
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: route
+        monitoring: "true"
     spec:
       containers:
         - name: route
@@ -27,5 +29,5 @@ spec:
               cpu: "100m"
               memory: "256Mi"
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu: "200m"
+              memory: "256Mi"

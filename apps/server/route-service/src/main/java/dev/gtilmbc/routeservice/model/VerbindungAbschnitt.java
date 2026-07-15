@@ -32,6 +32,10 @@ public record VerbindungAbschnitt(String abfahrtsOrt, StationTimestamp abfahrt, 
 
         segment.setStops(halte);
 
+        if (halte.isEmpty()) {
+            return null;
+        }
+
         segment.setStart(halte.getFirst());
         segment.setEnd(halte.getLast());
 

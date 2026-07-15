@@ -6,7 +6,6 @@
 package dev.gtilmbc.routeservice.generated.api;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.Nullable;
 import java.time.OffsetDateTime;
 import dev.gtilmbc.routeservice.generated.model.Station;
 import dev.gtilmbc.routeservice.generated.model.TrainConnection;
@@ -37,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import jakarta.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-06-21T17:32:23.036015+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-07-13T23:18:45.436869+02:00[Europe/Berlin]", comments = "Generator version: 7.22.0")
 @Validated
 @Tag(name = "route", description = "the route API")
 public interface RouteApi {
@@ -53,7 +52,6 @@ public interface RouteApi {
      * @param time  (required)
      * @param startStationId  (required)
      * @param destinationStationId  (required)
-     * @param viaStationIds  (optional)
      * @return OK (status code 200)
      */
     @Operation(
@@ -73,8 +71,7 @@ public interface RouteApi {
     default ResponseEntity<List<TrainConnection>> getConnections(
         @NotNull @Parameter(name = "time", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "time", required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime time,
         @NotNull @Parameter(name = "startStationId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "startStationId", required = true) String startStationId,
-        @NotNull @Parameter(name = "destinationStationId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "destinationStationId", required = true) String destinationStationId,
-        @Parameter(name = "viaStationIds", description = "", in = ParameterIn.QUERY) @Valid @RequestParam(value = "viaStationIds", required = false) @Nullable List<String> viaStationIds
+        @NotNull @Parameter(name = "destinationStationId", description = "", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "destinationStationId", required = true) String destinationStationId
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {

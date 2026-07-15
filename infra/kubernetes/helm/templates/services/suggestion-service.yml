@@ -5,6 +5,7 @@ metadata:
   name: genai-service
   labels:
     app: suggestion
+    monitoring: "true"
 spec:
   selector:
     app: suggestion

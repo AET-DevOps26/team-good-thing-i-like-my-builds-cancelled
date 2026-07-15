@@ -11,6 +11,8 @@
     logbook_image: "{{ lookup('env', 'LOGBOOK_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/logbook-service:latest', true) }}"
     route_image: "{{ lookup('env', 'ROUTE_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/route-service:latest', true) }}"
     genai_image: "{{ lookup('env', 'GENAI_IMAGE') | default('ghcr.io/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/genai-service:latest', true) }}"
+    prometheus_image: "{{ lookup('env', 'PROMETHEUS_IMAGE') | default('prom/prometheus:v2.54.1', true) }}"
+    grafana_image: "{{ lookup('env', 'GRAFANA_IMAGE') | default('grafana/grafana:11.2.2', true) }}"
     db_image: "{{ lookup('env', 'DB_IMAGE') | default('postgres:14.23', true) }}"
     pgadmin_image: "{{ lookup('env', 'PGADMIN_IMAGE') | default('dpage/pgadmin4:9.15', true) }}"
 
@@ -20,6 +22,11 @@
     logbook_port: "{{ lookup('env', 'LOGBOOK_PORT') | default('9100', true) }}"
     route_port: "{{ lookup('env', 'ROUTE_PORT') | default('9200', true) }}"
     genai_port: "{{ lookup('env', 'GENAI_PORT') | default('9300', true) }}"
+    prometheus_port: "{{ lookup('env', 'PROMETHEUS_PORT') | default('9090', true) }}"
+    grafana_port: "{{ lookup('env', 'GRAFANA_PORT') | default('3000', true) }}"
+
+    grafana_admin_user: "{{ lookup('env', 'GRAFANA_ADMIN_USER') | default('admin', true) }}"
+    grafana_admin_password: "{{ lookup('env', 'GRAFANA_ADMIN_PASSWORD') | default('admin', true) }}"
 
     lmstudio_base_url: "{{ lookup('env', 'LMSTUDIO_BASE_URL') | default('https://logos.aet.cit.tum.de', true) }}"
     lmstudio_model: "{{ lookup('env', 'LMSTUDIO_MODEL') | default('openai/gpt-oss-120b', true) }}"
@@ -49,6 +56,28 @@
         mode: "0644"
       tags: [deploy]
 
+    - name: Ensure monitoring directories exist
+      ansible.builtin.file:
+        path: "{{ app_dir }}/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - monitoring/prometheus
+        - monitoring/prometheus/rules
+        - monitoring/grafana
+        - monitoring/grafana/dashboards
+        - monitoring/grafana/provisioning
+        - monitoring/grafana/provisioning/dashboards
+        - monitoring/grafana/provisioning/datasources
+      tags: [deploy]
+
+    - name: Copy monitoring configuration
+      ansible.builtin.copy:
+        src: ../../monitoring/
+        dest: "{{ app_dir }}/monitoring/"
+        mode: preserve
+      tags: [deploy]
+
     - name: Login to GHCR (if credentials present)
       block:
         - name: Login to GHCR
@@ -64,7 +93,7 @@
       tags: [deploy]
 
     - name: Start services
-      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d --force-recreate"
+      ansible.builtin.command: "docker compose -f {{ app_dir }}/docker-compose.yml up -d --force-recreate --remove-orphans"
       args:
         chdir: "{{ app_dir }}"
       tags: [deploy]

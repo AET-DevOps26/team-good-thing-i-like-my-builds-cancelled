@@ -1,0 +1,30 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - localhost:9090/monitoring/prometheus/
+
+  - job_name: logbook-service
+    metrics_path: /api/actuator/prometheus
+    static_configs:
+      - targets:
+          - logbook-service.{{ .Release.Namespace }}.svc.cluster.local:80
+
+  - job_name: route-service
+    metrics_path: /api/actuator/prometheus
+    static_configs:
+      - targets:
+          - route-service.{{ .Release.Namespace }}.svc.cluster.local:80
+
+  - job_name: genai-service
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - genai-service.{{ .Release.Namespace }}.svc.cluster.local:8080

@@ -17,14 +17,14 @@
     <br>
     <p class="mt-4 text-center">Verbindungen werden geladen...</p>
   </div>
-} @else if (connections().length > 0) {
+} @else if (connections() && connections().length > 0) {
   <z-accordion>
     @for (connection of connections(); track connection) {
       <app-train-connection-result [connection]="connection"></app-train-connection-result>
     }
   </z-accordion>
 } @else if (searched()) {
-  <p class="mt-4">Keine Direktverbindungen gefunden.</p>
+  <p class="mt-4">Keine Verbindungen gefunden.</p>
 } @else {
   <p class="mt-4">Bitte gib Start und Ziel ein und klicke auf "Suchen".</p>
 }
