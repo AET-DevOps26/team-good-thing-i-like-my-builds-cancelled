@@ -3,4 +3,9 @@
   <Match>
     <Package name="~dev\.gtilmbc\.logbookservice\.generated(\..*)?"/>
   </Match>
+  <!-- Controllers use injected services with @RequiredArgsConstructor, this is fine -->
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+    <Class name="~.*Controller"/>
+  </Match>
 </FindBugsFilter>
