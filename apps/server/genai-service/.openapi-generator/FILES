@@ -1,4 +1,7 @@
+src/generated/models/activity_suggestion_request.py
+src/generated/models/activity_suggestion_response.py
 src/generated/models/cancel_suggestion.py
+src/generated/models/location_suggestion.py
 src/generated/models/suggestion_done.py
 src/generated/models/suggestion_token.py
 src/generated/models/text_update.py

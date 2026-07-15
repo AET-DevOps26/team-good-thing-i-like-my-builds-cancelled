@@ -10,7 +10,7 @@ import json
 
 import httpx
 
-from app.services import suggestion_service
+from app.services import lmstudio, suggestion_service
 
 
 class FakeWebSocket:
@@ -55,7 +55,7 @@ def install_transport(monkeypatch, handler) -> None:
 def run_stream(
     monkeypatch, handler, text_before="Hello", text_after=""
 ) -> FakeWebSocket:
-    monkeypatch.setattr(suggestion_service, "_MODEL_OVERRIDE", "test-model")
+    monkeypatch.setattr(lmstudio, "_MODEL_OVERRIDE", "test-model")
     install_transport(monkeypatch, handler)
     websocket = FakeWebSocket()
     asyncio.run(
@@ -190,43 +190,43 @@ def test_api_key_sets_authorization_header(monkeypatch) -> None:
         captured["headers"] = request.headers
         return httpx.Response(200, content=sse_body([]))
 
-    monkeypatch.setattr(suggestion_service, "_API_KEY", "secret-key")
+    monkeypatch.setattr(lmstudio, "_API_KEY", "secret-key")
     run_stream(monkeypatch, handler)
 
     assert captured["headers"]["authorization"] == "Bearer secret-key"
 
 
 def test_get_model_prefers_env_override(monkeypatch) -> None:
-    monkeypatch.setattr(suggestion_service, "_MODEL_OVERRIDE", "forced-model")
-    assert asyncio.run(suggestion_service._get_model()) == "forced-model"
+    monkeypatch.setattr(lmstudio, "_MODEL_OVERRIDE", "forced-model")
+    assert asyncio.run(lmstudio.get_model()) == "forced-model"
 
 
 def test_get_model_auto_detects_first_model(monkeypatch) -> None:
-    monkeypatch.setattr(suggestion_service, "_MODEL_OVERRIDE", "")
+    monkeypatch.setattr(lmstudio, "_MODEL_OVERRIDE", "")
 
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.url.path == "/v1/models"
         return httpx.Response(200, json={"data": [{"id": "gemma-3"}, {"id": "other"}]})
 
     install_transport(monkeypatch, handler)
-    assert asyncio.run(suggestion_service._get_model()) == "gemma-3"
+    assert asyncio.run(lmstudio.get_model()) == "gemma-3"
 
 
 def test_get_model_falls_back_on_empty_list(monkeypatch) -> None:
-    monkeypatch.setattr(suggestion_service, "_MODEL_OVERRIDE", "")
+    monkeypatch.setattr(lmstudio, "_MODEL_OVERRIDE", "")
 
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, json={"data": []})
 
     install_transport(monkeypatch, handler)
-    assert asyncio.run(suggestion_service._get_model()) == "local-model"
+    assert asyncio.run(lmstudio.get_model()) == "local-model"
 
 
 def test_get_model_falls_back_on_error(monkeypatch) -> None:
-    monkeypatch.setattr(suggestion_service, "_MODEL_OVERRIDE", "")
+    monkeypatch.setattr(lmstudio, "_MODEL_OVERRIDE", "")
 
     def handler(request: httpx.Request) -> httpx.Response:
         raise httpx.ConnectError("connection refused", request=request)
 
     install_transport(monkeypatch, handler)
-    assert asyncio.run(suggestion_service._get_model()) == "local-model"
+    assert asyncio.run(lmstudio.get_model()) == "local-model"

@@ -1,13 +1,31 @@
 import logging
 import time
 from fastapi import FastAPI, Request, Response
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 from prometheus_client import CONTENT_TYPE_LATEST, Counter, Histogram, generate_latest
 
+from app.api.activity_routes import router as activity_router
 from app.api.suggestion_routes import router as suggestion_router
 
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(title="GenAI Service", version="0.1.0")
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
+    """Map validation errors to the ErrorResponse shape from the OpenAPI spec."""
+    details = [
+        f"{'.'.join(str(loc) for loc in err['loc'])}: {err['msg']}"
+        for err in exc.errors()
+    ]
+    return JSONResponse(
+        status_code=400, content={"message": "Invalid request", "details": details}
+    )
+
 
 REQUEST_COUNT = Counter(
     "app_http_requests_total",
@@ -52,6 +70,7 @@ async def record_metrics(request: Request, call_next):
 
 
 app.include_router(suggestion_router)
+app.include_router(activity_router)
 
 
 @app.get("/metrics", include_in_schema=False)

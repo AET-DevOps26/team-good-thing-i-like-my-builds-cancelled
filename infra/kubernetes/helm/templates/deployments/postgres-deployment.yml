@@ -36,7 +36,10 @@ spec:
               value: {{ .Values.database.user }}
 
             - name: POSTGRES_PASSWORD
-              value: {{ .Values.database.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: POSTGRES_PASSWORD
 
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
