@@ -44,9 +44,12 @@ async def record_metrics(request: Request, call_next):
     REQUEST_LATENCY.labels(service=service, method=method, path=path).observe(duration)
 
     if response.status_code >= 500:
-        REQUEST_ERROR_COUNT.labels(service=service, method=method, path=path, status=status).inc()
+        REQUEST_ERROR_COUNT.labels(
+            service=service, method=method, path=path, status=status
+        ).inc()
 
     return response
+
 
 app.include_router(suggestion_router)
 
