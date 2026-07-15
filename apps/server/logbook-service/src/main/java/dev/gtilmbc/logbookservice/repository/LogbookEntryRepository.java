@@ -8,5 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface LogbookEntryRepository extends JpaRepository<LogbookEntryEntity, UUID>, JpaSpecificationExecutor<LogbookEntryEntity> {
+public interface LogbookEntryRepository
+		extends
+			JpaRepository<LogbookEntryEntity, UUID>,
+			JpaSpecificationExecutor<LogbookEntryEntity> {
 }

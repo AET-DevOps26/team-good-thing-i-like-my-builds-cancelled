@@ -106,3 +106,8 @@ jobs:
         working-directory: ${{ steps.service.outputs.context }}
         run: |
           ./gradlew clean test
+
+      - name: Lint
+        working-directory: ${{ steps.service.outputs.context }}
+        run: |
+          ./gradlew spotlessCheck check
