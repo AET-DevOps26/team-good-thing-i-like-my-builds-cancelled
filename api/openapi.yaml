@@ -171,7 +171,33 @@ paths:
             application/json:
               schema: {$ref: '#/components/schemas/ErrorResponse'}
 
-# GenAI suggestion endpoint is a WebSocket — see asyncapi.yaml
+  /v1/suggestion/activities:
+    post:
+      tags: [suggestion]
+      operationId: suggestActivities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ActivitySuggestionRequest'}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ActivitySuggestionResponse'}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '502':
+          description: GenAI model unavailable
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+# GenAI inline text suggestion endpoint is a WebSocket — see asyncapi.yaml
 
 components:
   schemas:
@@ -308,6 +334,43 @@ components:
         totalElements:
           type: integer
           minimum: 0
+
+    ActivitySuggestionRequest:
+      type: object
+      required: [destination]
+      properties:
+        destination:
+          type: string
+          minLength: 1
+          description: Name of the destination station.
+          example: "München Hbf"
+        interchanges:
+          type: array
+          items: {type: string}
+          description: Names of the interchange stations along the route.
+          example: ["Frankfurt (Main) Hbf"]
+
+    LocationSuggestion:
+      type: object
+      required: [location, activities]
+      properties:
+        location:
+          type: string
+          description: The station or city the suggestions refer to.
+          example: "München Hbf"
+        activities:
+          type: array
+          items: {type: string}
+          description: Suggested sights or activities at this location.
+          example: ["Marienplatz besuchen", "Englischer Garten"]
+
+    ActivitySuggestionResponse:
+      type: object
+      required: [locations]
+      properties:
+        locations:
+          type: array
+          items: {$ref: '#/components/schemas/LocationSuggestion'}
 
     ErrorResponse:
       type: object
