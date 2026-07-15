@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { Router, provideRouter } from '@angular/router';
-import { NEVER, of, throwError } from 'rxjs';
+import { NEVER, Subject, of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { ActivitySuggestionResponse, SuggestionService, TrainConnection } from '@/generated';
+import { ZardAccordionItemComponent } from '@/shared/components/accordion';
 
 import { TrainConnectionResult } from './train-connection-result';
 
@@ -54,23 +56,54 @@ describe('TrainConnectionResult', () => {
     fixture = TestBed.createComponent(TrainConnectionResult);
     component = fixture.componentInstance;
     navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    fixture.detectChanges();
     await fixture.whenStable();
   });
+
+  function openAccordion(): void {
+    const accordionItem = fixture.debugElement
+      .query(By.directive(ZardAccordionItemComponent))
+      .componentInstance as ZardAccordionItemComponent;
+    accordionItem.isOpen.set(true);
+    fixture.detectChanges();
+  }
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch activity suggestions and include them in the description', () => {
+  it('should fetch suggestions when the accordion item is opened and show them read-only', () => {
     fixture.componentRef.setInput('connection', connection);
-
-    component.goToLogbook();
+    openAccordion();
 
     expect(suggestionServiceMock.suggestActivities).toHaveBeenCalledTimes(1);
     expect(suggestionServiceMock.suggestActivities).toHaveBeenCalledWith({
       destination: 'München Hbf',
       interchanges: ['Frankfurt (Main) Hbf'],
     });
+
+    fixture.detectChanges();
+    const textarea = fixture.nativeElement.querySelector('textarea') as HTMLTextAreaElement;
+    expect(textarea).toBeTruthy();
+    expect(textarea.readOnly).toBeTruthy();
+    expect(textarea.value).toContain('Vorschläge für unterwegs:');
+    expect(textarea.value).toContain('- Marienplatz besuchen');
+    expect(component.fetchingSuggestions()).toBeFalsy();
+  });
+
+  it('should not fetch again for repeated opens or logbook clicks', () => {
+    fixture.componentRef.setInput('connection', connection);
+    openAccordion();
+    component.goToLogbook();
+
+    expect(suggestionServiceMock.suggestActivities).toHaveBeenCalledTimes(1);
+  });
+
+  it('should include the fetched suggestions when navigating to the logbook', () => {
+    fixture.componentRef.setInput('connection', connection);
+    openAccordion();
+
+    component.goToLogbook();
 
     expect(navigateSpy).toHaveBeenCalledTimes(1);
     const [route, extras] = navigateSpy.mock.calls[0] as [string[], { queryParams: Record<string, string> }];
@@ -80,12 +113,35 @@ describe('TrainConnectionResult', () => {
     expect(extras.queryParams['description']).toContain('Übernommener Fahrplan:');
     expect(extras.queryParams['description']).toContain('Vorschläge für unterwegs:');
     expect(extras.queryParams['description']).toContain('- Marienplatz besuchen');
+  });
+
+  it('should wait for a running request before navigating to the logbook', () => {
+    const response$ = new Subject<ActivitySuggestionResponse>();
+    suggestionServiceMock.suggestActivities.mockReturnValue(response$.asObservable());
+    fixture.componentRef.setInput('connection', connection);
+    openAccordion();
+
+    component.goToLogbook();
+    expect(navigateSpy).not.toHaveBeenCalled();
+    expect(component.pendingNavigation()).toBeTruthy();
+
+    response$.next(suggestions);
+    response$.complete();
+
+    expect(navigateSpy).toHaveBeenCalledTimes(1);
+    const [, extras] = navigateSpy.mock.calls[0] as [string[], { queryParams: Record<string, string> }];
+    expect(extras.queryParams['description']).toContain('Vorschläge für unterwegs:');
+    expect(component.pendingNavigation()).toBeFalsy();
     expect(component.fetchingSuggestions()).toBeFalsy();
   });
 
   it('should still navigate with the schedule when the suggestion request fails', () => {
     suggestionServiceMock.suggestActivities.mockReturnValue(throwError(() => new Error('unavailable')));
     fixture.componentRef.setInput('connection', connection);
+    openAccordion();
+
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('textarea')).toBeNull();
 
     component.goToLogbook();
 
@@ -93,7 +149,6 @@ describe('TrainConnectionResult', () => {
     const [, extras] = navigateSpy.mock.calls[0] as [string[], { queryParams: Record<string, string> }];
     expect(extras.queryParams['description']).toContain('Übernommener Fahrplan:');
     expect(extras.queryParams['description']).not.toContain('Vorschläge für unterwegs:');
-    expect(component.fetchingSuggestions()).toBeFalsy();
   });
 
   it('should navigate without suggestions when the request times out', () => {
@@ -101,6 +156,7 @@ describe('TrainConnectionResult', () => {
     try {
       suggestionServiceMock.suggestActivities.mockReturnValue(NEVER);
       fixture.componentRef.setInput('connection', connection);
+      openAccordion();
 
       component.goToLogbook();
       expect(navigateSpy).not.toHaveBeenCalled();
@@ -111,6 +167,7 @@ describe('TrainConnectionResult', () => {
       const [, extras] = navigateSpy.mock.calls[0] as [string[], { queryParams: Record<string, string> }];
       expect(extras.queryParams['description']).toContain('Übernommener Fahrplan:');
       expect(extras.queryParams['description']).not.toContain('Vorschläge für unterwegs:');
+      expect(component.pendingNavigation()).toBeFalsy();
       expect(component.fetchingSuggestions()).toBeFalsy();
     } finally {
       vi.useRealTimers();
@@ -118,6 +175,7 @@ describe('TrainConnectionResult', () => {
   });
 
   it('should not navigate or fetch suggestions without segments', () => {
+    openAccordion();
     component.goToLogbook();
 
     expect(suggestionServiceMock.suggestActivities).not.toHaveBeenCalled();
