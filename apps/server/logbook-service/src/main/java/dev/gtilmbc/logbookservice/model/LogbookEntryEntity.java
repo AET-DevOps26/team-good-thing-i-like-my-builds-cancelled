@@ -18,54 +18,54 @@ import java.util.UUID;
 @Setter
 public class LogbookEntryEntity {
 
-    @Id
-    private UUID id;
+	@Id
+	private UUID id;
 
-    @Column(nullable = false, length = 120)
-    private String title;
+	@Column(nullable = false, length = 120)
+	private String title;
 
-    @Column(length = 4000)
-    private String description;
+	@Column(length = 4000)
+	private String description;
 
-    @Column(nullable = false)
-    private OffsetDateTime startTime;
+	@Column(nullable = false)
+	private OffsetDateTime startTime;
 
-    @Column(nullable = false)
-    private OffsetDateTime endTime;
+	@Column(nullable = false)
+	private OffsetDateTime endTime;
 
-    @Column(nullable = false)
-    private String startCity;
+	@Column(nullable = false)
+	private String startCity;
 
-    private String startStationId;
+	private String startStationId;
 
-    @Column(nullable = false)
-    private String destinationCity;
+	@Column(nullable = false)
+	private String destinationCity;
 
-    private String destinationStationId;
+	private String destinationStationId;
 
-    @Column(nullable = false, length = 20)
-    private String transportMode;
+	@Column(nullable = false, length = 20)
+	private String transportMode;
 
-    @Column(nullable = false)
-    private OffsetDateTime createdAt;
+	@Column(nullable = false)
+	private OffsetDateTime createdAt;
 
-    @Column(nullable = false)
-    private OffsetDateTime updatedAt;
+	@Column(nullable = false)
+	private OffsetDateTime updatedAt;
 
-    @PrePersist
-    public void onCreate() {
-        OffsetDateTime now = OffsetDateTime.now();
-        if (id == null) {
-            id = UUID.randomUUID();
-        }
-        if (createdAt == null) {
-            createdAt = now;
-        }
-        updatedAt = now;
-    }
+	@PrePersist
+	public void onCreate() {
+		OffsetDateTime now = OffsetDateTime.now();
+		if (id == null) {
+			id = UUID.randomUUID();
+		}
+		if (createdAt == null) {
+			createdAt = now;
+		}
+		updatedAt = now;
+	}
 
-    @PreUpdate
-    public void onUpdate() {
-        updatedAt = OffsetDateTime.now();
-    }
+	@PreUpdate
+	public void onUpdate() {
+		updatedAt = OffsetDateTime.now();
+	}
 }
