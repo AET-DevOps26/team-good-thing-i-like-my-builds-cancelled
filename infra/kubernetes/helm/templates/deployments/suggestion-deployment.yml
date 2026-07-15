@@ -27,10 +27,10 @@ spec:
           resources:
             requests:
               cpu: "100m"
-              memory: "256Mi"
+              memory: "128Mi"
             limits:
               cpu: "200m"
-              memory: "256Mi"
+              memory: "200Mi"
           env:
             - name: LMSTUDIO_API_KEY
               valueFrom:
