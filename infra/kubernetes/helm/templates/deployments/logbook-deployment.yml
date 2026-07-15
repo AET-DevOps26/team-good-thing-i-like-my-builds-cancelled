@@ -42,4 +42,7 @@ spec:
               value: {{ .Values.database.user }}
 
             - name: SPRING_DATASOURCE_PASSWORD
-              value: {{ .Values.database.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: POSTGRES_PASSWORD

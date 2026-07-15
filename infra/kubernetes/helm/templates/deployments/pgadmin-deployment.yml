@@ -34,4 +34,7 @@ spec:
             - name: PGADMIN_DEFAULT_EMAIL
               value: admin@local.dev
             - name: PGADMIN_DEFAULT_PASSWORD
-              value: admin123
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: PGADMIN_PASSWORD
