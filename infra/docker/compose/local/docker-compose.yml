@@ -71,6 +71,18 @@ services:
         ports:
             - "9200:8080"
 
+    docs-portal:
+        build: ../../../../apps/docs
+        hostname: docs-portal
+        ports:
+            - "4570:80"
+        volumes:
+            - ../../../../api:/usr/share/nginx/html/specs:ro
+        depends_on:
+            - logbook-service
+            - route-service
+            - genai-service
+
     prometheus:
         image: prom/prometheus:v2.54.1
         hostname: prometheus
