@@ -71,9 +71,9 @@ export class TrainConnectionResult {
   }
 
   private navigateToLogbook(firstSegment: TrainSegment, lastSegment: TrainSegment, activitySuggestions: string): void {
-    const description = [this.buildScheduleDescription(), activitySuggestions]
-      .filter(part => part !== '')
-      .join('\n\n');
+    // const description = [this.buildScheduleDescription(), activitySuggestions]
+    //   .filter(part => part !== '')
+    //   .join('\n\n');
 
     this.router.navigate(['/log'], {
       queryParams: {
@@ -83,23 +83,23 @@ export class TrainConnectionResult {
         destinationStationName: lastSegment.end.name ?? '',
         startTime: this.connection().departureTime,
         endTime: this.connection().arrivalTime,
-        description,
+        description: activitySuggestions,
       },
     });
   }
 
-  private buildScheduleDescription(): string {
-    const lines = this.connection().segments.map((segment, index) => {
-      const legIndex = index + 1;
-      return `${legIndex}. ${segment.start.name ?? 'Unbekannt'} (${this.getTimeString(segment.departureTime)}) -> ${segment.end.name ?? 'Unbekannt'} (${this.getTimeString(segment.arrivalTime)})`;
-    });
-
-    return [
-      'Übernommener Fahrplan:',
-      `${this.getTimeString(this.connection().departureTime)} - ${this.getTimeString(this.connection().arrivalTime)}`,
-      ...lines,
-    ].join('\n');
-  }
+  // private buildScheduleDescription(): string {
+  //   const lines = this.connection().segments.map((segment, index) => {
+  //     const legIndex = index + 1;
+  //     return `${legIndex}. ${segment.start.name ?? 'Unbekannt'} (${this.getTimeString(segment.departureTime)}) -> ${segment.end.name ?? 'Unbekannt'} (${this.getTimeString(segment.arrivalTime)})`;
+  //   });
+  //
+  //   return [
+  //     'Übernommener Fahrplan:',
+  //     `${this.getTimeString(this.connection().departureTime)} - ${this.getTimeString(this.connection().arrivalTime)}`,
+  //     ...lines,
+  //   ].join('\n');
+  // }
 
   private buildActivityDescription(response: ActivitySuggestionResponse): string {
     if (response.locations.length === 0) {
