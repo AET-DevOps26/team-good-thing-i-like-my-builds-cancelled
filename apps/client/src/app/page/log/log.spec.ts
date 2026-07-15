@@ -164,6 +164,33 @@ describe('Log', () => {
     vi.useRealTimers();
   });
 
+  it('should anchor the ghost suggestion at the cursor position', () => {
+    vi.useFakeTimers();
+
+    const event = {
+      target: {
+        value: 'The train to Berlin',
+        selectionStart: 9,
+      },
+    } as unknown as Event;
+
+    component.onInput(event);
+    vi.advanceTimersByTime(600);
+    expect(suggestionServiceMock.sendTextUpdate).toHaveBeenCalledWith('The train', ' to Berlin');
+
+    suggestionServiceMock.events$.next({ type: 'token', token: ' from Munich' });
+    expect(component.textBeforeGhost()).toBe('The train');
+    expect(component.ghostText()).toBe(' from Munich');
+    expect(component.textAfterGhost()).toBe(' to Berlin');
+
+    component.acceptSuggestion();
+    expect(component.reportText()).toBe('The train from Munich to Berlin');
+    expect(component.ghostText()).toBe('');
+    expect(component.textAfterGhost()).toBe('');
+
+    vi.useRealTimers();
+  });
+
   it('should prefill form values from query params', async () => {
     activatedRouteMock.snapshot.queryParamMap = convertToParamMap({
       startStationId: '8000105',

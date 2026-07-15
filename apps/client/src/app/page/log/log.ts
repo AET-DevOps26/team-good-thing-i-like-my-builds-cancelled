@@ -1,5 +1,6 @@
 import {
   Component,
+  computed,
   ElementRef,
   inject,
   OnDestroy,
@@ -52,6 +53,17 @@ export class Log implements OnInit, OnDestroy {
 
   readonly reportText = signal('');
   readonly ghostText = signal('');
+  // Cursor position the current ghost suggestion is anchored to; null = end of text
+  readonly ghostPosition = signal<number | null>(null);
+  readonly textBeforeGhost = computed(() => {
+    const pos = this.ghostPosition();
+    const text = this.reportText();
+    return pos === null ? text : text.slice(0, pos);
+  });
+  readonly textAfterGhost = computed(() => {
+    const pos = this.ghostPosition();
+    return pos === null ? '' : this.reportText().slice(pos);
+  });
   readonly isStreaming = signal(false);
   readonly isLoading = signal(false);
   readonly isSaving = signal(false);
@@ -117,6 +129,7 @@ export class Log implements OnInit, OnDestroy {
     this.reportText.set(text);
 
     this.ghostText.set('');
+    this.ghostPosition.set(null);
     this.isStreaming.set(false);
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
 
@@ -127,6 +140,7 @@ export class Log implements OnInit, OnDestroy {
       const textBefore = text.slice(0, cursor);
       const textAfter = text.slice(cursor);
 
+      this.ghostPosition.set(cursor);
       this.isStreaming.set(true);
       this.suggestion.sendTextUpdate(textBefore, textAfter);
     }, 600);
@@ -148,11 +162,12 @@ export class Log implements OnInit, OnDestroy {
     const ghost = this.ghostText();
     if (!ghost) return;
     const el = this.editorRef?.nativeElement;
-    const cursor = el?.selectionStart ?? this.reportText().length;
+    const cursor = this.ghostPosition() ?? el?.selectionStart ?? this.reportText().length;
     const before = this.reportText().slice(0, cursor);
     const after = this.reportText().slice(cursor);
     this.reportText.set(before + ghost + after);
     this.ghostText.set('');
+    this.ghostPosition.set(null);
     this.isStreaming.set(false);
     this.suggestion.sendCancel();
     // Move cursor to end of inserted text
@@ -165,6 +180,7 @@ export class Log implements OnInit, OnDestroy {
 
   discardSuggestion(): void {
     this.ghostText.set('');
+    this.ghostPosition.set(null);
     this.isStreaming.set(false);
     this.suggestion.sendCancel();
   }
@@ -172,6 +188,7 @@ export class Log implements OnInit, OnDestroy {
   clearReport(): void {
     this.reportText.set('');
     this.ghostText.set('');
+    this.ghostPosition.set(null);
     this.isStreaming.set(false);
     this.suggestion.sendCancel();
   }
@@ -270,6 +287,7 @@ export class Log implements OnInit, OnDestroy {
     this.title.set('');
     this.reportText.set('');
     this.ghostText.set('');
+    this.ghostPosition.set(null);
     const now = new Date();
     this.startTime.set(this.toLocalDateTimeInput(now));
     this.endTime.set(this.toLocalDateTimeInput(new Date(now.getTime() + 60 * 60 * 1000)));
@@ -286,6 +304,7 @@ export class Log implements OnInit, OnDestroy {
     this.title.set(entry.title);
     this.reportText.set(entry.description ?? '');
     this.ghostText.set('');
+    this.ghostPosition.set(null);
     this.startTime.set(this.toLocalDateTimeInput(new Date(entry.startTime)));
     this.endTime.set(this.toLocalDateTimeInput(new Date(entry.endTime)));
     this.startCity.set(entry.startCity);
@@ -419,6 +438,7 @@ export class Log implements OnInit, OnDestroy {
 
     this.editingEntryId.set(null);
     this.ghostText.set('');
+    this.ghostPosition.set(null);
     this.isStreaming.set(false);
     this.selectedTransportMode.set(TransportMode.Train);
 
