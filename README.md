@@ -22,7 +22,7 @@ The full documentation can be found in the /docs folder with the following entri
 - [🟡 CI/CD](docs/ci-cd.md)
 - [🟢 Client](docs/client.md)
 - [🟢 Database](docs/database.md)
-- [🟡 Deployment](docs/deployment.md)
+- [🟢 Deployment](docs/deployment.md)
 - [🔴 GenAI](docs/genai.md)
 - [🟢 Monitoring](docs/monitoring.md)
 - [🟡 Problem Statement](docs/problem-statement.md)
