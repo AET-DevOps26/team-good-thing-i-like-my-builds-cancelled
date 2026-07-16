@@ -26,7 +26,7 @@ docker compose -f infra/docker/compose/local/docker-compose.yml down
 
 ## Kubernetes
 
-To deploy to Kubernetes, make sure you fulfill these **prerequisites**. Namespaces need to be created on [Rancher](https://http://rancher.ase.cit.tum.de/) to ensure they are created correctly (via code does not work according to course staff):
+To deploy to Kubernetes, make sure you fulfill these **prerequisites**. Namespaces need to be created on [Rancher](https://rancher.ase.cit.tum.de/) to ensure they are created correctly (via code does not work according to course staff):
 - Namespace `cancelled` with at least 3 GB RAM
 - Namespace `cancelled-monitoring` with about 1 GB RAM
 - Kubeconfig
