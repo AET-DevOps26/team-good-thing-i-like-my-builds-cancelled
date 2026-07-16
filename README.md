@@ -23,11 +23,11 @@ The full documentation can be found in the /docs folder with the following entri
 - [🟢 Client](docs/client.md)
 - [🟢 Database](docs/database.md)
 - [🟢 Deployment](docs/deployment.md)
-- [🔴 GenAI](docs/genai.md)
+- [🟢 GenAI](docs/genai.md)
 - [🟢 Monitoring](docs/monitoring.md)
 - [🟡 Problem Statement](docs/problem-statement.md)
 - [🟢 Server](docs/server.md)
-- [🟡 Testing](docs/testing.md)
+- [🟢 Testing](docs/testing.md)
 
 For local setup see ["Deployment > Local"](docs/deployment.md#local)
 
@@ -35,6 +35,3 @@ For local setup see ["Deployment > Local"](docs/deployment.md#local)
 
 - [Kubernetes (Rancher)](https://cancelled.stud.k8s.aet.cit.tum.de/)
 - [Azure](http://4.223.64.133:4567/plan)
-
-## AI Microservice
-The logbook suggestion service can be tested using the ansible deployment here: http://4.223.64.133:4567/. Navigate to the "Logbuch" page, type something, and watch the magic happen.

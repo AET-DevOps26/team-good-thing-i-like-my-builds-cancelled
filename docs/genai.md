@@ -9,7 +9,7 @@ can be found on this page. The GenAI service can be found here: `/apps/server/ge
 
 ----
 
-[![Test & Lint GenAI](https://github.com/team-good-thing-i-like-my-builds-cancelled/genai-service/actions/workflows/test-and-lint.yml/badge.svg)]
+[![Run GenAI Tests](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/genai-tests.yml/badge.svg)](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/genai-tests.yml)
 
 ### Unit Tests
 
