@@ -26,7 +26,7 @@ The full documentation can be found in the /docs folder with the following entri
 - [🔴 GenAI](docs/genai.md)
 - [🟢 Monitoring](docs/monitoring.md)
 - [🟡 Problem Statement](docs/problem-statement.md)
-- [🔴 Server](docs/server.md)
+- [🟢 Server](docs/server.md)
 - [🟡 Testing](docs/testing.md)
 
 For local setup see ["Deployment > Local"](docs/deployment.md#local)
