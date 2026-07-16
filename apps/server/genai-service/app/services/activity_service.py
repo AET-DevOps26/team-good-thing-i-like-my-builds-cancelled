@@ -6,6 +6,8 @@ import httpx
 from src.generated.models.activity_suggestion_response import ActivitySuggestionResponse
 
 from app.services.lmstudio import LMSTUDIO_BASE_URL, auth_headers, get_model
+from app.services.logbook_client import fetch_entries
+from app.services.retrieval import find_related_entries
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +26,28 @@ close to the station.
 {"locations": [{"location": "<station name>", "activities": ["<suggestion>", "<suggestion>"]}]}
 - Include one entry per provided location, in the given order, \
 with the destination last.
+- If past journeys from the user's logbook are provided, use them to \
+personalize: prefer activities that match the user's apparent interests \
+and do not suggest things they have already done at these locations.
 """
+
+_ENTRY_EXCERPT_CHARS = 300
+
+
+def _format_entry(entry: dict) -> str:
+    """One prompt line summarizing a past logbook entry."""
+    line = f"- {entry.get('startCity') or '?'} -> {entry.get('destinationCity') or '?'}"
+    date = (entry.get("endTime") or "")[:10]
+    if date:
+        line += f" ({date})"
+    if entry.get("title"):
+        line += f": {entry['title']}"
+    description = " ".join((entry.get("description") or "").split())[
+        :_ENTRY_EXCERPT_CHARS
+    ]
+    if description:
+        line += f" — {description}"
+    return line
 
 
 class ActivitySuggestionError(Exception):
@@ -51,6 +74,14 @@ async def suggest_activities(
     user_content = f"Destination station: {destination}"
     if interchanges:
         user_content += "\nInterchange stations: " + ", ".join(interchanges)
+
+    entries = await fetch_entries()
+    related = await find_related_entries([*interchanges, destination], entries)
+    if related:
+        user_content += (
+            "\n\nPast journeys from the user's logbook (most relevant first):\n"
+            + "\n".join(_format_entry(entry) for entry in related)
+        )
 
     model = await get_model()
     payload = {
