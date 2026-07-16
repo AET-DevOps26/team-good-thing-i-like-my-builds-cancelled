@@ -10,6 +10,12 @@ The server build workflow firstly checks for changes in one of the microservices
 
 ![](assets/ci-server.png)
 
+## Run Server Tests
+
+[![Run Server Tests](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/test-server.yml/badge.svg)](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/test-server.yml)
+
+This workflow runs testing and linting for the Spring Boot microservices.
+
 ## [Build Client](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/client.yml)
 
 [![Build Client](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/client.yml/badge.svg?branch=main)](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/client.yml)
@@ -36,5 +42,8 @@ The GenAI build workflow builds the python app using the Dockerfile and pushes t
 This workflow runs testing and linting for the GenAI python service.
 
 ## Deployment
+
+[![Deploy Kubernetes](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/deploy-k8s.yml/badge.svg?branch=main)](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/deploy-k8s.yml)
+[![Deploy Ansible/Azure](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/ansible-deploy.yml/badge.svg?branch=main)](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/ansible-deploy.yml)
 
 Deployments to Kubernetes and Azure are automatically triggered after merging to `main`, as soon as build/push actions finish. For more details, see [Kubernetes/Azure in Deployment Docs](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/blob/main/docs/deployment.md#kubernetes).
