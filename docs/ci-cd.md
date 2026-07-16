@@ -37,4 +37,4 @@ This workflow runs testing and linting for the GenAI python service.
 
 ## Deployment
 
-
+Deployments to Kubernetes and Azure are automatically triggered after merging to `main`, as soon as build/push actions finish. For more details, see [Kubernetes/Azure in Deployment Docs](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/blob/main/docs/deployment.md#kubernetes).
