@@ -69,13 +69,15 @@
       </div>
 
       <div class="editor-wrapper mt-2">
-        <div #overlay class="ghost-overlay" aria-hidden="true"><span
-            class="ghost-written">{{ reportText() }}</span><span
-            class="ghost-suggestion">{{ ghostText() }}</span></div>
+        <div #overlay class="ghost-overlay" aria-hidden="true" [class.ghost-active]="ghostText()"><span
+            class="ghost-written">{{ textBeforeGhost() }}</span><span
+            class="ghost-suggestion">{{ ghostText() }}</span><span
+            class="ghost-written">{{ textAfterGhost() }}</span></div>
 
         <textarea
           #editor
           class="report-textarea"
+          [class.ghost-active]="ghostText()"
           placeholder="Schreibe deinen Reisebericht hier..."
           [value]="reportText()"
           (input)="onInput($event)"

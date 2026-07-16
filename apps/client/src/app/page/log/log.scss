@@ -185,6 +185,14 @@ $min-height:  14rem;
   color: transparent;
 }
 
+.report-textarea.ghost-active {
+  -webkit-text-fill-color: transparent;
+}
+
+.ghost-overlay.ghost-active .ghost-written {
+  color: hsl(var(--foreground));
+}
+
 .ghost-suggestion {
   color:      hsl(var(--muted-foreground));
   opacity:    0.65;
