@@ -32,15 +32,15 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [x] Deployment manifests/charts exist for Kubernetes.
 - [x] CD deploys automatically to Kubernetes on merge to `main`.
 - [x] Deployment works on course infra (Rancher) and Azure.
-- [ ] Environment-specific config is externalized (env vars, secrets, config files).
-- [ ] No hardcoded credentials/tokens/environment constants in source code.
+- [x] Environment-specific config is externalized (env vars, secrets, config files).
+- [x] No hardcoded credentials/tokens/environment constants in source code.
 - [x] A stable deployed URL is available for tutor interaction.
 
 ### CI/CD Compliance
 - [x] GitHub Actions pipeline runs on every PR.
 - [x] CI builds all relevant services.
-- [ ] CI runs automated tests.
-- [ ] CI includes linting/static analysis where appropriate.
+- [x] CI runs automated tests.
+- [x] CI includes linting/static analysis where appropriate.
 - [x] CI fails reliably on broken code/tests.
 
 ### Observability Compliance
@@ -54,7 +54,7 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 - [x] Unit tests cover critical server logic.
 - [x] Unit tests cover relevant GenAI logic.
 - [x] Client tests cover key user workflows/interactions.
-- [ ] All tests run automatically in CI.
+- [x] All tests run automatically in CI.
 
 ### Engineering Artifacts and Documentation Compliance
 - [ ] High-level architecture description is available and matches implementation.
