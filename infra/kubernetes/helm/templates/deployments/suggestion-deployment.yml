@@ -43,3 +43,6 @@ spec:
             
             - name: LMSTUDIO_BASE_URL
               value: "https://logos.aet.cit.tum.de"
+
+            - name: LOGBOOK_BASE_URL
+              value: "http://logbook-service/api"
