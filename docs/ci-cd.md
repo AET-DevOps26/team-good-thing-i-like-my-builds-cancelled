@@ -35,7 +35,7 @@ The client build action runs the following steps:
 
 The GenAI build workflow builds the python app using the Dockerfile and pushes the image to the container registry.
 
-![img_1.png](assets/ci-genAI.png)
+![](assets/ci-genAI.png)
 
 ## Run GenAI Tests
 
