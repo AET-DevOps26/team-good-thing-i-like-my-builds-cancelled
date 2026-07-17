@@ -10,7 +10,7 @@ can be found on this page. The GenAI service can be found here: `/apps/server/ge
 ### Unit Tests
 
 Both functionalities of the GenAI service have unit tests to ensure the existing functionality stays intact when making changes. You can run the tests manually
-in the folder `apps/server/genai-service` using the command `python -m pytest tests/ -v`.
+in the folder `apps/server/genai-service` using the command `.venv/bin/python -m pytest tests/ -v`.
 
 If the dependencies are not installed, you can install them using these commands:
 
@@ -23,7 +23,7 @@ python -m venv .venv
 ### Linting
 
 Before running the tests, we ensure good code quality by using `ruff` for enforcing a consistent code style. The linting can also be run manually in the folder 
-`apps/server/genai-service` using the command `ruff check .` and `ruff format --check .`.
+`apps/server/genai-service` using the commands `.venv/bin/ruff check .` and `.venv/bin/ruff format --check .`.
 
 ## Functionality
 
