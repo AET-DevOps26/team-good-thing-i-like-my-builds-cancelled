@@ -56,4 +56,8 @@ jobs:
           for deploy in $deployments; do
             kubectl rollout restart deployment "$deploy" -n cancelled
           done
+          monitors=$(kubectl get deployments -n cancelled-monitoring -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || true)
+          for deploy in $monitors; do
+            kubectl rollout restart deployment "$deploy" -n cancelled-monitoring
+          done
 

@@ -60,6 +60,9 @@ services:
             LMSTUDIO_BASE_URL: "https://logos.aet.cit.tum.de"
             LMSTUDIO_MODEL: "openai/gpt-oss-120b"
             LMSTUDIO_API_KEY: "${LMSTUDIO_API_KEY}"
+            # Embedding model for logbook RAG; leave empty to use keyword matching.
+            LMSTUDIO_EMBEDDING_MODEL: "${LMSTUDIO_EMBEDDING_MODEL:-}"
+            LOGBOOK_BASE_URL: "http://logbook-service:8080/api"
         ports:
             - "9300:8080"
 
