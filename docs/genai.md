@@ -3,8 +3,6 @@
 The GenAI service is the third microservice of the project. It is written in Python and contains the GenAI component. Its documentation and detailed description 
 can be found on this page. The GenAI service can be found here: `/apps/server/genai-service`.
 
-## 
-
 ## Testing
 
 [![Run GenAI Tests](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/genai-tests.yml/badge.svg)](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/genai-tests.yml)
