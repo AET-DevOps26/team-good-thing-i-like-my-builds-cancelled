@@ -7,8 +7,6 @@ can be found on this page. The GenAI service can be found here: `/apps/server/ge
 
 ## Testing
 
-----
-
 [![Run GenAI Tests](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/genai-tests.yml/badge.svg)](https://github.com/AET-DevOps26/team-good-thing-i-like-my-builds-cancelled/actions/workflows/genai-tests.yml)
 
 ### Unit Tests
@@ -18,7 +16,7 @@ in the folder `apps/server/genai-service` using the command `python -m pytest te
 
 If the dependencies are not installed, you can install them using these commands:
 
-```
+```bash
 python -m venv .venv
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m pytest tests/ -v
@@ -31,7 +29,6 @@ Before running the tests, we ensure good code quality by using `ruff` for enforc
 
 ## Functionality
 
----
 
 ### Report Completion
 
