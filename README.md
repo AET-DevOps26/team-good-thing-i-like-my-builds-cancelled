@@ -17,7 +17,7 @@ Repository for team Good thing I like my builds Cancelled!
 The full documentation can be found in the /docs folder with the following entries:
 
 - [🟢 API](docs/api.md)
-- [🟡 Architecture](docs/architecture.md)
+- [🟢 Architecture](docs/architecture.md)
 - [🟡 Checklist](docs/checklist.md)
 - [🟢 CI/CD](docs/ci-cd.md)
 - [🟢 Client](docs/client.md)
@@ -25,9 +25,10 @@ The full documentation can be found in the /docs folder with the following entri
 - [🟢 Deployment](docs/deployment.md)
 - [🟢 GenAI](docs/genai.md)
 - [🟢 Monitoring](docs/monitoring.md)
-- [🟡 Problem Statement](docs/problem-statement.md)
+- [🟢 Problem Statement](docs/problem-statement.md)
 - [🟢 Server](docs/server.md)
 - [🟢 Testing](docs/testing.md)
+- [🟢 Bonus Points](docs/bonus-points.md)
 
 For local setup see ["Deployment > Local"](docs/deployment.md#local)
 
