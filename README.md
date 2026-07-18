@@ -28,6 +28,7 @@ The full documentation can be found in the /docs folder with the following entri
 - [🟢 Problem Statement](docs/problem-statement.md)
 - [🟢 Server](docs/server.md)
 - [🟢 Testing](docs/testing.md)
+- [🟢 Bonus Points](docs/bonus-points.md)
 
 For local setup see ["Deployment > Local"](docs/deployment.md#local)
 
