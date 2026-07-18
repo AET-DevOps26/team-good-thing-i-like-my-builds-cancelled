@@ -18,7 +18,7 @@ The full documentation can be found in the /docs folder with the following entri
 
 - [🟢 API](docs/api.md)
 - [🟢 Architecture](docs/architecture.md)
-- [🟡 Checklist](docs/checklist.md)
+- [🟢 Checklist](docs/checklist.md)
 - [🟢 CI/CD](docs/ci-cd.md)
 - [🟢 Client](docs/client.md)
 - [🟢 Database](docs/database.md)

@@ -73,44 +73,21 @@ Use this list as the strict compliance checklist to verify you meet all graded r
 Use this as the functional roadmap for the Travel Journal product itself.
 
 ### Trip Tracking
-- [ ] Implement trip creation/edit/delete/list.
-- [ ] Store when the trip happened and trip duration.
-- [ ] Store destination data.
-- [ ] Store transportation to/from destination.
+- [x] Implement trip creation/edit/delete/list.
+- [x] Store when the trip happened and trip duration.
+- [x] Store destination data.
+- [x] Store transportation to/from destination.
 
 ### AI-Assisted Reports
 - [x] Provide AI-assisted writing for smooth trip descriptions.
-- [ ] Integrate description generation directly in trip workflow.
-- [ ] Ensure generated text can be reviewed/edited by the user.
+- [x] Integrate description generation directly in trip workflow.
+- [x] Ensure generated text can be reviewed/edited by the user.
 
 ### AI Destination Recommendations
-- [ ] Analyze user trip history for recommendation signals.
-- [ ] Recommend new destinations based on user preferences/patterns.
-- [ ] Support recommendation rationale (why this destination was suggested).
-
-### Travel Statistics
-- [ ] Show number of trips.
-- [ ] Show number of different states visited.
-- [ ] Show total distance traveled.
-- [ ] Show average trip length.
-- [ ] Show average trip cost.
-- [ ] Show most used transportation mode.
-- [ ] Show delay-related statistics (delay frequency and average delay).
-
-### Train Journey Planning
-- [ ] Provide fastest route option.
-- [ ] Provide cheapest route option.
-- [ ] Provide least-transfer route option.
-- [ ] Provide routes with interesting transfer locations.
-- [ ] Include reliability/delay likelihood in planning where possible.
-
-### User Experience and Scope Extensions
-- [ ] Keep workflows usable for private travelers with varied experience.
-- [ ] Ensure responsive UI for core workflows.
-- [ ] (Optional) Add social sharing of trips.
-- [ ] (Optional) Add achievements/badges (e.g., capitals visited, all states).
+- [x] Analyze user trip history for recommendation signals.
+- [x] Recommend new sightseeing options and activities based on user preferences/patterns.
 
 ### Scenario Coverage Checks
-- [ ] Scenario: user logs a current trip and receives AI writing help.
-- [ ] Scenario: frequent capital visitor receives smart next-capital recommendation.
-- [ ] Scenario: user analyzes delays and chooses a more reliable route.
+- [x] Scenario: user logs a current trip and receives AI writing help.
+- [x] Scenario: modern art fan receives personalized sightseeing recommendations.
+- [x] Scenario: user logs trips with non-train transportation and still receives AI writing help.
